@@ -1,28 +1,28 @@
-import { Config } from "./common/config";
 import Fastify from "fastify";
-import { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
-import authenticate from "./middlewares/authenticate";
-import fastifyJwt from "@fastify/jwt";
+import auth from "./plugins/auth";
+import { config } from "./plugins/config";
+import { cors } from "./plugins/cors";
 import mainRouter from "./router";
+import { rateLimit } from "./plugins/rateLimit";
 
 const app = Fastify({
 	logger: {
 		timestamp: () => `,"time":"${new Date().toISOString()}"`
 	}
-}).withTypeProvider<TypeBoxTypeProvider>();
+});
 
-app.decorate("config", Config);
-app.decorate("authenticate", authenticate);
+await app.register(config);
+await app.register(auth);
+await app.register(rateLimit);
+await app.register(cors);
 
-app.register(fastifyJwt, { secret: app.config.JWT_SECRET });
-app.register(mainRouter);
+await app.register(mainRouter);
 
 const start = async () => {
-	await app.listen({
-		port: Number.parseInt(app.config.PORT)
-	});
+	await app.listen({ port: parseInt(app.config.PORT) });
 };
 
+// TODO: Implement graceful shutdown
 start()
 	.then(() => {
 		app.log.info(`Server listening on ${app.config.PORT}`);

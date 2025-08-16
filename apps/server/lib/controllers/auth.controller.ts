@@ -1,4 +1,9 @@
 import { App } from "~/types/fastify";
+import { Type } from "@sinclair/typebox";
+
+const ResponseSchema = Type.Object({
+	access_token: Type.String()
+});
 
 const AuthController = (app: App) => {
 	return app.get(
@@ -6,18 +11,21 @@ const AuthController = (app: App) => {
 		{
 			schema: {
 				response: {
-					200: {
-						type: "object",
-						properties: {
-							token: { type: "string" }
-						}
-					}
+					200: ResponseSchema
 				}
 			}
 		},
 		async (_request, reply) => {
-			const token = await reply.jwtSign({});
-			return reply.send({ token });
+			const token = await reply.jwtSign(
+				{},
+				{
+					sign: {
+						// numbers treated as seconds
+						expiresIn: app.config.JWT_EXPIRES_IN
+					}
+				}
+			);
+			return reply.send({ access_token: token });
 		}
 	);
 };
