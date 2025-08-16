@@ -2,6 +2,7 @@ import Fastify from "fastify";
 import auth from "./plugins/auth";
 import { config } from "./plugins/config";
 import { cors } from "./plugins/cors";
+import helmet from "@fastify/helmet";
 import mainRouter from "./router";
 import { rateLimit } from "./plugins/rateLimit";
 
@@ -11,6 +12,9 @@ const app = Fastify({
 	}
 });
 
+await app.register(helmet, {
+	crossOriginEmbedderPolicy: false
+});
 await app.register(config);
 await app.register(auth);
 await app.register(rateLimit);
