@@ -1,8 +1,38 @@
 {
 	"name": "shortn",
 	"version": "0.1.0",
+	"private": true,
 	"description": "A non-innovative URL shortener",
 	"author": "ismailgunayy",
 	"license": "MIT",
-	"repository": "https://github.com/ismailgunayy/shortn"
+	"repository": "https://github.com/ismailgunayy/shortn",
+	"scripts": {
+		"build": "turbo run build",
+		"build:client": "turbo run build --filter client",
+		"build:server": "turbo run build --filter server",
+		"check-types": "turbo run check-types",
+		"clean": "rimraf .turbo out; turbo clean",
+		"dev": "turbo run dev",
+		"dev:client": "turbo run dev --filter client",
+		"dev:server": "turbo run dev --filter server",
+		"format": "prettier . --write",
+		"lint": "turbo run lint",
+		"start": "turbo run start",
+		"start:client": "turbo run start --filter client",
+		"start:server": "turbo run start --filter server"
+	},
+	"devDependencies": {
+		"prettier": "^3.6.2",
+		"rimraf": "^6.0.1",
+		"turbo": "^2.5.5",
+		"typescript": "5.9.2"
+	},
+	"engines": {
+		"node": ">=18"
+	},
+	"packageManager": "yarn@1.22.22",
+	"workspaces": [
+		"apps/*",
+		"packages/*"
+	]
 }

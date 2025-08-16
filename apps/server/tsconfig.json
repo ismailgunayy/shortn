@@ -1,0 +1,13 @@
+{
+	"extends": "@repo/typescript-config/tsconfig.server.json",
+	"compilerOptions": {
+		"baseUrl": ".",
+		"outDir": "dist",
+		"paths": {
+			"~/*": ["./lib/*"]
+		},
+		"rootDir": "lib"
+	},
+	"include": ["lib/**/*", "router.ts"],
+	"exclude": ["node_modules", "dist"]
+}
