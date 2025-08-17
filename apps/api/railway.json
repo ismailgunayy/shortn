@@ -7,10 +7,9 @@
 	"deploy": {
 		"healthcheckPath": "/api/health",
 		"healthcheckTimeout": 60,
-		"preDeployCommand": "yarn workspace api kysely migrate:latest",
 		"restartPolicyType": "ALWAYS",
 		"sleepApplication": true,
-		"startCommand": "yarn workspace api run start",
+		"startCommand": "yarn workspace api run db:migrate && yarn workspace api run start",
 		"overlapSeconds": 60,
 		"drainingSeconds": 15
 	}

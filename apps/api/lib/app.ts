@@ -27,9 +27,11 @@ await app.register(mainRouter, { prefix: "/api" });
 
 const start = async () => {
 	await app.listen({
+		host: app.config.HOST,
 		port: parseInt(app.config.PORT),
-		listenTextResolver: () => `API is running on ${app.config.BASE_URL}:${app.config.PORT}`
+		listenTextResolver: () => `API is running on ${app.config.BASE_URL}`
 	});
+	app.log.info(app.server.address(), "Server internals:");
 };
 
 start().catch(async (err) => {

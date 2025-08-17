@@ -7,6 +7,7 @@ config();
 
 const ConfigSchema = T.Object({
 	NODE_ENV: T.Union([T.Literal("development"), T.Literal("production"), T.Literal("test")]),
+	HOST: T.String(),
 	BASE_URL: T.String(),
 	CLIENT_URL: T.String(),
 	PORT: T.String(),
