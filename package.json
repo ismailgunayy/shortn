@@ -9,17 +9,17 @@
 	"scripts": {
 		"build": "turbo run build",
 		"build:client": "turbo run build --filter client",
-		"build:server": "turbo run build --filter server",
+		"build:api": "turbo run build --filter api",
 		"check-types": "turbo run check-types",
 		"clean": "rimraf .turbo out; turbo clean",
 		"dev": "turbo run dev",
 		"dev:client": "turbo run dev --filter client",
-		"dev:server": "turbo run dev --filter server",
+		"dev:api": "turbo run dev --filter api",
 		"format": "prettier . --write",
 		"lint": "turbo run lint",
 		"start": "turbo run start",
 		"start:client": "turbo run start --filter client",
-		"start:server": "turbo run start --filter server"
+		"start:api": "turbo run start --filter api"
 	},
 	"devDependencies": {
 		"prettier": "^3.6.2",

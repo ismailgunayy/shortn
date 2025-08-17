@@ -1,8 +1,8 @@
 {
 	// "compounds": [
 	// 	{
-	// 		"configurations": ["Debug Server", "Debug Client"],
-	// 		"name": "Server + Client",
+	// 		"configurations": ["Debug API", "Debug Client"],
+	// 		"name": "API + Client",
 	// 		"presentation": {
 	// 			"group": "Monorepo",
 	// 			"hidden": false,
@@ -13,13 +13,13 @@
 	// ],
 	"configurations": [
 		{
-			"name": "Debug Server",
+			"name": "Debug API",
 			"autoAttachChildProcesses": true,
 			"console": "internalConsole",
 			"cwd": "${workspaceRoot}",
 			"outputCapture": "std",
 			"request": "launch",
-			"runtimeArgs": ["dev:server"],
+			"runtimeArgs": ["dev:api"],
 			"runtimeExecutable": "yarn",
 			"runtimeVersion": "24.0.2",
 			"skipFiles": ["<node_internals>/**"],

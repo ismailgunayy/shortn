@@ -1,15 +1,15 @@
-import js from "@eslint/js";
-import eslintConfigPrettier from "eslint-config-prettier";
-import tseslint from "typescript-eslint";
-import globals from "globals";
 import { config as baseConfig } from "./base.js";
+import eslintConfigPrettier from "eslint-config-prettier";
+import globals from "globals";
+import js from "@eslint/js";
+import tseslint from "typescript-eslint";
 
 /**
  * A custom ESLint configuration for Node.js API projects using Fastify.
  *
  * @type {import("eslint").Linter.Config[]}
  * */
-export const serverConfig = [
+export const apiConfig = [
 	...baseConfig,
 	js.configs.recommended,
 	eslintConfigPrettier,
@@ -67,4 +67,4 @@ export const serverConfig = [
 	}
 ];
 
-export default serverConfig;
+export default apiConfig;

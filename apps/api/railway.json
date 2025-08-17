@@ -2,14 +2,14 @@
 	"$schema": "https://backboard.railway.app/railway.schema.json",
 	"build": {
 		"builder": "NIXPACKS",
-		"buildCommand": "yarn workspace server run build"
+		"buildCommand": "yarn workspace api run build"
 	},
 	"deploy": {
 		"healthcheckPath": "/api/health",
 		"healthcheckTimeout": 60,
 		"restartPolicyType": "ALWAYS",
 		"sleepApplication": true,
-		"startCommand": "yarn workspace server run start",
+		"startCommand": "yarn workspace api run start",
 		"overlapSeconds": 60,
 		"drainingSeconds": 15
 	}

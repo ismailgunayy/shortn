@@ -6,7 +6,7 @@
 	"exports": {
 		"./base": "./base.js",
 		"./client": "./client.js",
-		"./server": "./server.js"
+		"./api": "./api.js"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.33.0",
