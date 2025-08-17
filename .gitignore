@@ -38,3 +38,7 @@ yarn-error.log*
 
 # Bruno API Client
 bruno/
+
+# Docker
+docker-compose.dev.yml
+docker-compose.prod.yml
