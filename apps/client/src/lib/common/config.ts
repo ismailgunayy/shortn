@@ -1,8 +1,10 @@
 import { Type, type Static } from '@sinclair/typebox';
 import { Value } from '@sinclair/typebox/value';
+import { browser } from '$app/environment';
 
 const ConfigSchema = Type.Object({
-	VITE_API_BASE_URL: Type.String({
+	VITE_API_BASE_URL: Type.String(),
+	VITE_API_BASE_URL_SERVER: Type.String({
 		pattern: '^https?://.+'
 	}),
 	VITE_PORT: Type.String()
@@ -22,10 +24,18 @@ function createConfig() {
 
 	const env = Value.Clean(ConfigSchema, Value.Decode(ConfigSchema, rawEnv)) as Env;
 
+	const getApiBaseUrl = () => {
+		if (browser) {
+			return env.VITE_API_BASE_URL;
+		} else {
+			return env.VITE_API_BASE_URL_SERVER;
+		}
+	};
+
 	return {
 		env,
 		api: {
-			baseUrl: env.VITE_API_BASE_URL,
+			baseUrl: getApiBaseUrl(),
 			endpoints: {
 				auth: '/api/auth',
 				url: '/api/url'

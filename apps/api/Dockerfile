@@ -1,0 +1,84 @@
+# Production Dockerfile for API (Fastify)
+FROM node:24.0.2-alpine AS base
+
+# Dependencies stage - install all dependencies for building
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+# Copy root package files for workspace
+COPY package.json yarn.lock turbo.json ./
+
+# Copy workspace packages
+COPY packages/ packages/
+
+# Copy API package.json
+COPY apps/api/package.json apps/api/
+
+# Install all dependencies (including devDependencies needed for build)
+RUN yarn install --frozen-lockfile
+
+# Build stage - compile TypeScript to JavaScript
+FROM base AS builder
+WORKDIR /app
+
+# Copy dependencies
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/packages ./packages
+
+# Copy API source code
+COPY apps/api/ apps/api/
+
+# Copy root files
+COPY package.json yarn.lock turbo.json ./
+
+WORKDIR /app/apps/api
+
+# Build the application using esbuild
+RUN yarn build
+
+# Production stage - only runtime dependencies
+FROM base AS runner
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+# Create non-root user
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 apiuser
+
+# Copy root workspace files
+COPY package.json yarn.lock turbo.json ./
+COPY packages/ packages/
+
+# Copy API package.json and built application
+COPY apps/api/package.json apps/api/
+COPY --from=builder --chown=apiuser:nodejs /app/apps/api/dist ./apps/api/dist
+
+# Copy migrations for database setup
+COPY --from=builder --chown=apiuser:nodejs /app/apps/api/migrations ./apps/api/migrations
+COPY --from=builder --chown=apiuser:nodejs /app/apps/api/kysely.config.ts ./apps/api/kysely.config.ts
+
+# Install only production dependencies
+RUN yarn install --frozen-lockfile --production && \
+    yarn cache clean --force
+
+# Change ownership of the entire app directory
+RUN chown -R apiuser:nodejs /app
+
+USER apiuser
+
+# Expose port
+EXPOSE 8023
+
+# Set production environment
+ENV NODE_ENV=production
+ENV HOST=0.0.0.0
+ENV PORT=8023
+
+# Add healthcheck
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:8023/api/health || exit 1
+
+# Create and use a simple startup script
+WORKDIR /app/apps/api
+CMD ["sh", "-c", "echo 'Running database migrations...' && (yarn db:migrate || echo 'Migration failed, continuing...') && echo 'Starting API server...' && yarn start"]

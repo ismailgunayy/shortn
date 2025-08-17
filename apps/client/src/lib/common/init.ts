@@ -2,8 +2,6 @@ import { authService } from '$lib/services/auth';
 
 export async function initializeApp(): Promise<{ success: boolean; error?: string }> {
 	try {
-		console.log('Initializing app...');
-
 		// Test authentication
 		const authResult = await authService.authenticate();
 

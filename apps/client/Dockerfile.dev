@@ -1,0 +1,35 @@
+# Development Dockerfile for Client (SvelteKit)
+FROM node:24.0.2-alpine
+
+# Install dependencies
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /app
+
+# Copy root package.json and yarn.lock for workspace dependencies
+COPY package.json yarn.lock ./
+COPY turbo.json ./
+
+# Copy workspace packages
+COPY packages/ packages/
+
+# Copy client package.json first for better caching
+COPY apps/client/package.json apps/client/
+
+# Install dependencies
+RUN yarn install --frozen-lockfile
+
+# Copy client source code
+COPY apps/client/ apps/client/
+
+WORKDIR /app/apps/client
+
+# Expose port
+EXPOSE 3023
+
+# Set development environment
+ENV NODE_ENV=development
+ENV PORT=3023
+
+# Start in development mode with hot reload
+CMD ["yarn", "dev", "--host", "0.0.0.0", "--port", "3023"]

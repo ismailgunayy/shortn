@@ -1,0 +1,70 @@
+services:
+  postgres:
+    image: postgres:13.22-alpine
+    container_name: shortn_postgres_dev
+    env_file:
+      - .env.dev
+    environment:
+      POSTGRES_DB: shortn
+      POSTGRES_USER: ${POSTGRES_USER:-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d shortn"]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    networks:
+      - shortn-network
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile.dev
+    container_name: shortn_api_dev
+    env_file:
+      - .env.dev
+    ports:
+      - 8023:8023
+    volumes:
+      - ./apps/api:/app/apps/api
+      - /app/apps/api/node_modules
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - shortn-network
+    restart: unless-stopped
+
+  client:
+    build:
+      context: .
+      dockerfile: apps/client/Dockerfile.dev
+      args:
+        VITE_API_BASE_URL: ${API_BASE_URL:-http://localhost:8023}
+        VITE_API_BASE_URL_SERVER: ${API_BASE_URL_SERVER:-http://api:8023}
+        VITE_PORT: 3023
+    container_name: shortn_client_dev
+    env_file:
+      - .env.dev
+    ports:
+      - 3023:3023
+    volumes:
+      - ./apps/client:/app/apps/client
+      - /app/apps/client/node_modules
+      - /app/node_modules
+    depends_on:
+      - api
+    networks:
+      - shortn-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data_dev:
+
+networks:
+  shortn-network:

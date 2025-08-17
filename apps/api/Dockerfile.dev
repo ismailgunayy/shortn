@@ -1,0 +1,36 @@
+FROM node:24.0.2-alpine
+
+WORKDIR /app
+
+# Copy root package.json and yarn.lock for workspace dependencies
+COPY package.json yarn.lock ./
+COPY turbo.json ./
+
+# Copy workspace packages
+COPY packages/ packages/
+
+# Copy API package.json first for better caching
+COPY apps/api/package.json apps/api/
+
+# Install dependencies
+RUN yarn install --frozen-lockfile
+
+# Copy API source code
+COPY apps/api/ apps/api/
+
+WORKDIR /app/apps/api
+
+# Expose port
+EXPOSE 8023
+
+# Create a startup script that runs migrations then starts dev server
+RUN echo '#!/bin/sh' > /app/start-dev.sh && \
+    echo 'echo "Running database migrations..."' >> /app/start-dev.sh && \
+    echo 'cd /app/apps/api' >> /app/start-dev.sh && \
+    echo 'yarn db:migrate || echo "Migration failed, continuing anyway..."' >> /app/start-dev.sh && \
+    echo 'echo "Starting development server..."' >> /app/start-dev.sh && \
+    echo 'exec yarn dev' >> /app/start-dev.sh && \
+    chmod +x /app/start-dev.sh
+
+# Run migrations and start development server
+CMD ["/app/start-dev.sh"]
