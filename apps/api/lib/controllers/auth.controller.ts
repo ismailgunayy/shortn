@@ -2,7 +2,8 @@ import { App } from "~/types/fastify";
 import { Type } from "@sinclair/typebox";
 
 const ResponseSchema = Type.Object({
-	access_token: Type.String()
+	accessToken: Type.String(),
+	expiresIn: Type.String()
 });
 
 export const AuthController = (app: App) => {
@@ -25,7 +26,10 @@ export const AuthController = (app: App) => {
 					}
 				}
 			);
-			return reply.send({ access_token: token });
+			return reply.send({
+				accessToken: token,
+				expiresIn: app.config.JWT_EXPIRES_IN
+			});
 		}
 	);
 };
