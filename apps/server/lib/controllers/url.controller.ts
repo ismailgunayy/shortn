@@ -1,12 +1,7 @@
-import { convertFromBase62, convertToBase62 } from "~/helpers/base62";
+import { InvalidShortenedURL, InvalidURL } from "~/errors/url.error";
 
 import { App } from "~/types/fastify";
 import { Type as T } from "@sinclair/typebox";
-import { isValidUrl } from "~/helpers/isValidURL";
-
-const db: {
-	[key: number]: string;
-} = {};
 
 const BodySchema = T.Object({
 	url: T.String()
@@ -21,48 +16,43 @@ export const URLController = (app: App) => {
 				body: BodySchema
 			}
 		},
-		(request, reply) => {
-			const { url } = request.body;
+		async (request, reply) => {
+			try {
+				const { url } = request.body;
+				const shortenedUrl = await app.services.url.shortenUrl(url);
 
-			if (!isValidUrl(url)) {
-				return reply.code(400).send({ error: "Invalid URL" });
+				return reply.code(200).send({ url: shortenedUrl });
+			} catch (error) {
+				if (error instanceof InvalidURL) {
+					return reply.code(400).send({ error: error.message });
+				} else {
+					return reply.code(500).send({ error: "Internal Server Error" });
+				}
 			}
-
-			// TODO: Update with DB operation once implemented
-			const randomId = Math.floor(Math.random() * 90000) + 10000;
-			db[randomId] = url;
-
-			const shortenedUrl = `https://shortn.com/${convertToBase62(randomId)}`;
-			return reply.code(200).send({ url: shortenedUrl });
 		}
 	);
 
 	app.post(
-		"/unshorten",
+		"/original",
 		{
 			preHandler: [app.authenticate],
 			schema: {
 				body: BodySchema
 			}
 		},
-		(request, reply) => {
-			const { url: shortenedUrl } = request.body;
+		async (request, reply) => {
+			try {
+				const { url: shortenedUrl } = request.body;
+				const originalUrl = await app.services.url.getOriginalUrl(shortenedUrl);
 
-			// TODO: Use isValidShortenedUrl
-			if (!isValidUrl(shortenedUrl)) {
-				return reply.code(400).send({ error: "Invalid URL" });
+				return reply.code(200).send({ url: originalUrl });
+			} catch (error) {
+				if (error instanceof InvalidShortenedURL) {
+					return reply.code(400).send({ error: error.message });
+				} else {
+					return reply.code(500).send({ error: "Internal Server Error" });
+				}
 			}
-
-			const url = new URL(shortenedUrl);
-
-			const id = convertFromBase62(url.pathname.slice(1));
-			const originalUrl = db[id];
-
-			if (!originalUrl) {
-				return reply.code(404).send({ error: "URL not found" });
-			}
-
-			return reply.code(200).send({ url: originalUrl });
 		}
 	);
 };

@@ -21,7 +21,7 @@ export const AuthController = (app: App) => {
 				{
 					sign: {
 						// numbers treated as seconds
-						expiresIn: app.config.auth.JWT_EXPIRES_IN
+						expiresIn: app.config.JWT_EXPIRES_IN
 					}
 				}
 			);

@@ -5,14 +5,17 @@ import { Pool } from "pg";
 import fastifyPlugin from "fastify-plugin";
 
 export const db = fastifyPlugin((app) => {
+	const pool = new Pool({
+		connectionString: app.config.DATABASE_URL,
+		max: 10
+	});
+
 	const db = new Kysely<DB>({
 		dialect: new PostgresDialect({
-			pool: new Pool({
-				connectionString: app.config.db.DATABASE_URL,
-				max: 10
-			})
+			pool: pool
 		})
 	});
 
+	db.pool = pool;
 	app.decorate("db", db);
 });

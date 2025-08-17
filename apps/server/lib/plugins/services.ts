@@ -5,7 +5,7 @@ import fastifyPlugin from "fastify-plugin";
 
 export const services = fastifyPlugin((app: App) => {
 	const urlRepository = new URLRepository(app.db);
-	const urlService = new URLService(urlRepository);
+	const urlService = new URLService(app, urlRepository);
 
 	app.decorate("services", {
 		url: urlService

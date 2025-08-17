@@ -5,10 +5,10 @@ export class URLRepository {
 	constructor(private db: Kysely<DB>) {}
 
 	async insert(url: string) {
-		await this.db.insertInto("shortn.urls").values({ url }).executeTakeFirstOrThrow();
+		return await this.db.insertInto("shortn.urls").values({ url }).returning("id").executeTakeFirstOrThrow();
 	}
 
 	async findById(id: number) {
-		await this.db.selectFrom("shortn.urls").selectAll().where("id", "=", id).executeTakeFirstOrThrow();
+		return await this.db.selectFrom("shortn.urls").select("url").where("id", "=", id).executeTakeFirstOrThrow();
 	}
 }
