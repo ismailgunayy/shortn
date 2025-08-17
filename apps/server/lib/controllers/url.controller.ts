@@ -12,7 +12,7 @@ const BodySchema = T.Object({
 	url: T.String()
 });
 
-const URLController = (app: App) => {
+export const URLController = (app: App) => {
 	app.post(
 		"/shorten",
 		{
@@ -66,5 +66,3 @@ const URLController = (app: App) => {
 		}
 	);
 };
-
-export default URLController;

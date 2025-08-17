@@ -10,8 +10,9 @@
 		"start": "node dist/app.js",
 		"clean": "rimraf dist",
 		"check-types": "tsc --noEmit",
-		"lint": "eslint lib/**/*.ts",
-		"lint:fix": "eslint lib/**/*.ts --fix"
+		"lint": "eslint",
+		"lint:fix": "eslint --fix",
+		"generate:db": "kysely-codegen"
 	},
 	"dependencies": {
 		"@fastify/cors": "^11.1.0",
@@ -22,14 +23,19 @@
 		"@sinclair/typebox": "^0.34.39",
 		"dotenv": "^17.2.1",
 		"fastify": "^5.5.0",
-		"fastify-plugin": "^5.0.1"
+		"fastify-plugin": "^5.0.1",
+		"kysely": "^0.28.5",
+		"pg": "^8.16.3"
 	},
 	"devDependencies": {
-		"@repo/eslint-config": "*",
-		"@repo/typescript-config": "*",
+		"@repo/eslint-config": "0.0.1",
+		"@repo/typescript-config": "0.0.1",
 		"@types/node": "^22.5.0",
+		"@types/pg": "^8.15.5",
 		"esbuild": "^0.25.9",
 		"eslint": "^9.33.0",
+		"kysely-codegen": "^0.18.5",
+		"kysely-ctl": "^0.16.0",
 		"tsx": "^4.17.0",
 		"typescript": "^5.5.4"
 	}

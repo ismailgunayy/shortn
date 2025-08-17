@@ -1,10 +1,8 @@
+import { auth, config, cors, db, rateLimit, services } from "./plugins";
+
 import Fastify from "fastify";
-import auth from "./plugins/auth";
-import { config } from "./plugins/config";
-import { cors } from "./plugins/cors";
 import helmet from "@fastify/helmet";
-import mainRouter from "./router";
-import { rateLimit } from "./plugins/rateLimit";
+import { mainRouter } from "./router";
 
 const app = Fastify({
 	logger: {
@@ -12,14 +10,16 @@ const app = Fastify({
 	}
 });
 
+await app.register(config);
 await app.register(helmet, {
 	crossOriginEmbedderPolicy: false
 });
-await app.register(config);
-await app.register(auth);
-await app.register(rateLimit);
 await app.register(cors);
+await app.register(db);
+await app.register(rateLimit);
+await app.register(auth);
 
+await app.register(services);
 await app.register(mainRouter);
 
 const start = async () => {

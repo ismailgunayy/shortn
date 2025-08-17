@@ -1,0 +1,5 @@
+{
+	"dialect": "postgres",
+	"outFile": "./lib/types/db-schema.d.ts",
+	"url": "env(DATABASE_URL)"
+}

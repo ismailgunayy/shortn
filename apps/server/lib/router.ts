@@ -1,8 +1,8 @@
-import { App } from "./types/fastify";
-import AuthController from "./controllers/auth.controller";
-import URLController from "./controllers/url.controller";
+import { AuthController, URLController } from "./controllers";
 
-const mainRouter = (app: App) => {
+import { App } from "./types/fastify";
+
+export const mainRouter = (app: App) => {
 	app.register(
 		(app: App) => {
 			AuthController(app);
@@ -21,5 +21,3 @@ const mainRouter = (app: App) => {
 		}
 	);
 };
-
-export default mainRouter;

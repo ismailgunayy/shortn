@@ -4,7 +4,7 @@ import { App } from "~/types/fastify";
 import fastifyJwt from "@fastify/jwt";
 import fastifyPlugin from "fastify-plugin";
 
-const auth = fastifyPlugin(async (app: App) => {
+export const auth = fastifyPlugin(async (app: App) => {
 	app.decorate("authenticate", async (request: FastifyRequest, reply: FastifyReply) => {
 		try {
 			await request.jwtVerify();
@@ -15,8 +15,6 @@ const auth = fastifyPlugin(async (app: App) => {
 	});
 
 	await app.register(fastifyJwt, {
-		secret: app.config.JWT_SECRET
+		secret: app.config.auth.JWT_SECRET
 	});
 });
-
-export default auth;

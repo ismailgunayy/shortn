@@ -6,8 +6,8 @@
 		"paths": {
 			"~/*": ["./lib/*"]
 		},
-		"rootDir": "lib"
+		"rootDir": "."
 	},
-	"include": ["lib/**/*", "router.ts"],
+	"include": ["lib/**/*", "db_migrations/**/*", "router.ts"],
 	"exclude": ["node_modules", "dist"]
 }

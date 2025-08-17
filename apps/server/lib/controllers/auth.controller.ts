@@ -5,7 +5,7 @@ const ResponseSchema = Type.Object({
 	access_token: Type.String()
 });
 
-const AuthController = (app: App) => {
+export const AuthController = (app: App) => {
 	return app.get(
 		"/",
 		{
@@ -21,7 +21,7 @@ const AuthController = (app: App) => {
 				{
 					sign: {
 						// numbers treated as seconds
-						expiresIn: app.config.JWT_EXPIRES_IN
+						expiresIn: app.config.auth.JWT_EXPIRES_IN
 					}
 				}
 			);
@@ -29,5 +29,3 @@ const AuthController = (app: App) => {
 		}
 	);
 };
-
-export default AuthController;
