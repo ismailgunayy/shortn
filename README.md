@@ -4,6 +4,6 @@
     <img src="https://img.shields.io/badge/node-v24.0.2-44883e?logo=nodedotjs" alt="Node Version" />
 </div>
 
-# ShareCode
+# Shortn
 
 A non-innovative URL shortener
