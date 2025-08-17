@@ -42,6 +42,16 @@ FROM base AS runner
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
+
+ARG NODE_ENV
+ARG HOST
+ARG BASE_URL
+ARG CLIENT_URL
+ARG PORT
+ARG JWT_SECRET
+ARG JWT_EXPIRES_IN
+ARG DATABASE_URL
+
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 apiuser
@@ -60,7 +70,7 @@ COPY --from=builder --chown=apiuser:nodejs /app/apps/api/kysely.config.ts ./apps
 
 # Install only production dependencies
 RUN yarn install --frozen-lockfile --production && \
-    yarn cache clean --force
+	yarn cache clean --force
 
 # Change ownership of the entire app directory
 RUN chown -R apiuser:nodejs /app
@@ -70,14 +80,19 @@ USER apiuser
 # Expose port
 EXPOSE 8023
 
-# Set production environment
-ENV NODE_ENV=production
-ENV HOST=0.0.0.0
-ENV PORT=8023
+# Set environment variables from build args
+ENV NODE_ENV=$NODE_ENV
+ENV HOST=$HOST
+ENV PORT=$PORT
+ENV DATABASE_URL=$DATABASE_URL
+ENV JWT_SECRET=$JWT_SECRET
+ENV JWT_EXPIRES_IN=$JWT_EXPIRES_IN
+ENV BASE_URL=$BASE_URL
+ENV CLIENT_URL=$CLIENT_URL
 
 # Add healthcheck
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:8023/api/health || exit 1
+	CMD wget --no-verbose --tries=1 --spider http://localhost:$PORT/api/health || exit 1
 
 # Create and use a simple startup script
 WORKDIR /app/apps/api

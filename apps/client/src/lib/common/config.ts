@@ -3,10 +3,9 @@ import { Value } from '@sinclair/typebox/value';
 import { browser } from '$app/environment';
 
 const ConfigSchema = Type.Object({
+	VITE_CLIENT_HOST: Type.String(),
 	VITE_API_BASE_URL: Type.String(),
-	VITE_API_BASE_URL_SERVER: Type.String({
-		pattern: '^https?://.+'
-	}),
+	VITE_API_BASE_URL_SERVER: Type.String(),
 	VITE_PORT: Type.String()
 });
 
@@ -45,4 +44,3 @@ function createConfig() {
 }
 
 export const config = createConfig();
-export const env = config.env;

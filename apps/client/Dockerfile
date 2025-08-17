@@ -34,12 +34,16 @@ COPY package.json yarn.lock turbo.json ./
 
 WORKDIR /app/apps/client
 
-# Build arguments for environment variables
-ARG VITE_API_BASE_URL=http://localhost:8023
-ARG VITE_PORT=3023
+# Build arguments for environment variables - Railway will inject these
+ARG VITE_CLIENT_HOST
+ARG VITE_API_BASE_URL
+ARG VITE_API_BASE_URL_SERVER
+ARG VITE_PORT
 
 # Set environment variables for build
+ENV VITE_CLIENT_HOST=$VITE_CLIENT_HOST
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+ENV VITE_API_BASE_URL_SERVER=$VITE_API_BASE_URL_SERVER
 ENV VITE_PORT=$VITE_PORT
 
 # Build the SvelteKit application
@@ -69,7 +73,7 @@ RUN rm -rf ./apps/client/node_modules
 
 # Install all dependencies (vite and @sveltejs/vite-plugin-svelte are needed for preview)
 RUN yarn install --frozen-lockfile && \
-    yarn cache clean --force
+	yarn cache clean --force
 
 # Change ownership
 RUN chown -R clientuser:nodejs /app
@@ -79,14 +83,9 @@ USER clientuser
 # Expose port
 EXPOSE 3023
 
-# Set production environment
-ENV NODE_ENV=production
-ENV PORT=3023
-ENV HOST=0.0.0.0
-
 # Add healthcheck
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:3023 || exit 1
+	CMD wget --no-verbose --tries=1 --spider http://localhost:$VITE_PORT || exit 1
 
 # Start the SvelteKit preview server
 CMD ["yarn", "workspace", "client", "start"]
