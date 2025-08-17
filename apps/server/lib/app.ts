@@ -23,7 +23,7 @@ await app.register(auth);
 
 await app.register(helpers);
 await app.register(services);
-await app.register(mainRouter);
+await app.register(mainRouter, { prefix: "/api" });
 
 const start = async () => {
 	await app.listen({ port: parseInt(app.config.PORT) });
