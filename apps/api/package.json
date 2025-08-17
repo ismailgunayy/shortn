@@ -1,9 +1,9 @@
 {
 	"name": "api",
+	"private": true,
 	"version": "1.0.0",
 	"main": "lib/app.ts",
 	"type": "module",
-	"license": "MIT",
 	"scripts": {
 		"build": "node esbuild.mjs",
 		"dev": "tsx watch lib/app.ts",

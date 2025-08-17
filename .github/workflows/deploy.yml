@@ -64,9 +64,9 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     needs: lint
-    # env:
-    #   VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL}}
-    #   VITE_PORT: ${{ vars.VITE_PORT }}
+    env:
+      VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL}}
+      VITE_PORT: ${{ vars.VITE_PORT }}
     steps:
       - uses: actions/checkout@v3
 
@@ -105,16 +105,16 @@ jobs:
 
       - run: railway up --service=${{ env.SVC_ID }}
 
-  # deploy-client:
-  #   name: deploy-client
-  #   runs-on: ubuntu-latest
-  #   needs: [build, deploy-api]
-  #   container: ghcr.io/railwayapp/cli:latest
-  #   environment: production
-  #   env:
-  #     SVC_ID: ${{ vars.RAILWAY_CLIENT_SERVICE_ID }}
-  #     RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-  #   steps:
-  #     - uses: actions/checkout@v3
+  deploy-client:
+    name: deploy-client
+    runs-on: ubuntu-latest
+    needs: [build, deploy-api]
+    container: ghcr.io/railwayapp/cli:latest
+    environment: production
+    env:
+      SVC_ID: ${{ vars.RAILWAY_CLIENT_SERVICE_ID }}
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
 
-  #     - run: railway up --service=${{ env.SVC_ID }}
+      - run: railway up --service=${{ env.SVC_ID }}

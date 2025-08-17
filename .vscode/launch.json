@@ -1,16 +1,16 @@
 {
-	// "compounds": [
-	// 	{
-	// 		"configurations": ["Debug API", "Debug Client"],
-	// 		"name": "API + Client",
-	// 		"presentation": {
-	// 			"group": "Monorepo",
-	// 			"hidden": false,
-	// 			"order": 1
-	// 		},
-	// 		"stopAll": true
-	// 	}
-	// ],
+	"compounds": [
+		{
+			"configurations": ["Debug API", "Debug Client"],
+			"name": "API + Client",
+			"presentation": {
+				"group": "Monorepo",
+				"hidden": false,
+				"order": 1
+			},
+			"stopAll": true
+		}
+	],
 	"configurations": [
 		{
 			"name": "Debug API",
@@ -24,19 +24,19 @@
 			"runtimeVersion": "24.0.2",
 			"skipFiles": ["<node_internals>/**"],
 			"type": "node"
+		},
+		{
+			"name": "Debug Client",
+			"autoAttachChildProcesses": true,
+			"console": "internalConsole",
+			"cwd": "${workspaceRoot}",
+			"outputCapture": "std",
+			"request": "launch",
+			"runtimeArgs": ["dev:client"],
+			"runtimeExecutable": "yarn",
+			"runtimeVersion": "24.0.2",
+			"skipFiles": ["<node_internals>/**"],
+			"type": "node"
 		}
-		// {
-		// 	"name": "Debug Client",
-		// 	"autoAttachChildProcesses": true,
-		// 	"console": "internalConsole",
-		// 	"cwd": "${workspaceRoot}",
-		// 	"outputCapture": "std",
-		// 	"request": "launch",
-		// 	"runtimeArgs": ["dev:client"],
-		// 	"runtimeExecutable": "yarn",
-		// 	"runtimeVersion": "24.0.2",
-		// 	"skipFiles": ["<node_internals>/**"],
-		// 	"type": "node"
-		// }
 	]
 }

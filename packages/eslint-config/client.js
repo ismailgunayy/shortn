@@ -2,48 +2,48 @@ import { config as baseConfig } from "./base.js";
 import eslintConfigPrettier from "eslint-config-prettier";
 import globals from "globals";
 import js from "@eslint/js";
-import pluginNext from "@next/eslint-plugin-next";
-import pluginReact from "eslint-plugin-react";
-import pluginReactHooks from "eslint-plugin-react-hooks";
+import pluginSvelte from "eslint-plugin-svelte";
+import svelteParser from "svelte-eslint-parser";
 import tseslint from "typescript-eslint";
 
 /**
- * A custom ESLint configuration for libraries that use Next.js.
+ * A custom ESLint configuration for SvelteKit projects.
  *
  * @type {import("eslint").Linter.Config[]}
  * */
-export const nextJsConfig = [
+export const svelteConfig = [
+	{
+		ignores: [
+			"**/build/**",
+			"**/.svelte-kit/**",
+			"**/dist/**",
+			"**/node_modules/**",
+			"**/.env",
+			"**/.env.*",
+			"!**/.env.example"
+		]
+	},
 	...baseConfig,
 	js.configs.recommended,
-	eslintConfigPrettier,
 	...tseslint.configs.recommended,
+	...pluginSvelte.configs["flat/recommended"],
+	eslintConfigPrettier,
+	...pluginSvelte.configs["flat/prettier"],
 	{
-		...pluginReact.configs.flat.recommended,
 		languageOptions: {
-			...pluginReact.configs.flat.recommended.languageOptions,
 			globals: {
-				...globals.serviceworker
+				...globals.browser,
+				...globals.node
 			}
 		}
 	},
 	{
-		plugins: {
-			"@next/next": pluginNext
-		},
-		rules: {
-			...pluginNext.configs.recommended.rules,
-			...pluginNext.configs["core-web-vitals"].rules
-		}
-	},
-	{
-		plugins: {
-			"react-hooks": pluginReactHooks
-		},
-		settings: { react: { version: "detect" } },
-		rules: {
-			...pluginReactHooks.configs.recommended.rules,
-			// React scope no longer necessary with new JSX transform.
-			"react/react-in-jsx-scope": "off"
+		files: ["**/*.svelte"],
+		languageOptions: {
+			parser: svelteParser,
+			parserOptions: {
+				parser: tseslint.parser
+			}
 		}
 	}
 ];

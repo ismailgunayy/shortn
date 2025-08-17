@@ -1,0 +1,14 @@
+{
+	"$schema": "https://backboard.railway.app/railway.schema.json",
+	"build": {
+		"builder": "NIXPACKS",
+		"buildCommand": "yarn workspace client run build"
+	},
+	"deploy": {
+		"restartPolicyType": "ALWAYS",
+		"sleepApplication": true,
+		"startCommand": "yarn workspace client run start",
+		"overlapSeconds": 60,
+		"drainingSeconds": 15
+	}
+}
