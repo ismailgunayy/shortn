@@ -4,6 +4,7 @@ import { disconnectDB, setupGracefulShutdown } from "./gracefulShutdown";
 import { Config } from "./common/config";
 import Fastify from "fastify";
 import helmet from "@fastify/helmet";
+import { log } from "./plugins/log";
 import { mainRouter } from "./router";
 
 const app = Fastify({
@@ -13,6 +14,7 @@ const app = Fastify({
 });
 
 app.decorate("config", Config);
+app.register(log);
 await app.register(helmet, {
 	crossOriginEmbedderPolicy: false
 });

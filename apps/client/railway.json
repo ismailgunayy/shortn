@@ -2,13 +2,11 @@
 	"$schema": "https://backboard.railway.app/railway.schema.json",
 	"build": {
 		"builder": "DOCKERFILE",
-		"dockerfilePath": "apps/client/Dockerfile",
-		"buildCommand": "yarn workspace client run build"
+		"dockerfilePath": "apps/client/Dockerfile"
 	},
 	"deploy": {
 		"restartPolicyType": "ALWAYS",
 		"sleepApplication": true,
-		"startCommand": "yarn workspace client run start",
 		"overlapSeconds": 60,
 		"drainingSeconds": 15
 	}

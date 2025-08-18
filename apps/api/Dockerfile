@@ -83,17 +83,17 @@ EXPOSE 8023
 # Set environment variables from build args
 ENV NODE_ENV=$NODE_ENV
 ENV HOST=$HOST
-ENV PORT=$PORT
-ENV DATABASE_URL=$DATABASE_URL
-ENV JWT_SECRET=$JWT_SECRET
-ENV JWT_EXPIRES_IN=$JWT_EXPIRES_IN
 ENV BASE_URL=$BASE_URL
 ENV CLIENT_URL=$CLIENT_URL
+ENV PORT=$PORT
+ENV JWT_SECRET=$JWT_SECRET
+ENV JWT_EXPIRES_IN=$JWT_EXPIRES_IN
+ENV DATABASE_URL=$DATABASE_URL
 
 # Add healthcheck
-HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+HEALTHCHECK --interval=2s --timeout=3s --start-period=10s --retries=5 \
 	CMD wget --no-verbose --tries=1 --spider http://localhost:$PORT/api/health || exit 1
 
 # Create and use a simple startup script
 WORKDIR /app/apps/api
-CMD ["sh", "-c", "echo 'Running database migrations...' && (yarn db:migrate || echo 'Migration failed, continuing...') && echo 'Starting API server...' && yarn start"]
+CMD ["sh", "-c", "echo 'Running database migrations...' && (yarn db:migrate || (echo 'Migration failed with error:' && yarn db:migrate 2>&1)) && echo 'Starting API server...' && yarn start"]
