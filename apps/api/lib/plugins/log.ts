@@ -7,10 +7,12 @@ export const log = fastifyPlugin((app: App) => {
 			req.log.info(
 				{
 					body: req.body,
-					method: req.method,
-					host: req.host,
 					port: req.port,
-					url: req.url
+					req: {
+						method: req.method,
+						host: req.host,
+						url: req.url
+					}
 				},
 				"REQUEST ::"
 			);
