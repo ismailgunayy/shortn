@@ -6,6 +6,7 @@ export async function up(db: Kysely<unknown>): Promise<void> {
 		.addColumn("id", "integer", (col) => col.primaryKey().generatedAlwaysAsIdentity())
 		.addColumn("url", "text", (col) => col.notNull())
 		.addColumn("created_at", "timestamp", (col) => col.defaultTo(sql`now()`).notNull())
+		.ifNotExists()
 		.execute();
 
 	// Set the id column to start from 10000
