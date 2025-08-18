@@ -3,18 +3,17 @@ import fastifyPlugin from "fastify-plugin";
 
 export const log = fastifyPlugin((app: App) => {
 	app.addHook("preHandler", function (req, _reply, done) {
-		if (req.body && !req.url.startsWith("/v1")) {
+		if (req.body) {
 			req.log.info(
 				{
 					body: req.body,
-					port: req.port,
 					req: {
 						method: req.method,
 						host: req.host,
 						url: req.url
 					}
 				},
-				"REQUEST ::"
+				"Incoming Request with Payload"
 			);
 		}
 		done();
@@ -22,7 +21,7 @@ export const log = fastifyPlugin((app: App) => {
 
 	app.addHook("preSerialization", (request, _reply, payload, done) => {
 		if (payload) {
-			request.log.info({ body: payload }, "RESPONSE ::");
+			request.log.info({ body: payload }, "Outgoing Response with Payload");
 		}
 		done();
 	});
