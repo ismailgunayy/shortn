@@ -6,7 +6,6 @@
 	},
 	"deploy": {
 		"restartPolicyType": "ALWAYS",
-		"sleepApplication": true,
 		"overlapSeconds": 60,
 		"drainingSeconds": 15
 	}
