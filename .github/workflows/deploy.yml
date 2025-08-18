@@ -66,6 +66,7 @@ jobs:
     needs: lint
     env:
       VITE_CLIENT_HOST: ${{ vars.VITE_CLIENT_HOST }}
+      VITE_CLIENT_URL: ${{ vars.VITE_CLIENT_URL }}
       VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL}}
       VITE_API_BASE_URL_SERVER: ${{ vars.VITE_API_BASE_URL_SERVER}}
       VITE_PORT: ${{ vars.VITE_PORT }}

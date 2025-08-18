@@ -29,7 +29,7 @@ export const load: PageServerLoad = async ({ params, fetch, url }) => {
 
 		// Now make request to get the original URL
 		// Construct the shortened URL using the current origin
-		const shortenedUrl = `${url.origin}/${slug}`;
+		const shortenedUrl = `${config.env.VITE_CLIENT_URL}/${slug}`;
 		const apiUrl = `${config.api.baseUrl}/api/url/original`;
 
 		const response = await fetch(apiUrl, {

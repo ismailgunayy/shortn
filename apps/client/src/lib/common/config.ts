@@ -4,6 +4,7 @@ import { browser } from '$app/environment';
 
 const ConfigSchema = Type.Object({
 	VITE_CLIENT_HOST: Type.String(),
+	VITE_CLIENT_URL: Type.String(),
 	VITE_API_BASE_URL: Type.String(),
 	VITE_API_BASE_URL_SERVER: Type.String(),
 	VITE_PORT: Type.String()
