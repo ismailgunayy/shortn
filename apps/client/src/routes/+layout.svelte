@@ -21,10 +21,12 @@
 
 {#if initError}
 	<div class="flex min-h-screen items-center justify-center bg-red-50 p-4 dark:bg-red-900/20">
-		<div class="max-w-md text-center">
-			<h1 class="mb-4 text-2xl font-bold text-red-600 dark:text-red-400">Configuration Error</h1>
-			<p class="mb-4 text-red-700 dark:text-red-300">{initError}</p>
-			<p class="text-sm text-red-600 dark:text-red-400">
+		<div class="max-w-sm text-center sm:max-w-md">
+			<h1 class="mb-4 text-xl font-bold text-red-600 sm:text-2xl dark:text-red-400">
+				Configuration Error
+			</h1>
+			<p class="mb-4 text-sm text-red-700 sm:text-base dark:text-red-300">{initError}</p>
+			<p class="text-xs text-red-600 sm:text-sm dark:text-red-400">
 				Please check your environment configuration and try again.
 			</p>
 		</div>

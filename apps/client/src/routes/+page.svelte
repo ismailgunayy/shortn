@@ -74,25 +74,27 @@
 
 <div class="flex min-h-screen flex-col items-center justify-center px-4">
 	<!-- Header -->
-	<div class="mb-12 text-center">
+	<div class="mb-8 text-center sm:mb-12">
 		<h1
-			class="mb-4 bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-4xl font-bold text-transparent md:text-6xl dark:from-white dark:to-slate-300"
+			class="mb-3 bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-3xl font-bold text-transparent sm:mb-4 sm:text-4xl md:text-6xl dark:from-white dark:to-slate-300"
 		>
 			Shortn
 		</h1>
-		<p class="max-w-md text-lg text-slate-600 md:text-xl dark:text-slate-400">
-			Shorten your URLs with style. Simple, fast, elegant.
+		<p
+			class="mx-auto max-w-sm px-2 text-base text-slate-600 sm:max-w-lg sm:px-4 sm:text-lg md:text-xl dark:text-slate-400"
+		>
+			Shortn your URLs. Simple, fast.
 		</p>
 	</div>
 
 	<!-- Main Form -->
-	<div class="w-full max-w-2xl">
+	<div class="w-full max-w-2xl px-4 sm:px-0">
 		<div
-			class="rounded-2xl border border-slate-200 bg-white p-8 shadow-xl md:p-12 dark:border-slate-700 dark:bg-slate-800"
+			class="rounded-2xl border border-slate-200 bg-white p-6 shadow-xl sm:p-8 md:p-12 dark:border-slate-700 dark:bg-slate-800"
 		>
 			{#if !shortUrl}
 				<!-- URL Input Form -->
-				<form onsubmit={shortenUrl} class="space-y-6">
+				<form onsubmit={shortenUrl} class="space-y-4 sm:space-y-6">
 					<div>
 						<label
 							for="url"
@@ -105,9 +107,10 @@
 							type="url"
 							bind:value={url}
 							placeholder="https://example.com/very-long-url"
-							class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-lg
+							class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-base
 								   text-slate-900 placeholder-slate-500 transition-all
 								   duration-200 focus:border-transparent focus:ring-2 focus:ring-blue-500
+								   sm:py-3 sm:text-lg
 								   dark:border-slate-600 dark:bg-slate-700
 								   dark:text-white dark:placeholder-slate-400"
 							disabled={loading}
@@ -127,10 +130,11 @@
 						type="submit"
 						disabled={loading || !url.trim()}
 						class="w-full transform rounded-xl bg-gradient-to-r from-blue-600 to-blue-700
-							   px-6 py-3 text-lg font-semibold text-white shadow-lg
+							   px-6 py-2.5 text-base font-semibold text-white shadow-lg
 							   transition-all duration-200
 							   hover:scale-[1.02] hover:from-blue-700 hover:to-blue-800 hover:shadow-xl active:scale-[0.98]
-							   disabled:cursor-not-allowed disabled:opacity-50"
+							   disabled:cursor-not-allowed disabled:opacity-50
+							   sm:py-3 sm:text-lg"
 					>
 						{#if loading}
 							<span class="flex items-center justify-center">
@@ -163,30 +167,30 @@
 				</form>
 			{:else}
 				<!-- Result Display -->
-				<div class="space-y-6 text-center">
-					<div class="text-lg font-medium text-green-600 dark:text-green-400">
+				<div class="space-y-4 text-center sm:space-y-6">
+					<div class="text-base font-medium text-green-600 sm:text-lg dark:text-green-400">
 						✨ URL shortened successfully!
 					</div>
 
 					<div
-						class="rounded-xl border border-slate-200 bg-slate-50 p-6 dark:border-slate-600 dark:bg-slate-900"
+						class="rounded-xl border border-slate-200 bg-slate-50 p-4 sm:p-6 dark:border-slate-600 dark:bg-slate-900"
 					>
 						<p class="mb-2 text-sm text-slate-600 dark:text-slate-400">Your short URL:</p>
-						<div class="flex items-center gap-3">
+						<div class="flex flex-col gap-3 sm:flex-row sm:items-center">
 							<code
-								class="flex-1 rounded-lg border border-slate-300 bg-white px-4 py-2 font-mono text-lg text-blue-600 dark:border-slate-600 dark:bg-slate-800 dark:text-blue-400"
+								class="flex-1 overflow-x-auto rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-sm text-blue-600 sm:px-4 sm:text-base lg:text-lg dark:border-slate-600 dark:bg-slate-800 dark:text-blue-400"
 							>
 								{shortUrl}
 							</code>
 							<button
 								onclick={copyToClipboard}
-								class="rounded-lg bg-slate-200 px-4 py-2 text-slate-700 transition-colors
+								class="flex items-center justify-center gap-2 rounded-lg bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition-colors
 									   duration-200 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
 								title="Copy to clipboard"
 							>
 								{#if copied}
 									<svg
-										class="h-5 w-5 text-green-600 dark:text-green-400"
+										class="h-4 w-4 text-green-600 dark:text-green-400"
 										fill="none"
 										stroke="currentColor"
 										viewBox="0 0 24 24"
@@ -198,8 +202,9 @@
 											d="M5 13l4 4L19 7"
 										></path>
 									</svg>
+									<span class="text-green-600 dark:text-green-400">Copied!</span>
 								{:else}
-									<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 										<path
 											stroke-linecap="round"
 											stroke-linejoin="round"
@@ -207,28 +212,31 @@
 											d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
 										></path>
 									</svg>
+									<span>Copy</span>
 								{/if}
 							</button>
 						</div>
 					</div>
 
-					<div class="flex gap-3">
+					<div class="flex flex-col gap-3 sm:flex-row">
 						<a
 							href={shortUrl}
 							target="_blank"
 							rel="noopener noreferrer"
 							class="flex-1 transform rounded-xl bg-gradient-to-r from-green-600 to-green-700
-								   px-6 py-3 text-center font-semibold text-white shadow-lg
+								   px-4 py-2.5 text-center text-sm font-semibold text-white shadow-lg
 								   transition-all duration-200 hover:scale-[1.02] hover:from-green-700 hover:to-green-800
-								   hover:shadow-xl active:scale-[0.98]"
+								   hover:shadow-xl active:scale-[0.98]
+								   sm:px-6 sm:py-3 sm:text-base"
 						>
 							Visit Link
 						</a>
 						<button
 							onclick={reset}
-							class="flex-1 transform rounded-xl bg-slate-200 px-6
-								   py-3 font-semibold text-slate-700 transition-all duration-200 hover:scale-[1.02]
-								   hover:bg-slate-300 active:scale-[0.98] dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
+							class="flex-1 transform rounded-xl bg-slate-200 px-4
+								   py-2.5 text-sm font-semibold text-slate-700 transition-all duration-200 hover:scale-[1.02]
+								   hover:bg-slate-300 active:scale-[0.98] sm:px-6 sm:py-3 sm:text-base
+								   dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
 						>
 							Shorten Another
 						</button>
@@ -239,7 +247,7 @@
 	</div>
 
 	<!-- Footer -->
-	<div class="mt-16 text-center text-sm text-slate-500 dark:text-slate-400">
+	<div class="mt-12 px-4 text-center text-sm text-slate-500 sm:mt-16 dark:text-slate-400">
 		<p>Built with ❤️ using SvelteKit</p>
 	</div>
 </div>

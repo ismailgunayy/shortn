@@ -8,15 +8,17 @@
 </svelte:head>
 
 <div
-	class="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800"
+	class="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4 dark:from-slate-900 dark:to-slate-800"
 >
-	<div class="mx-4 w-full max-w-md rounded-xl bg-white p-8 text-center shadow-lg dark:bg-slate-800">
-		<div class="mb-6">
+	<div
+		class="w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-lg sm:max-w-md sm:p-8 dark:bg-slate-800"
+	>
+		<div class="mb-4 sm:mb-6">
 			<div
-				class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-900"
+				class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 sm:mb-4 sm:h-16 sm:w-16 dark:bg-red-900"
 			>
 				<svg
-					class="h-8 w-8 text-red-600 dark:text-red-400"
+					class="h-6 w-6 text-red-600 sm:h-8 sm:w-8 dark:text-red-400"
 					fill="none"
 					stroke="currentColor"
 					viewBox="0 0 24 24"
@@ -29,8 +31,10 @@
 					/>
 				</svg>
 			</div>
-			<h1 class="mb-2 text-2xl font-bold text-slate-900 dark:text-white">Link Not Found</h1>
-			<p class="text-slate-600 dark:text-slate-300">
+			<h1 class="mb-2 text-xl font-bold text-slate-900 sm:text-2xl dark:text-white">
+				Link Not Found
+			</h1>
+			<p class="text-sm text-slate-600 sm:text-base dark:text-slate-300">
 				The short link you're looking for doesn't exist or has expired.
 			</p>
 		</div>
@@ -55,7 +59,7 @@
 			</ul>
 		</div>
 
-		<div class="mt-6 space-y-3">
+		<div class="mt-4 space-y-3 sm:mt-6">
 			<a
 				href="/"
 				class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
