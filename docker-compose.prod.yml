@@ -3,7 +3,7 @@ services:
     image: postgres:13.22-alpine
     container_name: shortn_postgres_prod
     env_file:
-      - .env.prod
+      - .env.local.prod
     environment:
       POSTGRES_DB: shortn
       POSTGRES_USER: ${POSTGRES_USER:-user}
@@ -27,7 +27,7 @@ services:
       dockerfile: apps/api/Dockerfile
     container_name: shortn_api_prod
     env_file:
-      - .env.prod
+      - .env.local.prod
     ports:
       - 8023:8023
     depends_on:
@@ -55,7 +55,7 @@ services:
         VITE_PORT: 3023
     container_name: shortn_client_prod
     env_file:
-      - .env.prod
+      - .env.local.prod
     ports:
       - 3023:3023
     depends_on:

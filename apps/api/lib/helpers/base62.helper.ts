@@ -1,12 +1,8 @@
-import { App } from "~/types/fastify";
-
 const BASE = 62;
 const BASE62_ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-export class Base62Helper {
-	constructor(private readonly app: App) {}
-
-	encode = (num: number): string => {
+export class Base62 {
+	static encode = (num: number): string => {
 		if (num === 0) return "0";
 		if (num < 0) return "";
 
@@ -20,7 +16,7 @@ export class Base62Helper {
 		return result;
 	};
 
-	decode = (str: string): number => {
+	static decode = (str: string): number => {
 		if (!str) return 0;
 
 		let result = 0;

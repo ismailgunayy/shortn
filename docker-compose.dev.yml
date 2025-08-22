@@ -3,7 +3,7 @@ services:
     image: postgres:13.22-alpine
     container_name: shortn_postgres_dev
     env_file:
-      - .env.dev
+      - .env.local.dev
     environment:
       POSTGRES_DB: shortn
       POSTGRES_USER: ${POSTGRES_USER:-user}
@@ -26,7 +26,7 @@ services:
       dockerfile: apps/api/Dockerfile.dev
     container_name: shortn_api_dev
     env_file:
-      - .env.dev
+      - .env.local.dev
     ports:
       - 8023:8023
     volumes:
@@ -52,7 +52,7 @@ services:
         VITE_PORT: 3023
     container_name: shortn_client_dev
     env_file:
-      - .env.dev
+      - .env.local.dev
     ports:
       - 3023:3023
     volumes:

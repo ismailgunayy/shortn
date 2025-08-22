@@ -106,7 +106,7 @@
 							id="url"
 							type="url"
 							bind:value={url}
-							placeholder="https://example.com/very-long-url"
+							placeholder="https://example.com/your-very-long-url"
 							class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-base
 								   text-slate-900 placeholder-slate-500 transition-all
 								   duration-200 focus:border-transparent focus:ring-2 focus:ring-blue-500

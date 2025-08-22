@@ -1,4 +1,4 @@
-import { auth, cors, db, helpers, rateLimit, services } from "./plugins";
+import { auth, cors, db, rateLimit, services } from "./plugins";
 import { disconnectDB, setupGracefulShutdown } from "./gracefulShutdown";
 
 import { Config } from "./common/config";
@@ -23,7 +23,6 @@ await app.register(db);
 await app.register(rateLimit);
 await app.register(auth);
 
-await app.register(helpers);
 await app.register(services);
 await app.register(mainRouter, { prefix: "/api" });
 
