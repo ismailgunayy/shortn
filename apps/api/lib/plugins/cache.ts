@@ -25,7 +25,7 @@ export const cache = fastifyPlugin(async (app: App) => {
 		app.log.info("Redis Client Disconnected");
 	});
 
-	app.addHook("onClose", async (app) => {
+	app.addHook("onClose", (app) => {
 		app.cache.destroy();
 	});
 
