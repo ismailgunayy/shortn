@@ -106,7 +106,7 @@ jobs:
       - name: Build
         run: |
           yarn global add @railway/cli
-          railway link --project shortn --service api
+          railway link --project=${{ vars.RAILWAY_PROJECT_ID }} --service=${{ vars.RAILWAY_API_SERVICE_ID}}
           railway run yarn build:api
 
   build-client:
@@ -129,7 +129,7 @@ jobs:
       - name: Build
         run: |
           yarn global add @railway/cli
-          railway link --project shortn --service client
+          railway link --project=${{ vars.RAILWAY_PROJECT_ID }} --service=${{ vars.RAILWAY_CLIENT_SERVICE_ID }}
           railway run yarn build:client
 
   deploy-api:
@@ -140,12 +140,11 @@ jobs:
     container: ghcr.io/railwayapp/cli:latest
     environment: production
     env:
-      SERVICE_ID: ${{ vars.RAILWAY_API_SERVICE_ID }}
       RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - name: Deploy API
-        run: railway up --service=${{ env.SERVICE_ID}}
+        run: railway up --service=${{ vars.RAILWAY_API_SERVICE_ID }}
 
   deploy-client:
     name: deploy-client
@@ -155,9 +154,8 @@ jobs:
     container: ghcr.io/railwayapp/cli:latest
     environment: production
     env:
-      SERVICE_ID: ${{ vars.RAILWAY_CLIENT_SERVICE_ID }}
       RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - name: Deploy Client
-        run: railway up --service=${{ env.SERVICE_ID }}
+        run: railway up --service=${{ vars.RAILWAY_CLIENT_SERVICE_ID }}
