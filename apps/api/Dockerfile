@@ -51,6 +51,7 @@ ARG PORT
 ARG JWT_SECRET
 ARG JWT_EXPIRES_IN
 ARG DATABASE_URL
+ARG REDIS_URL
 
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs
@@ -89,6 +90,7 @@ ENV PORT=$PORT
 ENV JWT_SECRET=$JWT_SECRET
 ENV JWT_EXPIRES_IN=$JWT_EXPIRES_IN
 ENV DATABASE_URL=$DATABASE_URL
+ENV REDIS_URL=$REDIS_URL
 
 # Add healthcheck
 HEALTHCHECK --interval=2s --timeout=3s --start-period=10s --retries=5 \

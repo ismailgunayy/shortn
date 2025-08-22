@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:13.22-alpine
-    container_name: shortn_postgres_dev
+    container_name: shortn-dev-postgres
     env_file:
       - .env.local.dev
     environment:
@@ -16,15 +16,28 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - postgres_data_dev:/var/lib/postgresql/data
+      - postgres-dev-data:/var/lib/postgresql/data
     networks:
-      - shortn-network
+      - shortn-dev-network
+
+  redis:
+    image: redis:8.2-alpine
+    container_name: shortn-dev-redis
+    command: ["redis-server", "--requirepass", "password"]
+    env_file:
+      - .env.local.dev
+    ports:
+      - 6379:6379
+    volumes:
+      - redis-dev-data:/data
+    networks:
+      - shortn-dev-network
 
   api:
     build:
       context: .
       dockerfile: apps/api/Dockerfile.dev
-    container_name: shortn_api_dev
+    container_name: shortn-dev-api
     env_file:
       - .env.local.dev
     ports:
@@ -37,7 +50,7 @@ services:
       postgres:
         condition: service_healthy
     networks:
-      - shortn-network
+      - shortn-dev-network
     restart: unless-stopped
 
   client:
@@ -50,7 +63,7 @@ services:
         VITE_API_BASE_URL: ${API_BASE_URL:-http://localhost:8023}
         VITE_API_BASE_URL_SERVER: ${API_BASE_URL_SERVER:-http://api:8023}
         VITE_PORT: 3023
-    container_name: shortn_client_dev
+    container_name: shortn-dev-client
     env_file:
       - .env.local.dev
     ports:
@@ -62,11 +75,12 @@ services:
     depends_on:
       - api
     networks:
-      - shortn-network
+      - shortn-dev-network
     restart: unless-stopped
 
 volumes:
-  postgres_data_dev:
+  postgres-dev-data:
+  redis-dev-data:
 
 networks:
-  shortn-network:
+  shortn-dev-network:

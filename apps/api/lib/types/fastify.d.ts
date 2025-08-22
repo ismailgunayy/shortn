@@ -1,12 +1,13 @@
 import { FastifyBaseLogger, FastifyInstance, RawServerDefault } from "fastify";
 import { IncomingMessage, ServerResponse } from "http";
 
-import { DB } from "./db-schema";
+import { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
 import { Kysely } from "kysely";
 import { Pool } from "pg";
+import { createClient } from "redis";
 import { TConfig } from "~/common/config";
-import { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
 import { URLService } from "~/services/url.service";
+import { DB } from "./db-schema";
 
 declare module "kysely" {
 	interface Kysely {
@@ -18,6 +19,7 @@ declare module "fastify" {
 	interface FastifyInstance {
 		authenticate: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
 		config: TConfig;
+		cache: ReturnType<typeof createClient>;
 		db: Kysely<DB>;
 		services: {
 			url: URLService;

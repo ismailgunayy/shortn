@@ -1,8 +1,8 @@
-import { auth, cors, db, rateLimit, services } from "./plugins";
-import { disconnectDB, setupGracefulShutdown } from "./gracefulShutdown";
+import { auth, cache, cors, db, rateLimit, services } from "./plugins";
 
 import { Config } from "./common/config";
 import Fastify from "fastify";
+import { gracefulShutdown } from "./gracefulShutdown";
 import helmet from "@fastify/helmet";
 import { log } from "./plugins/log";
 import { mainRouter } from "./router";
@@ -20,6 +20,7 @@ await app.register(helmet, {
 });
 await app.register(cors);
 await app.register(db);
+await app.register(cache);
 await app.register(rateLimit);
 await app.register(auth);
 
@@ -32,13 +33,13 @@ const start = async () => {
 		port: parseInt(app.config.PORT),
 		listenTextResolver: () => `API is running on ${app.config.BASE_URL}`
 	});
-	app.log.info(app.server.address(), "Server internals:");
+	app.log.info(app.server.address());
 };
 
 start().catch(async (err) => {
 	app.log.error(err);
-	await disconnectDB(app);
+	await gracefulShutdown(app);
 	process.exit(1);
 });
 
-setupGracefulShutdown(app);
+(["SIGINT", "SIGTERM"] as NodeJS.Signals[]).forEach((signal) => process.on(signal, () => gracefulShutdown(app)));

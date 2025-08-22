@@ -1,6 +1,6 @@
 import { App } from "~/types/fastify";
 
-export const disconnectDB = async (app: App) => {
+const disconnectDB = async (app: App) => {
 	const maxWaitTime = 10000;
 	const checkInterval = 200;
 	let waitTime = 0;
@@ -22,32 +22,17 @@ export const disconnectDB = async (app: App) => {
 	await app.db.pool.end();
 };
 
-export const setupGracefulShutdown = (app: App) => {
-	const gracefulShutdown = async (signal: NodeJS.Signals) => {
-		app.log.info(`Received ${signal}. Shutting down gracefully...`);
+export const gracefulShutdown = async (app: App) => {
+	try {
+		await app.close();
 
-		try {
-			await app.close();
+		await disconnectDB(app);
+		app.cache.destroy();
 
-			await disconnectDB(app);
-
-			app.log.info("Graceful shutdown complete");
-			process.exit(0);
-		} catch (error) {
-			app.log.error({ signal, error }, "Error during graceful shutdown");
-			process.exit(1);
-		}
-	};
-
-	(["SIGINT", "SIGTERM"] as NodeJS.Signals[]).forEach((signal) => process.on(signal, gracefulShutdown));
-
-	process.on("uncaughtException", (error) => {
-		app.log.error(error, "Uncaught Exception:");
+		app.log.info("Graceful shutdown complete");
+		process.exit(0);
+	} catch (error) {
+		app.log.error({ error }, "Error during graceful shutdown");
 		process.exit(1);
-	});
-
-	process.on("unhandledRejection", (reason, promise) => {
-		app.log.error({ promise, reason }, "Unhandled Rejection at:");
-		process.exit(1);
-	});
+	}
 };

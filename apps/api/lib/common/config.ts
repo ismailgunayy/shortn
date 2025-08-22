@@ -13,7 +13,8 @@ const ConfigSchema = T.Object({
 	PORT: T.String(),
 	JWT_SECRET: T.String({ minLength: 32, maxLength: 32 }),
 	JWT_EXPIRES_IN: T.RegExp(/^\d+(s|m|h|d)$/), // 1s, 1m, 1h, 1d
-	DATABASE_URL: T.String()
+	DATABASE_URL: T.String(),
+	REDIS_URL: T.String()
 });
 
 function validateEnv() {
