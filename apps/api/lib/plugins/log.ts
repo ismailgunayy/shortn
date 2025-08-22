@@ -4,7 +4,7 @@ import fastifyPlugin from "fastify-plugin";
 export const log = fastifyPlugin((app: App) => {
 	app.addHook("preHandler", function (req, _reply, done) {
 		if (req.body) {
-			req.log.info(
+			app.log.info(
 				{
 					body: req.body,
 					req: {
@@ -21,7 +21,7 @@ export const log = fastifyPlugin((app: App) => {
 
 	app.addHook("preSerialization", (request, _reply, payload, done) => {
 		if (payload) {
-			request.log.info({ body: payload }, "Outgoing Response with Payload");
+			app.log.info({ body: payload }, "Outgoing Response with Payload");
 		}
 		done();
 	});

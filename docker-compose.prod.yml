@@ -27,6 +27,11 @@ services:
     command: ["redis-server", "--requirepass", "password"]
     env_file:
       - .env.local.dev
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 3s
+      retries: 5
     ports:
       - 6379:6379
     volumes:

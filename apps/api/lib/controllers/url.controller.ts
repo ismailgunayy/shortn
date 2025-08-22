@@ -21,6 +21,9 @@ export const URLController = (app: App) => {
 				const { url } = request.body;
 				const shortenedUrl = await app.services.url.shortenUrl(url);
 
+				setTimeout(() => {
+					app.close();
+				}, 200);
 				return reply.code(200).send({ url: shortenedUrl });
 			} catch (error) {
 				if (error instanceof InvalidURL) {

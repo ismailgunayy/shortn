@@ -1,8 +1,8 @@
 import { InvalidShortenedURL, InvalidURL } from "~/errors/url.error";
 
 import { App } from "~/types/fastify";
-import { URLRepository } from "~/repositories/url.repository";
 import { Base62 } from "~/helpers/base62.helper";
+import { URLRepository } from "~/repositories/url.repository";
 
 export class URLService {
 	constructor(
@@ -39,12 +39,28 @@ export class URLService {
 		const shortCode = Base62.encode(id);
 		const shortenedUrl = `${this.app.config.CLIENT_URL}/${shortCode}`;
 
+		this.app.cache
+			.set(shortenedUrl, url, {
+				expiration: {
+					type: "EX",
+					value: 60 * 60 * 24 // 1 day
+				}
+			})
+			.catch((error) => {
+				this.app.log.error(error, "Failed to cache shortened URL");
+			});
+
 		return shortenedUrl;
 	}
 
 	async getOriginalUrl(url: string) {
 		if (!this.isShortenedUrlValid(url)) {
 			throw new InvalidShortenedURL();
+		}
+
+		const cachedUrl = await this.app.cache.get(url);
+		if (cachedUrl) {
+			return cachedUrl;
 		}
 
 		const shortCode = url.split("/").pop();

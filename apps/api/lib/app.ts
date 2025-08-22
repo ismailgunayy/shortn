@@ -36,9 +36,8 @@ const start = async () => {
 	app.log.info(app.server.address());
 };
 
-start().catch(async (err) => {
+start().catch((err) => {
 	app.log.error(err);
-	await gracefulShutdown(app);
 	process.exit(1);
 });
 

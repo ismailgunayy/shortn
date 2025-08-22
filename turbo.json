@@ -19,11 +19,7 @@
 		"clean": {
 			"cache": false
 		},
-		"lint": {
-			"cache": false
-		},
-		"check-types": {
-			"cache": false
-		}
+		"lint": {},
+		"check-types": {}
 	}
 }
