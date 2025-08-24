@@ -18,7 +18,7 @@
 
 		// Basic URL validation
 		if (!url.match(/^https?:\/\/.+\..+/)) {
-			error = 'Please enter a valid URL (starting with http:// or https://)';
+			error = 'Please enter a valid URL (starting with https://)';
 			return;
 		}
 
