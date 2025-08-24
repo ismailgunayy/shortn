@@ -78,8 +78,6 @@ RUN chown -R apiuser:nodejs /app
 
 USER apiuser
 
-# Expose port
-EXPOSE 8023
 
 # Set environment variables from build args
 ENV NODE_ENV=$NODE_ENV

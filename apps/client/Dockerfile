@@ -82,9 +82,6 @@ RUN chown -R clientuser:nodejs /app
 
 USER clientuser
 
-# Expose port
-EXPOSE 3023
-
 # Add healthcheck
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 	CMD wget --no-verbose --tries=1 --spider http://localhost:$VITE_PORT || exit 1

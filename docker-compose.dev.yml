@@ -46,7 +46,7 @@ services:
     env_file:
       - .env.local.dev
     ports:
-      - 8023:8023
+      - 3124:3124
     volumes:
       - ./apps/api:/app/apps/api
       - /app/apps/api/node_modules
@@ -64,15 +64,15 @@ services:
       dockerfile: apps/client/Dockerfile.dev
       args:
         VITE_CLIENT_HOST: ${VITE_CLIENT_HOST:-localhost}
-        VITE_CLIENT_URL: ${VITE_CLIENT_URL:-http://localhost:3023}
-        VITE_API_BASE_URL: ${API_BASE_URL:-http://localhost:8023}
-        VITE_API_BASE_URL_SERVER: ${API_BASE_URL_SERVER:-http://api:8023}
-        VITE_PORT: 3023
+        VITE_CLIENT_URL: ${VITE_CLIENT_URL:-http://localhost:3024}
+        VITE_API_BASE_URL: ${API_BASE_URL:-http://localhost:3124}
+        VITE_API_BASE_URL_SERVER: ${API_BASE_URL_SERVER:-http://api:3124}
+        VITE_PORT: 3024
     container_name: shortn-dev-client
     env_file:
       - .env.local.dev
     ports:
-      - 3023:3023
+      - 3024:3024
     volumes:
       - ./apps/client:/app/apps/client
       - /app/apps/client/node_modules

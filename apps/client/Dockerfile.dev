@@ -24,12 +24,9 @@ COPY apps/client/ apps/client/
 
 WORKDIR /app/apps/client
 
-# Expose port
-EXPOSE 3023
 
 # Set development environment
 ENV NODE_ENV=development
-ENV PORT=3023
 
 # Start in development mode with hot reload
-CMD ["yarn", "dev", "--host", "0.0.0.0", "--port", "3023"]
+CMD ["yarn", "dev"]

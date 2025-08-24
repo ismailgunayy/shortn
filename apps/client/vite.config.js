@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => {
 
 	const options = {
 		host: true,
-		port: Number(env.VITE_PORT) || 3023,
+		port: Number(env.VITE_PORT) || 3024,
 		strictPort: true
 	};
 

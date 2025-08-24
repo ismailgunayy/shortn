@@ -47,7 +47,7 @@ services:
     env_file:
       - .env.local.prod
     ports:
-      - 8023:8023
+      - 3124:3124
     depends_on:
       postgres:
         condition: service_healthy
@@ -67,15 +67,15 @@ services:
       dockerfile: apps/client/Dockerfile
       args:
         VITE_CLIENT_HOST: ${VITE_CLIENT_HOST:-localhost}
-        VITE_CLIENT_URL: ${VITE_CLIENT_URL:-http://localhost:3023}
-        VITE_API_BASE_URL: ${API_BASE_URL:-http://localhost:8023}
-        VITE_API_BASE_URL_SERVER: ${API_BASE_URL:-http://localhost:8023}
-        VITE_PORT: 3023
+        VITE_CLIENT_URL: ${VITE_CLIENT_URL:-http://localhost:3024}
+        VITE_API_BASE_URL: ${API_BASE_URL:-http://localhost:3124}
+        VITE_API_BASE_URL_SERVER: ${API_BASE_URL:-http://localhost:3124}
+        VITE_PORT: 3024
     container_name: shortn-prod-client
     env_file:
       - .env.local.prod
     ports:
-      - 3023:3023
+      - 3024:3024
     depends_on:
       - api
     networks:

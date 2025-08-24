@@ -20,9 +20,6 @@ COPY apps/api/ apps/api/
 
 WORKDIR /app/apps/api
 
-# Expose port
-EXPOSE 8023
-
 # Create a startup script that runs migrations then starts dev server
 RUN echo '#!/bin/sh' > /app/start-dev.sh && \
     echo 'echo "Running database migrations..."' >> /app/start-dev.sh && \
