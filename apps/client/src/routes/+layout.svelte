@@ -20,21 +20,19 @@
 </svelte:head>
 
 {#if initError}
-	<div class="flex min-h-screen items-center justify-center bg-red-50 p-4 dark:bg-red-900/20">
-		<div class="max-w-sm text-center sm:max-w-md">
-			<h1 class="mb-4 text-xl font-bold text-red-600 sm:text-2xl dark:text-red-400">
-				Configuration Error
-			</h1>
-			<p class="mb-4 text-sm text-red-700 sm:text-base dark:text-red-300">{initError}</p>
-			<p class="text-xs text-red-600 sm:text-sm dark:text-red-400">
+	<div class="flex min-h-screen items-center justify-center bg-red-950/40 p-4">
+		<div
+			class="max-w-sm rounded-xl border border-red-800/30 bg-red-900/20 p-6 text-center backdrop-blur-xl sm:max-w-md"
+		>
+			<h1 class="mb-4 text-xl font-bold text-red-400 sm:text-2xl">Configuration Error</h1>
+			<p class="mb-4 text-sm text-red-300 sm:text-base">{initError}</p>
+			<p class="text-xs text-red-400 sm:text-sm">
 				Please check your environment configuration and try again.
 			</p>
 		</div>
 	</div>
 {:else}
-	<main
-		class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800"
-	>
+	<main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
 		{@render children?.()}
 	</main>
 {/if}

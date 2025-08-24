@@ -35,6 +35,7 @@ COPY package.json yarn.lock turbo.json ./
 WORKDIR /app/apps/client
 
 # Build arguments for environment variables - Railway will inject these
+ARG VITE_MODE
 ARG VITE_CLIENT_HOST
 ARG VITE_CLIENT_URL
 ARG VITE_API_BASE_URL
@@ -42,6 +43,7 @@ ARG VITE_API_BASE_URL_SERVER
 ARG VITE_PORT
 
 # Set environment variables for build
+ENV VITE_MODE=$VITE_MODE
 ENV VITE_CLIENT_HOST=$VITE_CLIENT_HOST
 ENV VITE_CLIENT_URL=$VITE_CLIENT_URL
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL

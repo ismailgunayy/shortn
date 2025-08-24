@@ -63,6 +63,7 @@ services:
       context: .
       dockerfile: apps/client/Dockerfile.dev
       args:
+        VITE_MODE: ${VITE_MODE:-development}
         VITE_CLIENT_HOST: ${VITE_CLIENT_HOST:-localhost}
         VITE_CLIENT_URL: ${VITE_CLIENT_URL:-http://localhost:3024}
         VITE_API_BASE_URL: ${API_BASE_URL:-http://localhost:3124}

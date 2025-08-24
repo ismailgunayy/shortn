@@ -1,13 +1,14 @@
-import { Type, type Static } from '@sinclair/typebox';
+import { Type as T, type Static } from '@sinclair/typebox';
 import { Value } from '@sinclair/typebox/value';
 import { browser } from '$app/environment';
 
-const ConfigSchema = Type.Object({
-	VITE_CLIENT_HOST: Type.String(),
-	VITE_CLIENT_URL: Type.String(),
-	VITE_API_BASE_URL: Type.String(),
-	VITE_API_BASE_URL_SERVER: Type.String(),
-	VITE_PORT: Type.String()
+const ConfigSchema = T.Object({
+	VITE_MODE: T.Union([T.Literal('development'), T.Literal('production')]),
+	VITE_CLIENT_HOST: T.String(),
+	VITE_CLIENT_URL: T.String(),
+	VITE_API_BASE_URL: T.String(),
+	VITE_API_BASE_URL_SERVER: T.String(),
+	VITE_PORT: T.String()
 });
 
 type Env = Static<typeof ConfigSchema>;

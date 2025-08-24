@@ -8,17 +8,17 @@
 </svelte:head>
 
 <div
-	class="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4 dark:from-slate-900 dark:to-slate-800"
+	class="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4"
 >
 	<div
-		class="w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-lg sm:max-w-md sm:p-8 dark:bg-slate-800"
+		class="w-full max-w-sm rounded-xl border border-slate-600/40 bg-slate-600/25 p-6 text-center shadow-2xl shadow-slate-900/20 backdrop-blur-3xl sm:max-w-md sm:p-8"
 	>
 		<div class="mb-4 sm:mb-6">
 			<div
-				class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 sm:mb-4 sm:h-16 sm:w-16 dark:bg-red-900"
+				class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full border border-red-800/30 bg-red-900/40 backdrop-blur-lg sm:mb-4 sm:h-16 sm:w-16"
 			>
 				<svg
-					class="h-6 w-6 text-red-600 sm:h-8 sm:w-8 dark:text-red-400"
+					class="h-6 w-6 text-red-400 sm:h-8 sm:w-8"
 					fill="none"
 					stroke="currentColor"
 					viewBox="0 0 24 24"
@@ -31,28 +31,24 @@
 					/>
 				</svg>
 			</div>
-			<h1 class="mb-2 text-xl font-bold text-slate-900 sm:text-2xl dark:text-white">
-				Link Not Found
-			</h1>
-			<p class="text-sm text-slate-600 sm:text-base dark:text-slate-300">
+			<h1 class="mb-2 text-xl font-bold text-slate-200 sm:text-2xl">Link Not Found</h1>
+			<p class="text-sm text-slate-400 sm:text-base">
 				The short link you're looking for doesn't exist or has expired.
 			</p>
 		</div>
 
-		<div class="mb-6 rounded-lg bg-slate-100 p-3 dark:bg-slate-700">
-			<p class="text-sm text-slate-600 dark:text-slate-300">
-				Short URL: <span class="font-mono text-red-600 dark:text-red-400"
-					>/{$page.params.slug || 'unknown'}</span
-				>
+		<div class="mb-6 rounded-lg border border-slate-600/30 bg-slate-800/40 p-3 backdrop-blur-lg">
+			<p class="text-sm text-slate-300">
+				Short URL: <span class="font-mono text-red-400">/{$page.params.slug || 'unknown'}</span>
 			</p>
-			<p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+			<p class="mt-1 text-xs text-slate-500">
 				Error: {$page.error?.message || 'Link not found'}
 			</p>
 		</div>
 
 		<div class="space-y-3">
-			<p class="text-sm text-slate-500 dark:text-slate-400">This could happen if:</p>
-			<ul class="space-y-1 text-left text-sm text-slate-500 dark:text-slate-400">
+			<p class="text-sm text-slate-400">This could happen if:</p>
+			<ul class="space-y-1 text-left text-sm text-slate-500">
 				<li>• The link was typed incorrectly</li>
 				<li>• The link has expired or been deleted</li>
 				<li>• The link was never created</li>
@@ -62,7 +58,7 @@
 		<div class="mt-4 space-y-3 sm:mt-6">
 			<a
 				href="/"
-				class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+				class="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-slate-600 to-slate-700 px-4 py-2 text-sm font-medium text-slate-100 backdrop-blur-lg transition-all hover:scale-[1.02] hover:from-slate-500 hover:to-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
 			>
 				<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path
@@ -77,7 +73,7 @@
 
 			<button
 				onclick={() => history.back()}
-				class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-300 dark:bg-slate-600 dark:text-slate-200 dark:hover:bg-slate-500"
+				class="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-slate-600/30 bg-slate-700/40 px-4 py-2 text-sm font-medium text-slate-300 backdrop-blur-lg transition-all hover:scale-[1.02] hover:bg-slate-600/40 hover:text-slate-200"
 			>
 				<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path
