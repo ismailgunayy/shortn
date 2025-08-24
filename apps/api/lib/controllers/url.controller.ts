@@ -24,8 +24,10 @@ export const URLController = (app: App) => {
 				return reply.code(200).send({ url: shortenedUrl });
 			} catch (error) {
 				if (error instanceof InvalidURL) {
+					app.log.error(error, error.message);
 					return reply.code(400).send({ error: error.message });
 				} else {
+					app.log.error(error, "Internal Server Error");
 					return reply.code(500).send({ error: "Internal Server Error" });
 				}
 			}
@@ -48,8 +50,10 @@ export const URLController = (app: App) => {
 				return reply.code(200).send({ url: originalUrl });
 			} catch (error) {
 				if (error instanceof InvalidShortenedURL) {
+					app.log.error(error, error.message);
 					return reply.code(400).send({ error: error.message });
 				} else {
+					app.log.error(error, "Internal Server Error");
 					return reply.code(500).send({ error: "Internal Server Error" });
 				}
 			}

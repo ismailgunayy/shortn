@@ -19,7 +19,7 @@ export const log = fastifyPlugin((app: App) => {
 		done();
 	});
 
-	app.addHook("preSerialization", (request, _reply, payload, done) => {
+	app.addHook("preSerialization", (_request, _reply, payload, done) => {
 		if (payload) {
 			app.log.info({ body: payload }, "Outgoing Response with Payload");
 		}
