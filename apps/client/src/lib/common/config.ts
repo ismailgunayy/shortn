@@ -25,6 +25,10 @@ function createConfig() {
 
 	const env = Value.Clean(ConfigSchema, Value.Decode(ConfigSchema, rawEnv)) as Env;
 
+	// While working locally with docker compose, API base url differs because of the Docker network
+	// For example
+	// On client side: http://localhost:3124
+	// On server side: http://api:3124
 	const getApiBaseUrl = () => {
 		if (browser) {
 			return env.VITE_API_BASE_URL;
@@ -38,8 +42,11 @@ function createConfig() {
 		api: {
 			baseUrl: getApiBaseUrl(),
 			endpoints: {
-				auth: '/api/auth',
-				url: '/api/url'
+				auth: 'api/auth',
+				url: {
+					shorten: 'api/url/shorten',
+					original: 'api/url/original'
+				}
 			}
 		}
 	} as const;

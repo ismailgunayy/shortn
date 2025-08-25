@@ -1,12 +1,11 @@
+type Nullable<T> = {
+	[K in keyof T]: T[K] | null;
+};
+
 export interface ApiResponse<T = unknown> {
 	data?: T;
 	error?: string;
-}
-
-export interface ServiceResult<T = unknown> {
 	success: boolean;
-	data?: T;
-	error?: string;
 }
 
 export interface AuthData {
@@ -14,12 +13,7 @@ export interface AuthData {
 	expiresIn: string;
 }
 
-export interface AuthState {
-	isAuthenticated: boolean;
-	token: string | null;
-	expiresIn: string | null;
-	isLoading: boolean;
-}
+export type AuthState = Nullable<AuthData>;
 
 export interface ShortenUrlResponse {
 	url: string;

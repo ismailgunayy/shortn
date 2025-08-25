@@ -1,21 +1,31 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
+	import { apiService } from '$lib/services/api';
 	import { onMount } from 'svelte';
 
-	let countdown = 5;
+	let countdown = 10;
 	let intervalId: ReturnType<typeof setInterval>;
 
+	// This page should normally not be reached due to server-side redirect
+	// But if it is, show a countdown and try to redirect client-side
 	onMount(() => {
-		// This page should normally not be reached due to server-side redirect
-		// But if it is, show a countdown and try to redirect client-side
 		intervalId = setInterval(() => {
 			countdown--;
 			if (countdown <= 0) {
 				clearInterval(intervalId);
-				// Try to go back to home page
 				window.location.href = '/';
 			}
 		}, 1000);
+
+		apiService.getOriginalUrl(page.url.href).then((response) => {
+			if (response.error) {
+				return;
+			}
+
+			if (response?.data?.url) {
+				window.location.href = response.data.url;
+			}
+		});
 
 		return () => {
 			if (intervalId) {
@@ -34,11 +44,11 @@
 	class="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4"
 >
 	<div
-		class="w-full max-w-sm rounded-xl border border-slate-600/40 bg-slate-600/25 p-6 text-center shadow-2xl shadow-slate-900/20 backdrop-blur-3xl sm:max-w-md sm:p-8"
+		class="w-full max-w-sm rounded-xl border border-slate-600/60 bg-slate-600/25 p-6 text-center shadow-2xl shadow-slate-900/20 backdrop-blur-3xl sm:max-w-md sm:p-8"
 	>
 		<div class="mb-4 sm:mb-6">
 			<div
-				class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full border border-slate-500/30 bg-slate-600/40 backdrop-blur-lg sm:mb-4 sm:h-16 sm:w-16"
+				class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full border border-slate-600/60 bg-slate-600/40 backdrop-blur-lg sm:mb-4 sm:h-16 sm:w-16"
 			>
 				<svg
 					class="h-6 w-6 animate-spin text-slate-300 sm:h-8 sm:w-8"
@@ -55,12 +65,12 @@
 				</svg>
 			</div>
 			<h1 class="mb-2 text-xl font-bold text-slate-200 sm:text-2xl">Processing Redirect</h1>
-			<p class="text-sm text-slate-400 sm:text-base">We're resolving your short URL...</p>
+			<p class="text-sm text-slate-400 sm:text-base">Trying to resolve the URL...</p>
 		</div>
 
-		<div class="mb-6 rounded-lg border border-slate-600/30 bg-slate-800/40 p-3 backdrop-blur-lg">
+		<div class="mb-6 rounded-lg border border-slate-600/60 bg-slate-800/40 p-3 backdrop-blur-lg">
 			<p class="text-sm text-slate-300">
-				Short URL: <span class="font-mono text-slate-200">/{$page.params.slug}</span>
+				Short URL: <span class="font-mono text-slate-200">/{page.params.slug}</span>
 			</p>
 		</div>
 
