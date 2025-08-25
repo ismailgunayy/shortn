@@ -52,7 +52,7 @@
 </script>
 
 <svelte:head>
-	<title>Shortn - Simple URL Shortener</title>
+	<title>Shortn - URL Shortener</title>
 	<meta name="description" content="Shortn your URLs. Simple, fast." />
 </svelte:head>
 

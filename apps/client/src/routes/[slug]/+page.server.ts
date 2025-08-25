@@ -2,10 +2,12 @@ import { error, redirect } from '@sveltejs/kit';
 
 import type { PageServerLoad } from './$types';
 import { apiService } from '$lib/services/api';
+import { config } from '$lib/common/config';
 
-export const load: PageServerLoad = async ({ url }) => {
+export const load: PageServerLoad = async ({ url, params }) => {
 	try {
-		const response = await apiService.getOriginalUrl(url.href);
+		const shortenedUrl = `${config.env.VITE_CLIENT_URL}/${params.slug}`;
+		const response = await apiService.getOriginalUrl(shortenedUrl);
 
 		if (response.error) {
 			throw error(500, response.error || 'Failed to resolve URL');

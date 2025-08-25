@@ -25,7 +25,7 @@
 
 		<div class="mb-6 rounded-lg border border-slate-600/60 bg-slate-800/40 p-3 backdrop-blur-lg">
 			<p class="text-sm text-slate-300">
-				Short URL: <span class="font-mono text-red-400">{page.url.href || 'unknown'}</span>
+				<span class="font-mono text-red-400">{page.url.href || 'unknown'}</span>
 			</p>
 		</div>
 
