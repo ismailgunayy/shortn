@@ -14,7 +14,7 @@ export class URLService {
 		try {
 			const parsed = new URL(url);
 
-			if (this.app.config.NODE_ENV === "development") {
+			if (this.app.config.APP_ENV === "local") {
 				return true;
 			}
 

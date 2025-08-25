@@ -24,9 +24,5 @@ COPY apps/client/ apps/client/
 
 WORKDIR /app/apps/client
 
-
-# Set development environment
-ENV NODE_ENV=development
-
 # Start in development mode with hot reload
 CMD ["yarn", "dev"]
