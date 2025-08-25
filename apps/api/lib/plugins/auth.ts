@@ -14,7 +14,10 @@ export const auth = fastifyPlugin(async (app: App) => {
 			await request.jwtVerify();
 		} catch (err) {
 			request.log.error(err);
-			return reply.code(401).send({ error: "Auth error! Please get a valid token by sending a request to /auth" });
+			return reply.code(401).send({
+				success: false,
+				error: "Auth error! Please get a valid token by sending a request to /auth"
+			});
 		}
 	});
 });

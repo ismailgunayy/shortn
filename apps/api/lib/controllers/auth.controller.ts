@@ -1,24 +1,20 @@
 import { App } from "~/types/fastify";
 import { Type } from "@sinclair/typebox";
+import { createResponseSchema } from "~/types/api";
 
-const ResponseSchema = Type.Object({
-	accessToken: Type.String(),
-	expiresIn: Type.String()
-});
-
-const ErrorSchema = Type.Object({
-	error: Type.String()
-});
+const AuthResponseSchema = createResponseSchema(
+	Type.Object({
+		accessToken: Type.String(),
+		expiresIn: Type.String()
+	})
+);
 
 export const AuthController = (app: App) => {
 	return app.get(
 		"/",
 		{
 			schema: {
-				response: {
-					200: ResponseSchema,
-					500: ErrorSchema
-				}
+				response: AuthResponseSchema
 			}
 		},
 		async (_request, reply) => {
@@ -32,13 +28,21 @@ export const AuthController = (app: App) => {
 						}
 					}
 				);
+
 				return reply.send({
-					accessToken: token,
-					expiresIn: app.config.JWT_EXPIRES_IN
+					success: true,
+					data: {
+						accessToken: token,
+						expiresIn: app.config.JWT_EXPIRES_IN
+					}
 				});
 			} catch (error) {
 				app.log.error(error, "Error authenticating user");
-				return reply.code(500).send({ error: "Internal Server Error" });
+
+				return reply.code(500).send({
+					success: false,
+					error: "Internal Server Error"
+				});
 			}
 		}
 	);

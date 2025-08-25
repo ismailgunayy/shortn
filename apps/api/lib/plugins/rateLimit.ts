@@ -6,19 +6,15 @@ export const rateLimit = fastifyPlugin(async (app: App) => {
 	await app.register(fastifyRateLimit, {
 		global: true,
 		max: 100,
-		timeWindow: 1000 * 60
-	});
+		timeWindow: 1000 * 60, // 1 minute
+		keyGenerator(req) {
+			const auth = req.headers.authorization;
 
-	app.setNotFoundHandler(
-		{
-			preHandler: app.rateLimit({
-				max: 4,
-				timeWindow: 1000 * 60
-			})
-		},
-		function (_request, reply) {
-			// TODO: Add "Please check our docs" once implemented:
-			reply.code(404).send({ error: "No such endpoint :(" });
+			if (auth && auth.startsWith("Bearer ")) {
+				return auth.slice(7);
+			}
+
+			return req.ip;
 		}
-	);
+	});
 });

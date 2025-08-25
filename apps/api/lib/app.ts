@@ -1,10 +1,9 @@
-import { auth, cache, cors, db, rateLimit, services } from "./plugins";
+import { auth, cache, cors, db, log, notFound, rateLimit, services } from "./plugins";
 
 import { Config } from "./common/config";
 import Fastify from "fastify";
 import { gracefulShutdown } from "./gracefulShutdown";
 import helmet from "@fastify/helmet";
-import { log } from "./plugins/log";
 import { mainRouter } from "./router";
 
 const app = Fastify({
@@ -22,6 +21,7 @@ await app.register(cors);
 await app.register(db);
 await app.register(cache);
 await app.register(rateLimit);
+await app.register(notFound);
 await app.register(auth);
 
 await app.register(services);

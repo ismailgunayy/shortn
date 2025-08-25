@@ -30,6 +30,7 @@ const disconnectDB = async (app: App) => {
 export const db = fastifyPlugin((app: App) => {
 	const pool = new Pool({
 		connectionString: app.config.DATABASE_URL,
+
 		max: 10
 	});
 
