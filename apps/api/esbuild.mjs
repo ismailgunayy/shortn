@@ -12,4 +12,7 @@ esbuild
 		platform: "node",
 		target: ["es2022"]
 	})
-	.catch(() => process.exit(1));
+	.catch(() => {
+		console.error("Build failed");
+		process.exit(1);
+	});

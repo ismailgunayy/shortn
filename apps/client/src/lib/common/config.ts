@@ -1,29 +1,28 @@
-import { Type as T, type Static } from '@sinclair/typebox';
-import { Value } from '@sinclair/typebox/value';
 import { browser } from '$app/environment';
+import z from 'zod';
 
-const ConfigSchema = T.Object({
-	VITE_MODE: T.Union([T.Literal('development'), T.Literal('production')]),
-	VITE_CLIENT_HOST: T.String(),
-	VITE_CLIENT_URL: T.String(),
-	VITE_API_BASE_URL: T.String(),
-	VITE_API_BASE_URL_SERVER: T.String(),
-	VITE_PORT: T.String()
+const ConfigSchema = z.object({
+	VITE_MODE: z.enum(['development', 'production']),
+	VITE_CLIENT_HOST: z.string(),
+	VITE_CLIENT_URL: z.string(),
+	VITE_API_BASE_URL: z.string(),
+	VITE_API_BASE_URL_SERVER: z.string(),
+	VITE_PORT: z.string()
 });
 
-type Env = Static<typeof ConfigSchema>;
+function validateEnv() {
+	try {
+		const config = ConfigSchema.parse(import.meta.env);
 
-function createConfig() {
-	const rawEnv = import.meta.env;
-
-	if (!Value.Check(ConfigSchema, rawEnv)) {
-		const errors = [...Value.Errors(ConfigSchema, rawEnv)]
-			.map((err) => `${err.path}: ${err.message}`)
-			.join('\n');
-		throw new Error(`Environment validation failed:\n${errors}`);
+		return structuredClone(config);
+	} catch (error) {
+		console.error('Environment validation failed:', error);
+		process.exit(1);
 	}
+}
 
-	const env = Value.Clean(ConfigSchema, Value.Decode(ConfigSchema, rawEnv)) as Env;
+function structureConfig() {
+	const env = validateEnv();
 
 	// While working locally with docker compose, API base url differs because of the Docker network
 	// For example
@@ -42,14 +41,20 @@ function createConfig() {
 		api: {
 			baseUrl: getApiBaseUrl(),
 			endpoints: {
-				auth: 'api/auth',
+				auth: {
+					register: 'auth/register',
+					login: 'auth/login',
+					refresh: 'auth/refresh',
+					logout: 'auth/logout',
+					generateApiKey: 'auth/generate-api-key'
+				},
 				url: {
-					shorten: 'api/url/shorten',
-					original: 'api/url/original'
+					shorten: 'url/shorten',
+					original: 'url/original'
 				}
 			}
 		}
 	} as const;
 }
 
-export const config = createConfig();
+export const config = structureConfig();

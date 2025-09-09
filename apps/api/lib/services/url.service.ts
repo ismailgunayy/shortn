@@ -1,20 +1,21 @@
-import { InvalidShortenedURL, InvalidURL } from "~/errors/url.error";
+import { InvalidShortenedUrl, InvalidUrl } from "~/errors";
 
 import { App } from "~/types/fastify";
-import { Base62 } from "~/helpers/base62.helper";
-import { URLRepository } from "~/repositories/url.repository";
+import { CacheKey } from "~/common/enums";
+import { UrlHelper } from "~/helpers/url.helper";
+import { UrlRepository } from "~/repositories/url.repository";
 
-export class URLService {
+export class UrlService {
 	constructor(
 		private readonly app: App,
-		private readonly urlRepository: URLRepository
+		private readonly urlRepository: UrlRepository
 	) {}
 
 	private isUrlValid(url: string): boolean {
 		try {
 			const parsed = new URL(url);
 
-			if (this.app.config.APP_ENV === "local") {
+			if (this.app.config.IS_LOCAL) {
 				return true;
 			}
 
@@ -25,22 +26,25 @@ export class URLService {
 	}
 
 	private isShortenedUrlValid(url: string): boolean {
-		if (this.isUrlValid(url) && url.includes(this.app.config.CLIENT_URL)) return true;
+		if (this.isUrlValid(url) && url.includes(this.app.config.HTTP.CLIENT_URL)) {
+			return true;
+		}
 
 		return false;
 	}
 
-	async shortenUrl(url: string) {
+	public async shortenUrl(url: string) {
 		if (!this.isUrlValid(url)) {
-			throw new InvalidURL();
+			throw new InvalidUrl();
 		}
 
-		const { id } = await this.urlRepository.insert(url);
-		const shortCode = Base62.encode(id);
-		const shortenedUrl = `${this.app.config.CLIENT_URL}/${shortCode}`;
+		const { id } = await this.urlRepository.insert({ url });
+		const shortCode = UrlHelper.encode(id);
+		const shortenedUrl = `${this.app.config.HTTP.CLIENT_URL}/${shortCode}`;
 
+		// TODO: Implement a generic error handling mechanism for cache errors
 		this.app.cache
-			.set(shortenedUrl, url, {
+			.set(`${CacheKey.URL}:${shortenedUrl}`, url, {
 				expiration: {
 					type: "EX",
 					value: 60 * 60 * 24 // 1 day
@@ -53,23 +57,24 @@ export class URLService {
 		return shortenedUrl;
 	}
 
-	async getOriginalUrl(url: string) {
+	public async getOriginalUrl(url: string) {
 		if (!this.isShortenedUrlValid(url)) {
-			throw new InvalidShortenedURL();
+			throw new InvalidShortenedUrl();
 		}
 
-		const cachedUrl = await this.app.cache.get(url);
+		const cachedUrl = await this.app.cache.get(`${CacheKey.URL}:${url}`);
 		if (cachedUrl) {
 			return cachedUrl;
 		}
 
-		const shortCode = url.split("/").pop();
+		const shortCode = url.replace(this.app.config.HTTP.CLIENT_URL + "/", "");
 		if (!shortCode) {
-			throw new InvalidShortenedURL();
+			throw new InvalidShortenedUrl();
 		}
 
-		const id = Base62.decode(shortCode);
+		const id = UrlHelper.decode(shortCode);
 		const { url: originalUrl } = await this.urlRepository.findById(id);
+
 		return originalUrl;
 	}
 }

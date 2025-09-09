@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { apiService } from '$lib/services/api';
+	import { clientApiService } from '$lib/services/client-api';
 	import { onMount } from 'svelte';
 
 	let countdown = 10;
@@ -17,7 +17,7 @@
 			}
 		}, 1000);
 
-		apiService.getOriginalUrl(page.url.href).then((response) => {
+		clientApiService.getOriginalUrl({ url: page.url.href }).then((response) => {
 			if (response.error) {
 				return;
 			}

@@ -8,6 +8,6 @@
 		},
 		"rootDir": "."
 	},
-	"include": ["lib/**/*", "db_migrations/**/*", "router.ts"],
+	"include": ["lib/**/*"],
 	"exclude": ["node_modules", "dist"]
 }

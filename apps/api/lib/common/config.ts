@@ -1,35 +1,76 @@
-import { Static, Type as T } from "@sinclair/typebox";
-
-import { Value } from "@sinclair/typebox/value";
 import { config } from "dotenv";
+import z from "zod";
 
 config();
 
-const ConfigSchema = T.Object({
-	NODE_ENV: T.Union([T.Literal("development"), T.Literal("production"), T.Literal("test")]),
-	APP_ENV: T.Union([T.Literal("local"), T.Literal("production")]),
-	HOST: T.String(),
-	BASE_URL: T.String(),
-	CLIENT_URL: T.String(),
-	PORT: T.String(),
-	JWT_SECRET: T.String({ minLength: 32, maxLength: 32 }),
-	JWT_EXPIRES_IN: T.RegExp(/^\d+(s|m|h|d)$/), // 1s, 1m, 1h, 1d
-	DATABASE_URL: T.String(),
-	REDIS_URL: T.String()
+const EnvSchema = z.object({
+	NODE_ENV: z.enum(["development", "production", "test"]),
+	APP_ENV: z.enum(["local", "production"]),
+	HOST: z.string(),
+	BASE_URL: z.url(),
+	CLIENT_URL: z.url(),
+	PORT: z.number(),
+	COOKIE_SECRET: z.string().length(32),
+	JWT_SECRET: z.string().length(32),
+	JWT_ACCESS_EXPIRES_IN_SECONDS: z.number(),
+	JWT_REFRESH_EXPIRES_IN_SECONDS: z.number(),
+	DATABASE_URL: z.url(),
+	REDIS_URL: z.url()
 });
+
+// Special treatment for numbers
+function convertNumbers(schema: typeof EnvSchema, env: NodeJS.ProcessEnv) {
+	const result: Record<string, string | number | undefined> = structuredClone(env);
+
+	for (const [key, { type }] of Object.entries(schema.shape)) {
+		if (type === "number") {
+			result[key] = Number(env[key]);
+		}
+	}
+
+	return result;
+}
 
 function validateEnv() {
 	try {
-		const decodedEnv = Value.Decode(ConfigSchema, process.env);
-		const cleaned = Value.Clean(ConfigSchema, decodedEnv) as Static<typeof ConfigSchema>;
+		const processedEnv = convertNumbers(EnvSchema, process.env);
+		const config = EnvSchema.parse(processedEnv);
 
-		const config = { ...cleaned };
-		return Object.freeze(config);
+		return structuredClone(config);
 	} catch (error) {
 		console.error("Environment validation failed:", error);
 		process.exit(1);
 	}
 }
 
-export type TConfig = ReturnType<typeof validateEnv>;
-export const Config = validateEnv();
+function structureConfig() {
+	const env = validateEnv();
+
+	return {
+		HTTP: {
+			HOST: env.HOST,
+			PORT: env.PORT,
+			BASE_URL: env.BASE_URL,
+			CLIENT_URL: env.CLIENT_URL
+		},
+		AUTH: {
+			COOKIE_SECRET: env.COOKIE_SECRET,
+			JWT: {
+				SECRET: env.JWT_SECRET,
+				ACCESS_EXPIRES_IN_SECONDS: env.JWT_ACCESS_EXPIRES_IN_SECONDS,
+				REFRESH_EXPIRES_IN_SECONDS: env.JWT_REFRESH_EXPIRES_IN_SECONDS
+			}
+		},
+		DATABASE: {
+			URL: env.DATABASE_URL
+		},
+		REDIS: {
+			URL: env.REDIS_URL
+		},
+		IS_LOCAL: env.APP_ENV === "local",
+		IS_PRODUCTION: env.APP_ENV === "production"
+	};
+}
+
+export type TConfig = ReturnType<typeof structureConfig>;
+export const APP_CONFIG = structureConfig();

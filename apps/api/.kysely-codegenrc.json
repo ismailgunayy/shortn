@@ -1,5 +1,6 @@
 {
+	"camelCase": true,
 	"dialect": "postgres",
-	"outFile": "./lib/types/db-schema.d.ts",
+	"outFile": "./lib/types/db.d.ts",
 	"url": "env(DATABASE_URL)"
 }

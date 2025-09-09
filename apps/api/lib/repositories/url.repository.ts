@@ -1,11 +1,12 @@
-import { DB } from "~/types/db-schema";
-import { Kysely } from "kysely";
+import { Insertable, Kysely } from "kysely";
 
-export class URLRepository {
+import { DB } from "~/types/db";
+
+export class UrlRepository {
 	constructor(private db: Kysely<DB>) {}
 
-	async insert(url: string) {
-		return await this.db.insertInto("shortn.urls").values({ url }).returning("id").executeTakeFirstOrThrow();
+	async insert(values: Insertable<DB["shortn.urls"]>) {
+		return await this.db.insertInto("shortn.urls").values(values).returning("id").executeTakeFirstOrThrow();
 	}
 
 	async findById(id: number) {

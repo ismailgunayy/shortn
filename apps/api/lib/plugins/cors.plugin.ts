@@ -4,8 +4,8 @@ import fastifyPlugin from "fastify-plugin";
 
 export const cors = fastifyPlugin(async (app: App) => {
 	await app.register(fastifyCors, {
-		origin: true,
-		methods: ["GET", "POST", "OPTIONS"],
-		allowedHeaders: ["Content-Type", "Authorization"]
+		origin: [app.config.HTTP.CLIENT_URL],
+		credentials: true,
+		methods: ["GET", "POST", "OPTIONS"]
 	});
 });

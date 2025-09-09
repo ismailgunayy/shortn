@@ -4,7 +4,7 @@ import { defineConfig } from "kysely-ctl";
 import fs from "node:fs/promises";
 import path from "node:path";
 
-const MIGRATION_FOLDER = "migrations";
+const MIGRATION_FOLDER = "db/migrations";
 
 export default defineConfig({
 	dialect: new PostgresDialect({

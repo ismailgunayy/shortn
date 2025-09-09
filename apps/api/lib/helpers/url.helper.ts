@@ -1,7 +1,7 @@
 const BASE = 62;
 const BASE62_ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-export class Base62 {
+export class UrlHelper {
 	static encode = (num: number): string => {
 		if (num === 0) return "0";
 		if (num < 0) return "";

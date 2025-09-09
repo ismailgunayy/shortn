@@ -43,17 +43,6 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 
-ARG NODE_ENV
-ARG APP_ENV
-ARG HOST
-ARG BASE_URL
-ARG CLIENT_URL
-ARG PORT
-ARG JWT_SECRET
-ARG JWT_EXPIRES_IN
-ARG DATABASE_URL
-ARG REDIS_URL
-
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 apiuser
@@ -78,19 +67,6 @@ RUN yarn install --frozen-lockfile --production && \
 RUN chown -R apiuser:nodejs /app
 
 USER apiuser
-
-
-# Set environment variables from build args
-ENV NODE_ENV=$NODE_ENV
-ENV APP_ENV=$APP_ENV
-ENV HOST=$HOST
-ENV BASE_URL=$BASE_URL
-ENV CLIENT_URL=$CLIENT_URL
-ENV PORT=$PORT
-ENV JWT_SECRET=$JWT_SECRET
-ENV JWT_EXPIRES_IN=$JWT_EXPIRES_IN
-ENV DATABASE_URL=$DATABASE_URL
-ENV REDIS_URL=$REDIS_URL
 
 # Add healthcheck
 HEALTHCHECK --interval=2s --timeout=3s --start-period=10s --retries=5 \

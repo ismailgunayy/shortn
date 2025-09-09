@@ -10,8 +10,13 @@ export const notFound = fastifyPlugin((app: App) => {
 			})
 		},
 		function (_request, reply) {
-			// TODO: Add "Please check our docs" once implemented:
-			reply.code(404).send({ error: "No such endpoint :(" });
+			// TODO: Add "Please check our docs" once the docs are ready
+			reply.code(404).send({
+				success: false,
+				error: {
+					message: "No such endpoint :("
+				}
+			});
 		}
 	);
 });

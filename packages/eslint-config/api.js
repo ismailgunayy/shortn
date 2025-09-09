@@ -48,10 +48,6 @@ export const apiConfig = [
 			"@typescript-eslint/explicit-module-boundary-types": "off",
 			"@typescript-eslint/no-explicit-any": "warn",
 
-			// Import/Export rules for ESM
-			"prefer-const": "warn",
-			"no-var": "warn",
-
 			// Fastify specific recommendations
 			"no-async-promise-executor": "warn",
 			"require-await": "warn"

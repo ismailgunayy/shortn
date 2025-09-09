@@ -1,6 +1,6 @@
 <script lang="ts">
 	import GitHubIcon from '$lib/icons/GitHub.svelte';
-	import { apiService } from '$lib/services/api';
+	import { clientApiService } from '$lib/services/client-api';
 
 	const initialState = {
 		url: '',
@@ -20,14 +20,14 @@
 		error = '';
 
 		try {
-			const result = await apiService.shortenUrl(url.trim());
+			const response = await clientApiService.shortenUrl({ url: url.trim() });
 
-			if (result.error) {
-				throw new Error(result.error || 'Failed to shorten URL');
+			if (response.error) {
+				throw new Error(response.error.message);
 			}
 
-			if (result.data?.url) {
-				shortenedUrl = result.data.url;
+			if (response.data?.url) {
+				shortenedUrl = response.data.url;
 			}
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Something went wrong';
@@ -60,14 +60,14 @@
 	<!-- Header -->
 	<div class="mb-8 text-center sm:mb-12">
 		<h1
-			class="mb-3 bg-gradient-to-r from-slate-500 to-slate-200 bg-clip-text text-3xl font-bold text-transparent sm:mb-4 sm:text-4xl md:text-6xl"
+			class="mb-3 bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-3xl font-bold text-transparent sm:mb-4 sm:text-4xl md:text-6xl"
 		>
 			Shortn
 		</h1>
 		<p
-			class="mx-auto max-w-sm bg-gradient-to-r from-slate-300 to-slate-100 bg-clip-text px-2 text-transparent sm:max-w-lg sm:px-4 sm:text-lg md:text-xl"
+			class="mx-auto max-w-sm bg-gradient-to-r from-slate-300 to-slate-100 bg-clip-text text-transparent sm:max-w-lg sm:px-4 sm:text-lg md:text-xl"
 		>
-			Shortn your URLs. Simple, fast.
+			Shortn your URLs. Simple. Fast.
 		</p>
 	</div>
 
@@ -216,7 +216,7 @@
 								   py-2.5 text-sm font-semibold text-slate-300 backdrop-blur-lg transition-all hover:scale-[1.02]
 								   hover:bg-slate-600/40 hover:text-slate-200 active:scale-[0.98] sm:px-6 sm:py-3 sm:text-base"
 						>
-							One More?
+							Shorten Another
 						</button>
 					</div>
 				</div>

@@ -1,21 +1,32 @@
-type Nullable<T> = {
-	[K in keyof T]: T[K] | null;
-};
-
 export interface ApiResponse<T = unknown> {
 	data?: T;
-	error?: string;
+	error?: Error;
 	success: boolean;
 }
 
-export interface AuthData {
-	accessToken: string;
-	expiresIn: string;
+export interface Error {
+	message: string;
 }
 
-export type AuthState = Nullable<AuthData>;
+export interface LoginRequest {
+	email?: string;
+	password?: string;
+}
+export interface LoginResponse {
+	accessToken: string;
+	refreshToken: string;
+	expiresIn: number;
+}
+
+export interface ShortenUrlRequest {
+	url: string;
+}
 
 export interface ShortenUrlResponse {
+	url: string;
+}
+
+export interface OriginalUrlRequest {
 	url: string;
 }
 

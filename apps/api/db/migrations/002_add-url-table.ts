@@ -3,10 +3,10 @@ import { sql, type Kysely } from "kysely";
 export async function up(db: Kysely<unknown>): Promise<void> {
 	await db.schema
 		.createTable("shortn.urls")
+		.ifNotExists()
 		.addColumn("id", "integer", (col) => col.primaryKey().generatedAlwaysAsIdentity())
 		.addColumn("url", "text", (col) => col.notNull())
-		.addColumn("created_at", "timestamp", (col) => col.defaultTo(sql`now()`).notNull())
-		.ifNotExists()
+		.addColumn("created_at", "timestamp", (col) => col.notNull().defaultTo(sql`now()`))
 		.execute();
 
 	// Set the id column to start from 10000
