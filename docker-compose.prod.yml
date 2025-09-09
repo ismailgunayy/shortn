@@ -71,6 +71,7 @@ services:
         VITE_CLIENT_URL: ${VITE_CLIENT_URL:-http://localhost:3024}
         VITE_API_BASE_URL: ${API_BASE_URL:-http://localhost:3124}
         VITE_API_BASE_URL_SERVER: ${API_BASE_URL:-http://api:3124}
+        VITE_API_KEY: ${VITE_API_KEY:-testkey}
         VITE_PORT: 3024
     container_name: shortn-prod-client
     env_file:

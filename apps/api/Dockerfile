@@ -56,7 +56,7 @@ COPY apps/api/package.json apps/api/
 COPY --from=builder --chown=apiuser:nodejs /app/apps/api/dist ./apps/api/dist
 
 # Copy migrations for database setup
-COPY --from=builder --chown=apiuser:nodejs /app/apps/api/migrations ./apps/api/migrations
+COPY --from=builder --chown=apiuser:nodejs /app/apps/api/db/ ./apps/api/db
 COPY --from=builder --chown=apiuser:nodejs /app/apps/api/kysely.config.ts ./apps/api/kysely.config.ts
 
 # Install only production dependencies

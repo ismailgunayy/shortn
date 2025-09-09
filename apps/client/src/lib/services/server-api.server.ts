@@ -8,12 +8,10 @@ class ServerApiService extends ApiService {
 	constructor() {
 		super();
 
-		const apiKey = import.meta.env.VITE_SHORTN_API_KEY;
+		const apiKey = import.meta.env.VITE_API_KEY;
 
 		if (!apiKey) {
-			console.error(
-				'API key is missing. Please set VITE_SHORTN_API_KEY in your environment variables.'
-			);
+			console.error('API key is missing. Please set VITE_API_KEY in your environment variables.');
 			process.exit(1);
 		}
 
