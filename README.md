@@ -1,55 +1,57 @@
 <div align="left">
     <img src="https://img.shields.io/badge/license-MIT-blue.svg?logo=mit" alt="License" />
     <img src="https://img.shields.io/badge/Deployment-Railway-blueviolet" alt="Railway" />
-    <img src="https://img.shields.io/badge/node-v24.0.2-44883e?logo=nodedotjs" alt="Node Version" />
+    <img src="https://img.shields.io/badge/node-v24-44883e?logo=nodedotjs" alt="Node Version" />
 </div>
 
 # Shortn
 
-A non-innovative URL shortener
+A non-innovative URL Shortener
 
 > ## **[🚀 Try it live now ](https://shortn.up.railway.app)**
 
-### Features
+## Features
 
-- Fast URL shortening with Base62 encoding
-- Redis caching for quick retrieval
-- Clean, responsive interface
-- JWT-based authentication
+- **Fast URL Shortening**: Base62 encoding starting from ID 10000
+- **Caching Layer**: Redis for high-performance URL lookups with fallback to PostgreSQL
+- **Authentication**: JWT with refresh tokens and API key generation
+- **Server-Side Redirects**: Direct 302 redirects without client-side JavaScript
+- **Rate Limiting**: Built-in protection against abuse
+- **Type Safety**: Full TypeScript coverage with Zod validation
+- **Production Ready**: Docker containerization and Railway deployment
 
-### Tech Stack
+## Tech Stack
 
-##### Frontend
+### Backend
 
-- [Svelte 5](https://svelte.dev/)
-- [SvelteKit](https://kit.svelte.dev/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Vite](https://vite.dev)
+- **[Fastify](https://fastify.dev/)** - HTTP framework
+- **[Kysely](https://kysely.dev/)** - Type-safe SQL query builder
+- **[PostgreSQL](https://www.postgresql.org/)** - Primary database
+- **[Redis](https://redis.io/)** - Cache layer
+- **[Zod](https://zod.dev/)** - Runtime type/schema validation
+- **[ESBuild](https://esbuild.github.io/)** - Build tool
 
-##### Backend
+### Frontend
 
-- [Node.js](https://nodejs.org/)
-- [Fastify](https://fastify.dev/)
-- [PostgreSQL](https://www.postgresql.org/)
-- [Redis](https://redis.io/)
-- [Kysely](https://kysely.dev/)
-- [ESBuild](https://esbuild.github.io/)
+- **[SvelteKit 5](https://kit.svelte.dev/)** - Full-stack framework
+- **[Tailwind CSS](https://tailwindcss.com/)** - Styling
+- **[Vite](https://vite.dev)** - Build tool
 
-##### Tooling
+### DevOps & Tooling
 
-- [TurboRepo](https://turbo.build/repo)
-- [Prettier](https://prettier.io/)
-- [ESLint](https://eslint.org/)
-- [Docker](https://www.docker.com/)
-- Deployed to [Railway](https://railway.app) via [GitHub Actions](https://github.com/features/actions)
+- **[TurboRepo](https://turbo.build/repo)** - Monorepo solution
+- **[Docker](https://www.docker.com/)** - Containerization
+- **[GitHub Actions](https://github.com/features/actions)** - CI/CD
+- **[Railway](https://railway.app)** - Deployment
 
-### Running locally
+## Quick Start with Docker
 
 ```bash
+# Start all services with Docker
 docker compose -f docker-compose.dev.yml up
 ```
 
-Go to [http://localhost:3024](http://localhost:3024)
+Then, go to http://localhost:3024
 
 ## License
 
