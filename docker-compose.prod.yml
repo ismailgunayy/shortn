@@ -24,7 +24,7 @@ services:
   redis:
     image: redis:8.2-alpine
     container_name: shortn-prod-redis
-    command: ["redis-server", "--requirepass", "password"]
+    command: ["redis-server", "--requirepass", "password", "--port", "6381"]
     env_file:
       - .env.local.dev
     healthcheck:
@@ -33,7 +33,7 @@ services:
       timeout: 3s
       retries: 5
     ports:
-      - 6379:6379
+      - 6381:6381
     volumes:
       - redis-dev-data:/data
     networks:

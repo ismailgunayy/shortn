@@ -9,6 +9,15 @@ const EnvSchema = z.object({
 	HOST: z.string(),
 	BASE_URL: z.url(),
 	CLIENT_URL: z.url(),
+	ALLOWED_ORIGINS: z
+		.string()
+		.default("")
+		.transform((val) =>
+			val
+				.split(",")
+				.map((origin) => origin.trim())
+				.filter((origin) => origin.length > 0)
+		),
 	PORT: z.number(),
 	COOKIE_SECRET: z.string().length(32),
 	JWT_SECRET: z.string().length(32),
@@ -51,7 +60,8 @@ function structureConfig() {
 			HOST: env.HOST,
 			PORT: env.PORT,
 			BASE_URL: env.BASE_URL,
-			CLIENT_URL: env.CLIENT_URL
+			CLIENT_URL: env.CLIENT_URL,
+			ALLOWED_ORIGINS: env.ALLOWED_ORIGINS
 		},
 		AUTH: {
 			COOKIE_SECRET: env.COOKIE_SECRET,
