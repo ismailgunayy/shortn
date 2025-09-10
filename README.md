@@ -12,13 +12,15 @@ A non-innovative URL Shortener
 
 ## Features
 
-- **Fast URL Shortening**: Base62 encoding starting from ID 10000
-- **Caching Layer**: Redis for high-performance URL lookups with fallback to PostgreSQL
-- **Authentication**: JWT with refresh tokens and API key generation
-- **Server-Side Redirects**: Direct 302 redirects without client-side JavaScript
-- **Rate Limiting**: Built-in protection against abuse
-- **Type Safety**: Full TypeScript coverage with Zod validation
-- **Production Ready**: Docker containerization and Railway deployment
+- **Instant URL Shortening**: Convert long URLs into short, shareable links
+- **Fast Redirects**: Optimized for speed
+
+##### To be implemented:
+
+- **Custom Short URLs**: Your custom aliases for URLs
+- **User Accounts**: Register to manage and track your shortened URLs
+- **Analytics**: View click statistics for your links
+- **API Access**: Generate API keys for programmatic URL shortening
 
 ## Tech Stack
 
