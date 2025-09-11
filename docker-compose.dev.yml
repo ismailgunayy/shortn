@@ -14,7 +14,7 @@ services:
       timeout: 5s
       retries: 5
     ports:
-      - 5432:5432
+      - 5433:5432
     volumes:
       - postgres-dev-data:/var/lib/postgresql/data
     networks:
@@ -23,7 +23,7 @@ services:
   redis:
     image: redis:8.2-alpine
     container_name: shortn-dev-redis
-    command: ["redis-server", "--requirepass", "password", "--port", "6381"]
+    command: redis-server --requirepass password
     env_file:
       - .env.local.dev
     healthcheck:
@@ -32,7 +32,7 @@ services:
       timeout: 3s
       retries: 5
     ports:
-      - 6381:6381
+      - 6381:6379
     volumes:
       - redis-dev-data:/data
     networks:
