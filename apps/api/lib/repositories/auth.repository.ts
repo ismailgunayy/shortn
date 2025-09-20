@@ -1,4 +1,4 @@
-import { DB, ShortnUsers } from "~/types/db";
+import { DB, ShortnApiKeys, ShortnUsers } from "~/types/db";
 import { Insertable, Kysely, Updateable } from "kysely";
 
 export class AuthRepository {
@@ -17,34 +17,34 @@ export class AuthRepository {
 	}
 
 	async deleteUser(id: number) {
-		return await this.db.deleteFrom("shortn.users").where("id", "=", id).executeTakeFirstOrThrow();
+		return await this.db.deleteFrom("shortn.users").where("id", "=", id).execute();
 	}
 
 	async findUserById(id: number) {
 		return await this.db.selectFrom("shortn.users").selectAll().where("id", "=", id).executeTakeFirst();
 	}
 
-	async findUserByEmail(email: DB["shortn.users"]["email"]) {
+	async findUserByEmail(email: ShortnUsers["email"]) {
 		return await this.db.selectFrom("shortn.users").selectAll().where("email", "=", email).executeTakeFirst();
 	}
 
-	async insertApiKey(values: Insertable<DB["shortn.apiKeys"]>) {
+	async insertApiKey(values: Insertable<ShortnApiKeys>) {
 		return await this.db.insertInto("shortn.apiKeys").values(values).returningAll().executeTakeFirstOrThrow();
 	}
 
-	async updateApiKey(id: number, values: Updateable<DB["shortn.apiKeys"]>) {
+	async updateApiKey(id: number, values: Updateable<ShortnApiKeys>) {
 		return await this.db.updateTable("shortn.apiKeys").set(values).where("id", "=", id).executeTakeFirstOrThrow();
 	}
 
 	async deleteApiKey(id: number) {
-		return await this.db.deleteFrom("shortn.apiKeys").where("id", "=", id).executeTakeFirstOrThrow();
+		return await this.db.deleteFrom("shortn.apiKeys").where("id", "=", id).execute();
 	}
 
 	async findApiKeyByHash(keyHash: string) {
 		return await this.db.selectFrom("shortn.apiKeys").selectAll().where("keyHash", "=", keyHash).executeTakeFirst();
 	}
 
-	async findApiKeysByUserId(userId: number) {
+	async findAllApiKeysByUserId(userId: number) {
 		return await this.db.selectFrom("shortn.apiKeys").selectAll().where("userId", "=", userId).execute();
 	}
 }

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import GitHubIcon from '$lib/icons/GitHub.svelte';
-	import { clientApiService } from '$lib/services/client-api';
+	import { clientApiService } from '$lib/services/api';
 
 	const initialState = {
 		url: '',

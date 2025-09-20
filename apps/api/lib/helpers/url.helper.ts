@@ -1,8 +1,12 @@
+import { App } from "~/types/fastify";
+
 const BASE = 62;
 const BASE62_ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 export class UrlHelper {
-	static encode = (num: number): string => {
+	constructor(private readonly app: App) {}
+
+	public encodeId = (num: number): string => {
 		if (num === 0) return "0";
 		if (num < 0) return "";
 
@@ -16,7 +20,7 @@ export class UrlHelper {
 		return result;
 	};
 
-	static decode = (str: string): number => {
+	public decodeId = (str: string): number => {
 		if (!str) return 0;
 
 		let result = 0;
@@ -34,4 +38,26 @@ export class UrlHelper {
 
 		return result;
 	};
+
+	public isUrlValid(url: string) {
+		try {
+			const parsed = new URL(url);
+
+			if (this.app.config.IS_LOCAL) {
+				return true;
+			}
+
+			return parsed.protocol === "https:" && parsed.hostname.length > 0 && parsed.hostname.includes(".");
+		} catch {
+			return false;
+		}
+	}
+
+	public isShortenedUrlValid(url: string) {
+		if (this.isUrlValid(url) && url.includes(this.app.config.HTTP.CLIENT_URL)) {
+			return true;
+		}
+
+		return false;
+	}
 }

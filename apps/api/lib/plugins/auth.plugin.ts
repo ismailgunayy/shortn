@@ -1,6 +1,6 @@
 import { App } from "~/types/fastify";
 import { FastifyRequest } from "fastify";
-import { TokenType } from "~/common/enums";
+import { TokenType } from "~/services/auth.service";
 import { Unauthorized } from "~/errors/auth.error";
 import fastifyCookie from "@fastify/cookie";
 import fastifyJwt from "@fastify/jwt";

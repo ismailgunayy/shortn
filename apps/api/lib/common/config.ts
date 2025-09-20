@@ -46,8 +46,8 @@ function validateEnv() {
 		const config = EnvSchema.parse(processedEnv);
 
 		return structuredClone(config);
-	} catch (error) {
-		console.error("Environment validation failed:", error);
+	} catch (err) {
+		console.error("Environment validation failed:", err);
 		process.exit(1);
 	}
 }

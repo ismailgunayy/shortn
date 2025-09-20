@@ -19,6 +19,11 @@ import crypto from "crypto";
 
 const SALT_ROUNDS = 12;
 
+export enum TokenType {
+	ACCESS = "access",
+	REFRESH = "refresh"
+}
+
 export class AuthService {
 	constructor(
 		private readonly app: App,

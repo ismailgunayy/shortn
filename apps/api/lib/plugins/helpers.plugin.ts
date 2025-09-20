@@ -5,7 +5,7 @@ import fastifyPlugin from "fastify-plugin";
 
 export const helpers = fastifyPlugin((app: App) => {
 	const authHelper = new AuthHelper(app);
-	const urlHelper = new UrlHelper();
+	const urlHelper = new UrlHelper(app);
 
 	app.decorate("helpers", {
 		auth: authHelper,

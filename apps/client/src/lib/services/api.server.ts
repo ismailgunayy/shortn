@@ -1,5 +1,5 @@
 import type { ApiResponse } from '$lib/types/api';
-import { ApiService } from './client-api';
+import { ApiService } from './api';
 import { config } from '$lib/common/config';
 
 class ServerApiService extends ApiService {
@@ -31,11 +31,11 @@ class ServerApiService extends ApiService {
 			});
 
 			return await fetched.json();
-		} catch (error) {
+		} catch (err) {
 			return {
 				success: false,
 				error: {
-					message: error instanceof Error ? error.message : 'Network error'
+					message: err instanceof Error ? err.message : 'Network error'
 				}
 			};
 		}

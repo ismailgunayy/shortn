@@ -23,10 +23,20 @@ export interface ShortnApiKeys {
   userId: number;
 }
 
+export interface ShortnCustomUrls {
+  createdAt: Generated<Timestamp>;
+  customCode: string;
+  id: Generated<number>;
+  updatedAt: Generated<Timestamp>;
+  url: string;
+  userId: number;
+}
+
 export interface ShortnUrls {
   createdAt: Generated<Timestamp>;
   id: Generated<number>;
   url: string;
+  userId: number;
 }
 
 export interface ShortnUsers {
@@ -40,6 +50,7 @@ export interface ShortnUsers {
 
 export interface DB {
   "shortn.apiKeys": ShortnApiKeys;
+  "shortn.customUrls": ShortnCustomUrls;
   "shortn.urls": ShortnUrls;
   "shortn.users": ShortnUsers;
 }

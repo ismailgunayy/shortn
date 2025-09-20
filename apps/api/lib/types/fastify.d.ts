@@ -1,15 +1,14 @@
+import { AuthHelper, UrlHelper } from "~/helpers";
 import { FastifyBaseLogger, FastifyInstance, RawServerDefault } from "fastify";
 import { IncomingMessage, ServerResponse } from "http";
-
-import { DB } from "./db";
 import { Kysely, Selectable } from "kysely";
+
+import { AuthService, TokenType } from "~/services/auth.service";
+import { CacheService } from "~/services/cache.service";
+import { DB } from "./db";
 import { TConfig } from "~/common/config";
 import { UrlService } from "~/services/url.service";
-import { createClient } from "redis";
-import { AuthService } from "~/services/auth.service";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
-import { TokenType } from "~/common/enums";
-import { AuthHelper, UrlHelper } from "~/helpers";
 
 interface JWTPayload {
 	tokenType: TokenType;
@@ -37,15 +36,15 @@ declare module "fastify" {
 	interface FastifyInstance {
 		authenticate: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
 		config: TConfig;
-		cache: ReturnType<typeof createClient>;
 		db: Kysely<DB>;
 		helpers: {
 			auth: AuthHelper;
 			url: UrlHelper;
 		};
 		services: {
-			url: UrlService;
 			auth: AuthService;
+			cache: CacheService;
+			url: UrlService;
 		};
 	}
 }

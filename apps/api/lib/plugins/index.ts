@@ -1,5 +1,4 @@
 export * from "./auth.plugin";
-export * from "./cache.plugin";
 export * from "./cors.plugin";
 export * from "./db.plugin";
 export * from "./error-handler.plugin";

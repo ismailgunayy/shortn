@@ -8,7 +8,8 @@ export const UrlController = (app: App) => {
 		{
 			schema: {
 				body: z.object({
-					url: z.url()
+					url: z.url(),
+					customCode: z.string().optional()
 				}),
 				response: createResponseSchema(
 					z.object({
@@ -18,8 +19,8 @@ export const UrlController = (app: App) => {
 			}
 		},
 		async (request, reply) => {
-			const { url } = request.body;
-			const shortenedUrl = await app.services.url.shortenUrl(url);
+			const { url, customCode } = request.body;
+			const shortenedUrl = await app.services.url.shortenUrl(url, request.user.id, customCode);
 
 			return reply.code(200).send({
 				success: true,

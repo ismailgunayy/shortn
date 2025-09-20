@@ -18,6 +18,7 @@
 			"console": "internalConsole",
 			"cwd": "${workspaceRoot}",
 			"outputCapture": "std",
+			"internalConsoleOptions": "openOnFirstSessionStart",
 			"request": "launch",
 			"runtimeArgs": ["dev:api"],
 			"runtimeExecutable": "yarn",

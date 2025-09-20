@@ -1,7 +1,8 @@
-import { CacheKey, TokenType } from "~/common/enums";
 import { EmailSchema, PasswordSchema } from "~/schemas/auth.schema";
 
 import { App } from "~/types/fastify";
+import { CacheType } from "~/services/cache.service";
+import { TokenType } from "~/services/auth.service";
 import { createResponseSchema } from "~/schemas/api-response.schema";
 import z from "zod";
 
@@ -82,7 +83,7 @@ export const AuthController = (app: App) => {
 				tokenType: TokenType.REFRESH
 			});
 
-			await app.cache.set(`${CacheKey.REFRESH}:${refreshToken}`, user.id, {
+			await app.services.cache.set(CacheType.REFRESH, user.id.toString(), refreshToken, {
 				expiration: {
 					type: "EX",
 					value: refreshTokenExpiry
@@ -130,7 +131,7 @@ export const AuthController = (app: App) => {
 				tokenType: TokenType.REFRESH
 			});
 
-			await app.cache.set(`${CacheKey.REFRESH}:${newRefreshToken}`, decoded.id, {
+			await app.services.cache.set(CacheType.REFRESH, decoded.id.toString(), newRefreshToken, {
 				expiration: {
 					type: "EX",
 					value: refreshTokenExpiry
@@ -159,18 +160,16 @@ export const AuthController = (app: App) => {
 				response: createResponseSchema()
 			}
 		},
-		// eslint-disable-next-line require-await
-		async (_request, reply) => {
+		async (request, reply) => {
 			app.helpers.auth.clearTokenCookies(reply);
-
-			// TODO: Remove the refresh token from the cache too
+			await app.services.cache.del(CacheType.REFRESH, request.user.id.toString());
 
 			return reply.code(200).send({ success: true });
 		}
 	);
 
 	app.post(
-		"/auth/generate-key",
+		"/auth/api-key",
 		{
 			preHandler: [app.authenticate],
 			schema: {

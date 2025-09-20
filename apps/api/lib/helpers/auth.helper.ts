@@ -6,8 +6,13 @@ import {
 	RefreshTokenNotFound
 } from "~/errors";
 import { App, JWTPayload } from "~/types/fastify";
-import { CacheKey, TokenType } from "~/common/enums";
 import { FastifyReply, FastifyRequest } from "fastify";
+
+import { CacheType } from "~/services/cache.service";
+import { TokenType } from "~/services/auth.service";
+
+const ACCESS_TOKEN_PATH = "/api";
+const REFRESH_TOKEN_PATH = "/api/auth";
 
 export class AuthHelper {
 	constructor(private readonly app: App) {}
@@ -17,12 +22,12 @@ export class AuthHelper {
 
 		if (name === TokenType.ACCESS) {
 			options = {
-				path: "/api",
+				path: ACCESS_TOKEN_PATH,
 				maxAge: this.app.config.AUTH.JWT.ACCESS_EXPIRES_IN_SECONDS
 			};
 		} else if (name === TokenType.REFRESH) {
 			options = {
-				path: "/api/auth",
+				path: REFRESH_TOKEN_PATH,
 				maxAge: this.app.config.AUTH.JWT.REFRESH_EXPIRES_IN_SECONDS
 			};
 		}
@@ -38,10 +43,10 @@ export class AuthHelper {
 
 	public clearTokenCookies(reply: FastifyReply) {
 		reply.clearCookie(TokenType.ACCESS, {
-			path: "/api"
+			path: ACCESS_TOKEN_PATH
 		});
 		reply.clearCookie(TokenType.REFRESH, {
-			path: "/api/auth"
+			path: REFRESH_TOKEN_PATH
 		});
 	}
 
@@ -70,8 +75,8 @@ export class AuthHelper {
 				if (decoded.tokenType !== TokenType.ACCESS) {
 					throw new InvalidTokenType();
 				}
-			} catch {
-				throw new InvalidOrExpiredToken();
+			} catch (err) {
+				throw new InvalidOrExpiredToken(err);
 			}
 		} else {
 			throw new AccessTokenNotFound();
@@ -97,18 +102,15 @@ export class AuthHelper {
 					throw new InvalidTokenType();
 				}
 
-				const idInCache = await this.app.cache.get(`${CacheKey.REFRESH}:${refreshToken}`);
+				const cachedToken = await this.app.services.cache.get(CacheType.REFRESH, decoded.id.toString());
 
-				if (!idInCache) {
-					throw new RefreshTokenNotFound();
+				if (!cachedToken) {
+					throw new InvalidOrExpiredToken();
 				}
 
-				if (idInCache !== decoded.id.toString()) {
-					this.app.cache.del(`${CacheKey.REFRESH}:${refreshToken}`);
-					throw new RefreshTokenNotFound();
-				}
-			} catch {
-				throw new InvalidOrExpiredToken();
+				await this.app.services.cache.del(CacheType.REFRESH, decoded.id.toString());
+			} catch (err) {
+				throw new InvalidOrExpiredToken(err);
 			}
 		} else {
 			throw new RefreshTokenNotFound();

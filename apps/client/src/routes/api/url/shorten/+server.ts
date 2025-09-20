@@ -1,6 +1,6 @@
 import { error, json, type RequestHandler } from '@sveltejs/kit';
 
-import { serverApiService } from '$lib/services/server-api.server';
+import { serverApiService } from '$lib/services/api.server';
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
@@ -10,7 +10,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		return json(response);
 	} catch (err) {
 		if (err instanceof Error && 'status' in err) {
-			throw err; // Re-throw SvelteKit errors
+			throw err;
 		}
 
 		console.error('Error shortening URL:', err);

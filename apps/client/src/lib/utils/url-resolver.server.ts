@@ -1,12 +1,15 @@
 import { error, redirect } from '@sveltejs/kit';
 
-import type { PageServerLoad } from './$types';
-import { clientApiService } from '$lib/services/client-api';
-import { config } from '$lib/common/config';
+import { clientApiService } from '$lib/services/api';
 
-export const load: PageServerLoad = async ({ params }) => {
+/**
+ * Resolves a shortened URL and redirects to the original URL
+ * @param shortenedUrl - The full shortened URL to resolve
+ * @returns A redirect response to the original URL
+ * @throws Error if the URL cannot be resolved
+ */
+export async function resolveAndRedirect(shortenedUrl: string) {
 	try {
-		const shortenedUrl = `${config.env.VITE_CLIENT_URL}/${params.slug}`;
 		const response = await clientApiService.getOriginalUrl({ url: shortenedUrl });
 
 		if (response.error || !response.data?.url) {
@@ -22,4 +25,4 @@ export const load: PageServerLoad = async ({ params }) => {
 		console.error('Redirect error:', err);
 		throw error(500, 'Failed to resolve short URL');
 	}
-};
+}

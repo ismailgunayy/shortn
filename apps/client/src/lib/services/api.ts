@@ -22,11 +22,11 @@ export class ApiService {
 			});
 
 			return await fetched.json();
-		} catch (error) {
+		} catch (err) {
 			return {
 				success: false,
 				error: {
-					message: error instanceof Error ? error.message : 'Network error'
+					message: err instanceof Error ? err.message : 'Network error'
 				}
 			};
 		}

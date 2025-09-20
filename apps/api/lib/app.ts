@@ -1,4 +1,4 @@
-import { auth, cache, cors, db, error, helpers, log, notFound, rateLimit, services } from "./plugins";
+import { auth, cors, db, error, helpers, log, notFound, rateLimit, services } from "./plugins";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
 import { APP_CONFIG } from "./common/config";
@@ -20,7 +20,6 @@ await app.register(helmet, {
 	crossOriginEmbedderPolicy: false
 });
 await app.register(db);
-await app.register(cache);
 await app.register(auth);
 await app.register(rateLimit);
 await app.register(notFound);

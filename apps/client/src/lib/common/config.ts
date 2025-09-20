@@ -15,8 +15,8 @@ function validateEnv() {
 		const config = ConfigSchema.parse(import.meta.env);
 
 		return structuredClone(config);
-	} catch (error) {
-		console.error('Environment validation failed:', error);
+	} catch (err) {
+		console.error('Environment validation failed:', err);
 		process.exit(1);
 	}
 }
@@ -25,7 +25,6 @@ function structureConfig() {
 	const env = validateEnv();
 
 	// While working locally with docker compose, API base url differs because of the Docker network
-	// For example
 	// On client side: http://localhost:3124
 	// On server side: http://api:3124
 	const getApiBaseUrl = () => {
@@ -46,7 +45,7 @@ function structureConfig() {
 					login: 'auth/login',
 					refresh: 'auth/refresh',
 					logout: 'auth/logout',
-					generateApiKey: 'auth/generate-api-key'
+					apiKey: 'auth/api-key'
 				},
 				url: {
 					shorten: 'url/shorten',
