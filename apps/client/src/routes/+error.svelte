@@ -3,8 +3,6 @@
 	import { goto } from '$app/navigation';
 	import Error from '$lib/icons/Error.svelte';
 
-	let { error } = $props();
-
 	let countdown = $state(5);
 
 	onMount(() => {

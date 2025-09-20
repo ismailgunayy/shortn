@@ -1,10 +1,9 @@
 import { serverApi } from '$lib/api';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
 
-export const POST: RequestHandler = async ({ request }) => {
+export const GET: RequestHandler = async () => {
 	try {
-		const values = await request.json();
-		const response = await serverApi.auth.register(values);
+		const response = await serverApi.auth.status();
 
 		return json(response);
 	} catch (err) {
@@ -12,7 +11,7 @@ export const POST: RequestHandler = async ({ request }) => {
 			throw err;
 		}
 
-		console.error('Error registering user:', err);
+		console.error('Error fetching user data:', err);
 		throw error(500, 'Internal server error');
 	}
 };

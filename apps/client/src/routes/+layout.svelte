@@ -10,10 +10,11 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
+<header></header>
+
 <main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800/90 to-slate-900">
 	{@render children?.()}
 </main>
-
 <footer class="absolute bottom-0 mx-auto mb-2 flex w-full justify-center">
 	<a href="https://github.com/ismailgunayy/shortn" target="_blank">
 		<GitHub

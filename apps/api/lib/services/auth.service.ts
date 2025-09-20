@@ -1,4 +1,4 @@
-import { API_KEY_LENGTH, ApiKeySchema, EmailSchema, PasswordSchema } from "~/schemas/auth.schema";
+import { API_KEY_LENGTH, ApiKeySchema, PasswordSchema } from "~/schemas/auth.schema";
 import {
 	ApiKeyNotFound,
 	ApiKeyNotProvided,
@@ -16,6 +16,7 @@ import { compare, hash } from "bcrypt";
 import { App } from "~/types/fastify";
 import { AuthRepository } from "~/repositories/auth.repository";
 import crypto from "crypto";
+import z from "zod";
 
 const SALT_ROUNDS = 12;
 
@@ -50,7 +51,7 @@ export class AuthService {
 			throw new UserAlreadyExists();
 		}
 
-		const isEmailOK = EmailSchema.safeParse(email).success;
+		const isEmailOK = z.email().safeParse(email).success;
 		if (!isEmailOK) {
 			throw new InvalidEmailFormat();
 		}

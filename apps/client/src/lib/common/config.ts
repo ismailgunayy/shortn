@@ -43,6 +43,7 @@ function structureConfig() {
 				auth: {
 					register: 'auth/register',
 					login: 'auth/login',
+					status: 'auth/status',
 					refresh: 'auth/refresh',
 					logout: 'auth/logout',
 					apiKey: 'auth/api-key'

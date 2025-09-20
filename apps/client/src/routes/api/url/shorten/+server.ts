@@ -1,11 +1,10 @@
+import { serverApi } from '$lib/api';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
-
-import { serverApiService } from '$lib/services/api.server';
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
-		const { url } = await request.json();
-		const response = await serverApiService.shortenUrl({ url });
+		const values = await request.json();
+		const response = await serverApi.url.shorten(values);
 
 		return json(response);
 	} catch (err) {

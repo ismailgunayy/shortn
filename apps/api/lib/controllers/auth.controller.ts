@@ -1,7 +1,6 @@
-import { EmailSchema, PasswordSchema } from "~/schemas/auth.schema";
-
 import { App } from "~/types/fastify";
 import { CacheType } from "~/services/cache.service";
+import { PasswordSchema } from "~/schemas/auth.schema";
 import { TokenType } from "~/services/auth.service";
 import { createResponseSchema } from "~/schemas/api-response.schema";
 import z from "zod";
@@ -16,14 +15,14 @@ export const AuthController = (app: App) => {
 			schema: {
 				body: z.object({
 					fullName: z.string(),
-					email: EmailSchema,
+					email: z.email(),
 					password: PasswordSchema
 				}),
 				response: createResponseSchema(
 					z.object({
 						id: z.number(),
 						fullName: z.string(),
-						email: EmailSchema
+						email: z.email()
 					})
 				)
 			}
@@ -53,7 +52,7 @@ export const AuthController = (app: App) => {
 		{
 			schema: {
 				body: z.object({
-					email: EmailSchema,
+					email: z.email(),
 					password: PasswordSchema
 				}),
 				response: createResponseSchema(
@@ -93,12 +92,46 @@ export const AuthController = (app: App) => {
 			app.helpers.auth.setTokenCookie(TokenType.ACCESS, accessToken, reply);
 			app.helpers.auth.setTokenCookie(TokenType.REFRESH, refreshToken, reply);
 
-			return reply.send({
+			return reply.code(200).send({
 				success: true,
 				data: {
 					accessToken,
 					refreshToken,
 					expiresIn: accessTokenExpiry
+				}
+			});
+		}
+	);
+
+	app.get(
+		"/auth/status",
+		{
+			schema: {
+				response: createResponseSchema(
+					z.object({
+						user: z.object({
+							id: z.number(),
+							fullName: z.string(),
+							email: z.email()
+						}),
+						isAuthenticated: z.boolean()
+					})
+				)
+			}
+		},
+		async (request, reply) => {
+			const decoded = app.helpers.auth.authenticateAccessToken(request);
+			const user = await app.services.auth.me(decoded.id);
+
+			return reply.code(200).send({
+				success: true,
+				data: {
+					user: {
+						id: user.id,
+						fullName: user.fullName,
+						email: user.email
+					},
+					isAuthenticated: true
 				}
 			});
 		}
@@ -141,7 +174,7 @@ export const AuthController = (app: App) => {
 			app.helpers.auth.setTokenCookie(TokenType.ACCESS, newAccessToken, reply);
 			app.helpers.auth.setTokenCookie(TokenType.REFRESH, newRefreshToken, reply);
 
-			return reply.send({
+			return reply.code(200).send({
 				success: true,
 				data: {
 					accessToken: newAccessToken,
@@ -191,7 +224,7 @@ export const AuthController = (app: App) => {
 
 			const apiKey = await app.services.auth.createApiKey(request.user.id, name);
 
-			return reply.send({
+			return reply.code(200).send({
 				success: true,
 				data: {
 					...apiKey

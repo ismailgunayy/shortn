@@ -1,11 +1,10 @@
+import { serverApi } from '$lib/api';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
-
-import { serverApiService } from '$lib/services/api.server';
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
-		const { url } = await request.json();
-		const response = await serverApiService.getOriginalUrl({ url });
+		const values = await request.json();
+		const response = await serverApi.url.getOriginal(values);
 
 		return json(response);
 	} catch (err) {
@@ -13,7 +12,7 @@ export const POST: RequestHandler = async ({ request }) => {
 			throw err;
 		}
 
-		console.error('Error shortening URL:', err);
+		console.error('Error getting original URL:', err);
 		throw error(500, 'Internal server error');
 	}
 };
