@@ -8,9 +8,7 @@
 	<meta name="robots" content="noindex" />
 </svelte:head>
 
-<div
-	class="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4"
->
+<div class="flex min-h-screen items-center justify-center p-4">
 	<div
 		class="w-full max-w-sm rounded-xl border border-slate-600/60 bg-slate-600/25 p-6 text-center shadow-2xl shadow-slate-900/20 backdrop-blur-3xl sm:max-w-md sm:p-8"
 	>
@@ -30,8 +28,8 @@
 		</div>
 
 		<div class="space-y-3">
-			<p class="text-sm text-slate-400">This could happen if:</p>
-			<ul class="space-y-1 text-left text-sm text-slate-500">
+			<p class="text-sm text-slate-300">This could happen if:</p>
+			<ul class="space-y-1 text-left text-sm text-slate-200">
 				<li>• The link was typed incorrectly</li>
 				<li>• The link was never created</li>
 				<li>• I'm not a good developer</li>
@@ -41,7 +39,7 @@
 		<div class="mt-4 sm:mt-6">
 			<a
 				href="/"
-				class="inline-flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-slate-600 to-slate-700 px-4 py-2 text-sm font-medium text-slate-100 backdrop-blur-lg transition-all hover:scale-[1.02] hover:from-slate-500 hover:to-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+				class="text-md inline-flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-slate-600 to-slate-700 px-4 py-3 font-medium text-slate-100 backdrop-blur-lg transition-all hover:scale-[1.02] hover:from-slate-500 hover:to-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
 			>
 				Shorten your own URL
 			</a>

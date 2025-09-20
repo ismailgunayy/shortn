@@ -1,5 +1,7 @@
 <script lang="ts">
-	import GitHubIcon from '$lib/icons/GitHub.svelte';
+	import CheckMark from '$lib/icons/CheckMark.svelte';
+	import Copy from '$lib/icons/Copy.svelte';
+	import Loading from '$lib/icons/Loading.svelte';
 	import { clientApiService } from '$lib/services/api';
 
 	const initialState = {
@@ -57,7 +59,7 @@
 </svelte:head>
 
 <div class="flex min-h-screen flex-col items-center justify-center px-4">
-	<!-- Header -->
+	<!-- Title -->
 	<div class="mb-8 text-center sm:mb-12">
 		<h1
 			class="mb-3 bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-3xl font-bold text-transparent sm:mb-4 sm:text-4xl md:text-6xl"
@@ -121,26 +123,7 @@
 					>
 						{#if loading}
 							<span class="flex items-center justify-center">
-								<svg
-									class="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-								>
-									<circle
-										class="opacity-25"
-										cx="12"
-										cy="12"
-										r="10"
-										stroke="currentColor"
-										stroke-width="4"
-									></circle>
-									<path
-										class="opacity-75"
-										fill="currentColor"
-										d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-									></path>
-								</svg>
+								<Loading />
 								Please wait
 							</span>
 						{:else}
@@ -168,29 +151,10 @@
 								title="Copy to clipboard"
 							>
 								{#if copied}
-									<svg
-										class="h-4 w-4 text-emerald-400"
-										fill="none"
-										stroke="currentColor"
-										viewBox="0 0 24 24"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											stroke-width="2"
-											d="M5 13l4 4L19 7"
-										></path>
-									</svg>
+									<CheckMark />
 									<span class="text-emerald-400">Done</span>
 								{:else}
-									<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											stroke-width="2"
-											d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-										></path>
-									</svg>
+									<Copy />
 									<span>Copy</span>
 								{/if}
 							</button>
@@ -223,12 +187,4 @@
 			{/if}
 		</div>
 	</div>
-
-	<footer class="absolute bottom-0 mx-auto mb-2 flex">
-		<a href="https://github.com/ismailgunayy/shortn" target="_blank">
-			<GitHubIcon
-				class="size-12 rounded-lg p-2 text-white transition hover:bg-white hover:text-slate-800"
-			/>
-		</a>
-	</footer>
 </div>
