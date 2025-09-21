@@ -42,7 +42,7 @@
 				</a>
 				<a
 					href="/web/register"
-					class="duration-230 rounded-lg bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-3 py-2 text-sm font-semibold text-slate-100 backdrop-blur-lg transition-all hover:from-slate-400 hover:to-slate-600 sm:px-4 sm:py-2"
+					class="duration-230 rounded-lg bg-gradient-to-r from-slate-500/80 to-slate-600/80 px-3 py-2 text-sm font-semibold text-slate-100 backdrop-blur-lg transition-all hover:from-slate-400 hover:to-slate-600 sm:px-4 sm:py-2"
 				>
 					Sign Up
 				</a>

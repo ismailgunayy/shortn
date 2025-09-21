@@ -13,6 +13,30 @@ function createCookieStore() {
 	return {
 		subscribe,
 
+		getCookie: (name: string): string | undefined => {
+			let cookies: CookieMap = {};
+
+			const unsubscribe = cookieStore.subscribe((value) => {
+				cookies = value;
+			});
+			unsubscribe();
+
+			return cookies[name];
+		},
+
+		getCookieString: () => {
+			let cookies: CookieMap = {};
+
+			const unsubscribe = cookieStore.subscribe((value) => {
+				cookies = value;
+			});
+			unsubscribe();
+
+			return Object.entries(cookies)
+				.map(([name, value]) => `${name}=${value}`)
+				.join('; ');
+		},
+
 		addCookie: (cookie: Cookie) =>
 			update((currentCookies) => ({
 				...currentCookies,
@@ -35,19 +59,6 @@ function createCookieStore() {
 				const { [name]: _, ...rest } = currentCookies;
 				return rest;
 			}),
-
-		getCookieString: () => {
-			let cookies: CookieMap = {};
-
-			const unsubscribe = cookieStore.subscribe((value) => {
-				cookies = value;
-			});
-			unsubscribe();
-
-			return Object.entries(cookies)
-				.map(([name, value]) => `${name}=${value}`)
-				.join('; ');
-		},
 
 		clear: () => set({})
 	};

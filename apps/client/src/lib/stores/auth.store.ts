@@ -35,6 +35,52 @@ function createAuthStore() {
 	return {
 		subscribe,
 
+		async register(formData: RegisterForm) {
+			update((state) => ({ ...state, loading: true }));
+
+			try {
+				const response = await api.auth.register(formData);
+
+				if (response.success) {
+					const loginResult = await this.login({
+						email: formData.email,
+						password: formData.password
+					});
+
+					return loginResult;
+				} else {
+					update((state) => ({ ...state, loading: false }));
+
+					return { success: false, error: response.error?.message || 'Registration failed' };
+				}
+			} catch {
+				update((state) => ({ ...state, loading: false }));
+				return { success: false, error: 'Network error' };
+			}
+		},
+
+		async login(formData: LoginForm) {
+			update((state) => ({ ...state, loading: true }));
+
+			try {
+				const response = await api.auth.login(formData);
+
+				if (response.success && response.data) {
+					await this.checkStatus();
+					goto('/');
+
+					return { success: true };
+				} else {
+					update((state) => ({ ...state, loading: false }));
+
+					return { success: false, error: response.error?.message || 'Login failed' };
+				}
+			} catch {
+				update((state) => ({ ...state, loading: false }));
+				return { success: false, error: 'Network error' };
+			}
+		},
+
 		async checkStatus() {
 			update((state) => ({ ...state, loading: true }));
 
@@ -64,48 +110,21 @@ function createAuthStore() {
 			}
 		},
 
-		async login(formData: LoginForm) {
+		async refresh() {
 			update((state) => ({ ...state, loading: true }));
 
 			try {
-				const response = await api.auth.login(formData);
+				const response = await api.auth.refresh();
 
 				if (response.success && response.data) {
 					await this.checkStatus();
-					goto('/');
-
 					return { success: true };
 				} else {
-					update((state) => ({ ...state, loading: false }));
-
-					return { success: false, error: response.error?.message || 'Login failed' };
+					set(unauthenticatedState);
+					return { success: false, error: response.error?.message || 'Refresh failed' };
 				}
 			} catch {
-				update((state) => ({ ...state, loading: false }));
-				return { success: false, error: 'Network error' };
-			}
-		},
-
-		async register(formData: RegisterForm) {
-			update((state) => ({ ...state, loading: true }));
-
-			try {
-				const response = await api.auth.register(formData);
-
-				if (response.success) {
-					const loginResult = await this.login({
-						email: formData.email,
-						password: formData.password
-					});
-
-					return loginResult;
-				} else {
-					update((state) => ({ ...state, loading: false }));
-
-					return { success: false, error: response.error?.message || 'Registration failed' };
-				}
-			} catch {
-				update((state) => ({ ...state, loading: false }));
+				set(unauthenticatedState);
 				return { success: false, error: 'Network error' };
 			}
 		},
@@ -120,6 +139,10 @@ function createAuthStore() {
 				set(unauthenticatedState);
 				goto('/');
 			}
+		},
+
+		clear() {
+			set(unauthenticatedState);
 		}
 	};
 }

@@ -4,6 +4,7 @@ import { config } from '$lib/common/config';
 import { cookieStore } from '$lib/stores/cookies.store';
 
 export class Service {
+	// TODO: Implement refresh token logic
 	public async request<T>(endpoint: string, options?: RequestInit): Promise<ApiResponse<T>> {
 		try {
 			const url = `${config.api.baseUrl}/api/${endpoint}`;
