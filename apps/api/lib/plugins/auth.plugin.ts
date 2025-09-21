@@ -33,4 +33,15 @@ export const auth = fastifyPlugin(async (app: App) => {
 
 		request.user = user;
 	});
+
+	app.decorate("authenticateSession", async (request: FastifyRequest) => {
+		if (request.cookies[TokenType.ACCESS]) {
+			const decoded = app.helpers.auth.authenticateAccessToken(request);
+			const user = await app.services.auth.me(decoded.id);
+
+			request.user = user;
+		} else {
+			throw new Unauthorized();
+		}
+	});
 });

@@ -2,6 +2,9 @@ import { App } from "~/types/fastify";
 
 const BASE = 62;
 const BASE62_ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+export enum URLSegment {
+	Custom = "c"
+}
 
 export class UrlHelper {
 	constructor(private readonly app: App) {}
@@ -59,5 +62,13 @@ export class UrlHelper {
 		}
 
 		return false;
+	}
+
+	public buildUrl(shortCode: string, segment?: URLSegment) {
+		if (segment === URLSegment.Custom) {
+			return `${this.app.config.HTTP.CLIENT_URL}/${URLSegment.Custom}/${shortCode}`;
+		}
+
+		return `${this.app.config.HTTP.CLIENT_URL}/${shortCode}`;
 	}
 }

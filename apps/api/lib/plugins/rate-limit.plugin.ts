@@ -11,8 +11,9 @@ export const rateLimit = fastifyPlugin(async (app: App) => {
 		keyGenerator: (request) => {
 			if (request.user) {
 				return `user-${request.user.id}`;
-			} else if (request.headers["x-api-key"]) {
-				return `api-key-${request.headers["x-api-key"]}`;
+			} else if (request.headers.authorization) {
+				const apiKey = request.headers.authorization.split(" ")[1];
+				return `apiKey-${apiKey}`;
 			}
 
 			return request.ip;

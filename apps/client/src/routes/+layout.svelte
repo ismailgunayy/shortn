@@ -1,16 +1,23 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import GitHub from '$lib/icons/GitHub.svelte';
+	import Header from '$lib/components/Header.svelte';
+	import { authStore } from '$lib/stores/auth.store';
 
 	let { children } = $props();
+
+	onMount(() => {
+		authStore.checkStatus();
+	});
 </script>
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-<header></header>
+<Header />
 
 <main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800/90 to-slate-900">
 	{@render children?.()}

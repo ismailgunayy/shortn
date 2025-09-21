@@ -7,12 +7,16 @@ import {
 } from "~/errors";
 import { App, JWTPayload } from "~/types/fastify";
 import { FastifyReply, FastifyRequest } from "fastify";
+import { compare, hash } from "bcrypt";
 
+import { API_KEY_LENGTH } from "~/schemas/auth.schema";
 import { CacheType } from "~/services/cache.service";
 import { TokenType } from "~/services/auth.service";
+import crypto from "crypto";
 
 const ACCESS_TOKEN_PATH = "/api";
 const REFRESH_TOKEN_PATH = "/api/auth";
+const SALT_ROUNDS = 12;
 
 export class AuthHelper {
 	constructor(private readonly app: App) {}
@@ -117,5 +121,21 @@ export class AuthHelper {
 		}
 
 		return decoded;
+	}
+
+	public async hashPassword(password: string) {
+		return await hash(password, SALT_ROUNDS);
+	}
+
+	public async verifyPassword(password: string, hash: string) {
+		return await compare(password, hash);
+	}
+
+	public generateApiKey() {
+		return crypto.randomBytes(API_KEY_LENGTH).toString("hex");
+	}
+
+	public hashApiKey(key: string) {
+		return crypto.createHash("sha256").update(key).digest("hex");
 	}
 }

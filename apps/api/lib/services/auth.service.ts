@@ -1,4 +1,3 @@
-import { API_KEY_LENGTH, ApiKeySchema, PasswordSchema } from "~/schemas/auth.schema";
 import {
 	ApiKeyNameAlreadyInUse,
 	ApiKeyNotFound,
@@ -12,14 +11,11 @@ import {
 	UserNotFound,
 	WrongPassword
 } from "~/errors";
-import { compare, hash } from "bcrypt";
+import { ApiKeySchema, PasswordSchema } from "~/schemas/auth.schema";
 
 import { App } from "~/types/fastify";
 import { AuthRepository } from "~/repositories/auth.repository";
-import crypto from "crypto";
 import z from "zod";
-
-const SALT_ROUNDS = 12;
 
 export enum TokenType {
 	ACCESS = "access",
@@ -31,14 +27,6 @@ export class AuthService {
 		private readonly app: App,
 		private readonly authRepository: AuthRepository
 	) {}
-
-	private async hashPassword(password: string) {
-		return await hash(password, SALT_ROUNDS);
-	}
-
-	private async verifyPassword(password: string, hash: string) {
-		return await compare(password, hash);
-	}
 
 	public async register(values: { fullName: string; email: string; password: string }) {
 		let { fullName, email, password } = values;
@@ -65,7 +53,7 @@ export class AuthService {
 		const user = await this.authRepository.insertUser({
 			fullName,
 			email,
-			password: await this.hashPassword(password)
+			password: await this.app.helpers.auth.hashPassword(password)
 		});
 
 		return {
@@ -86,7 +74,7 @@ export class AuthService {
 			throw new UserNotFound();
 		}
 
-		const isPasswordMatched = await this.verifyPassword(password, user.password);
+		const isPasswordMatched = await this.app.helpers.auth.verifyPassword(password, user.password);
 		if (!isPasswordMatched) {
 			throw new WrongPassword();
 		}
@@ -126,23 +114,15 @@ export class AuthService {
 		await this.authRepository.deleteUser(id);
 	}
 
-	private generateApiKey() {
-		return crypto.randomBytes(API_KEY_LENGTH).toString("hex");
-	}
-
-	private hashApiKey(key: string) {
-		return crypto.createHash("sha256").update(key).digest("hex");
-	}
-
 	public async createApiKey(userId: number, name: string) {
 		const existingApiKey = await this.authRepository.findApiKeyByName(userId, name);
 		if (existingApiKey) {
 			throw new ApiKeyNameAlreadyInUse();
 		}
 
-		const key = this.generateApiKey();
+		const key = this.app.helpers.auth.generateApiKey();
 		const lastFour = key.slice(-4);
-		const keyHash = this.hashApiKey(key);
+		const keyHash = this.app.helpers.auth.hashApiKey(key);
 
 		const apiKey = await this.authRepository.insertApiKey({
 			userId,
@@ -169,7 +149,7 @@ export class AuthService {
 			throw new InvalidApiKeyFormat();
 		}
 
-		const keyHash = this.hashApiKey(key);
+		const keyHash = this.app.helpers.auth.hashApiKey(key);
 		const apiKey = await this.authRepository.findApiKeyByHash(keyHash);
 
 		if (!apiKey) {

@@ -106,7 +106,7 @@ export const AuthController = (app: App) => {
 	app.get(
 		"/auth/status",
 		{
-			preHandler: [app.authenticate],
+			preHandler: [app.authenticateSession],
 			schema: {
 				response: createResponseSchema(
 					z.object({
@@ -188,7 +188,7 @@ export const AuthController = (app: App) => {
 	app.get(
 		"/auth/logout",
 		{
-			preHandler: [app.authenticate],
+			preHandler: [app.authenticateSession],
 			schema: {
 				response: createResponseSchema()
 			}
@@ -204,7 +204,7 @@ export const AuthController = (app: App) => {
 	app.post(
 		"/auth/api-key",
 		{
-			preHandler: [app.authenticate],
+			preHandler: [app.authenticateSession],
 			schema: {
 				body: z.object({
 					name: z.string()

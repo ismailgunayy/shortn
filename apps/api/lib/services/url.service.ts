@@ -2,25 +2,14 @@ import { CustomCodeAlreadyInUse, InvalidShortenedUrl, InvalidUrl } from "~/error
 
 import { App } from "~/types/fastify";
 import { CacheType } from "./cache.service";
+import { URLSegment } from "~/helpers";
 import { UrlRepository } from "~/repositories/url.repository";
-
-enum URLSegment {
-	Custom = "c"
-}
 
 export class UrlService {
 	constructor(
 		private readonly app: App,
 		private readonly urlRepository: UrlRepository
 	) {}
-
-	private buildUrl(shortCode: string, segment?: URLSegment) {
-		if (segment === URLSegment.Custom) {
-			return `${this.app.config.HTTP.CLIENT_URL}/${URLSegment.Custom}/${shortCode}`;
-		}
-
-		return `${this.app.config.HTTP.CLIENT_URL}/${shortCode}`;
-	}
 
 	private async handleCustomCode(originalUrl: string, userId: number, customCode: string) {
 		const existingCustom = await this.urlRepository.findCustomUrlByCustomCode(customCode);
@@ -35,20 +24,20 @@ export class UrlService {
 			userId
 		});
 
-		return this.buildUrl(customCode, URLSegment.Custom);
+		return this.app.helpers.url.buildUrl(customCode, URLSegment.Custom);
 	}
 
 	private async handleGeneratedCode(originalUrl: string, userId: number) {
 		const existingUrl = await this.urlRepository.findUrlByUrl(originalUrl);
 
 		if (existingUrl) {
-			return this.buildUrl(this.app.helpers.url.encodeId(existingUrl.id));
+			return this.app.helpers.url.buildUrl(this.app.helpers.url.encodeId(existingUrl.id));
 		}
 
 		const { id } = await this.urlRepository.insertUrl({ url: originalUrl, userId });
 
 		const shortCode = this.app.helpers.url.encodeId(id);
-		return this.buildUrl(shortCode);
+		return this.app.helpers.url.buildUrl(shortCode);
 	}
 
 	public async shortenUrl(originalUrl: string, userId: number, customCode?: string) {
