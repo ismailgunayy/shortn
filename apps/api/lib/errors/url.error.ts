@@ -23,3 +23,15 @@ export class CustomCodeAlreadyInUse extends UrlError {
 		super("Custom code already in use", 409, cause);
 	}
 }
+
+export class UrlNotFound extends UrlError {
+	constructor(cause?: unknown) {
+		super("URL not found", 404, cause);
+	}
+}
+
+export class CustomUrlNotFound extends UrlError {
+	constructor(cause?: unknown) {
+		super("Custom URL not found", 404, cause);
+	}
+}

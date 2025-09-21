@@ -46,7 +46,7 @@ function structureConfig() {
 					status: 'auth/status',
 					refresh: 'auth/refresh',
 					logout: 'auth/logout',
-					apiKey: 'auth/api-key'
+					apiKey: 'auth/api-keys'
 				},
 				url: {
 					shorten: 'url/shorten',

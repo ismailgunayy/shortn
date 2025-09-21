@@ -201,8 +201,38 @@ export const AuthController = (app: App) => {
 		}
 	);
 
+	app.get(
+		"/auth/api-keys",
+		{
+			preHandler: [app.authenticateSession],
+			schema: {
+				response: createResponseSchema(
+					z.object({
+						apiKeys: z.array(
+							z.object({
+								id: z.number(),
+								name: z.string(),
+								lastFour: z.string()
+							})
+						)
+					})
+				)
+			}
+		},
+		async (request, reply) => {
+			const apiKeys = await app.services.auth.getApiKeysOfUser(request.user.id);
+
+			return reply.code(200).send({
+				success: true,
+				data: {
+					apiKeys
+				}
+			});
+		}
+	);
+
 	app.post(
-		"/auth/api-key",
+		"/auth/api-keys",
 		{
 			preHandler: [app.authenticateSession],
 			schema: {
@@ -229,6 +259,63 @@ export const AuthController = (app: App) => {
 				data: {
 					...apiKey
 				}
+			});
+		}
+	);
+
+	app.patch(
+		"/auth/api-keys/:id",
+		{
+			preHandler: [app.authenticateSession],
+			schema: {
+				params: z.object({
+					id: z.number()
+				}),
+				body: z.object({
+					name: z.string()
+				}),
+				response: createResponseSchema(
+					z.object({
+						id: z.number(),
+						name: z.string(),
+						lastFour: z.string()
+					})
+				)
+			}
+		},
+		async (request, reply) => {
+			const { id } = request.params;
+			const { name } = request.body;
+
+			const apiKey = await app.services.auth.updateApiKey(id, request.user.id, name);
+
+			return reply.code(200).send({
+				success: true,
+				data: {
+					...apiKey
+				}
+			});
+		}
+	);
+
+	app.delete(
+		"/auth/api-keys/:id",
+		{
+			preHandler: [app.authenticateSession],
+			schema: {
+				params: z.object({
+					id: z.number()
+				}),
+				response: createResponseSchema()
+			}
+		},
+		async (request, reply) => {
+			const { id } = request.params;
+
+			await app.services.auth.deleteApiKey(id, request.user.id);
+
+			return reply.code(200).send({
+				success: true
 			});
 		}
 	);

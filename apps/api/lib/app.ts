@@ -1,11 +1,9 @@
-import { auth, cors, db, error, helpers, log, notFound, rateLimit, services } from "./plugins";
+import { auth, cors, db, error, helmet, helpers, log, notFound, rateLimit, router, services } from "./plugins";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
 import { APP_CONFIG } from "./common/config";
 import Fastify from "fastify";
 import { gracefulShutdown } from "./graceful-shutdown";
-import helmet from "@fastify/helmet";
-import { mainRouter } from "./router";
 
 const app = Fastify({
 	logger: {
@@ -14,23 +12,21 @@ const app = Fastify({
 });
 
 app.decorate("config", APP_CONFIG);
-app.register(log);
-app.register(error);
-await app.register(helmet, {
-	crossOriginEmbedderPolicy: false
-});
+
+app.setValidatorCompiler(validatorCompiler);
+app.setSerializerCompiler(serializerCompiler);
+
+await app.register(log);
+await app.register(error);
+await app.register(helmet);
 await app.register(db);
 await app.register(auth);
 await app.register(rateLimit);
 await app.register(notFound);
 await app.register(cors);
-
-app.setValidatorCompiler(validatorCompiler);
-app.setSerializerCompiler(serializerCompiler);
-
 await app.register(helpers);
 await app.register(services);
-await app.register(mainRouter);
+await app.register(router);
 
 const start = async () => {
 	await app.listen({

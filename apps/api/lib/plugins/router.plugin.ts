@@ -1,8 +1,9 @@
-import { AuthController, HealthController, TestController, UrlController } from "./controllers";
+import { AuthController, HealthController, TestController, UrlController } from "~/controllers";
 
-import { App } from "./types/fastify";
+import { App } from "~/types/fastify";
+import fastifyPlugin from "fastify-plugin";
 
-export const mainRouter = (app: App) => {
+export const router = fastifyPlugin((app: App) => {
 	app.register(
 		(app: App) => {
 			// General endpoints
@@ -34,7 +35,6 @@ export const mainRouter = (app: App) => {
 				});
 
 				app.register((app: App) => {
-					app.addHook("preHandler", app.authenticate);
 					app.register(UrlController);
 					app.register(TestController);
 				});
@@ -42,4 +42,4 @@ export const mainRouter = (app: App) => {
 		},
 		{ prefix: "/api" }
 	);
-};
+});

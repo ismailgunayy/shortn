@@ -22,7 +22,7 @@ export class AuthRepository {
 		return await this.db.deleteFrom("shortn.users").where("id", "=", id).execute();
 	}
 
-	async findUserById(id: number) {
+	async findUser(id: number) {
 		return await this.db.selectFrom("shortn.users").selectAll().where("id", "=", id).executeTakeFirst();
 	}
 
@@ -40,8 +40,17 @@ export class AuthRepository {
 		return await this.db.updateTable("shortn.apiKeys").set(values).where("id", "=", id).executeTakeFirstOrThrow();
 	}
 
-	async deleteApiKey(id: number) {
-		return await this.db.deleteFrom("shortn.apiKeys").where("id", "=", id).execute();
+	async deleteApiKey(id: number, userId: number) {
+		return await this.db.deleteFrom("shortn.apiKeys").where("userId", "=", userId).where("id", "=", id).execute();
+	}
+
+	async findApiKey(id: number, userId: number) {
+		return await this.db
+			.selectFrom("shortn.apiKeys")
+			.selectAll()
+			.where("userId", "=", userId)
+			.where("id", "=", id)
+			.executeTakeFirst();
 	}
 
 	async findApiKeyByHash(keyHash: string) {
@@ -58,6 +67,10 @@ export class AuthRepository {
 	}
 
 	async findAllApiKeysByUserId(userId: number) {
-		return await this.db.selectFrom("shortn.apiKeys").selectAll().where("userId", "=", userId).execute();
+		return await this.db
+			.selectFrom("shortn.apiKeys")
+			.select(["id", "name", "lastFour"])
+			.where("userId", "=", userId)
+			.execute();
 	}
 }

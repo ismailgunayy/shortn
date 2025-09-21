@@ -1,4 +1,4 @@
-import { CustomCodeAlreadyInUse, InvalidShortenedUrl, InvalidUrl } from "~/errors";
+import { CustomCodeAlreadyInUse, CustomUrlNotFound, InvalidShortenedUrl, InvalidUrl, UrlNotFound } from "~/errors";
 
 import { App } from "~/types/fastify";
 import { CacheType } from "./cache.service";
@@ -89,7 +89,7 @@ export class UrlService {
 			return existingCustom.url;
 		} else {
 			const id = this.app.helpers.url.decodeId(slug);
-			const existingUrl = await this.urlRepository.findUrlById(id);
+			const existingUrl = await this.urlRepository.findUrl(id);
 
 			if (!existingUrl) {
 				throw new InvalidShortenedUrl();
@@ -106,5 +106,51 @@ export class UrlService {
 		});
 
 		return originalUrl;
+	}
+
+	public async getUrlsOfUser(userId: number) {
+		let urls, customUrls;
+
+		urls = await this.urlRepository.findAllUrlsByUserId(userId);
+		customUrls = await this.urlRepository.findAllCustomUrlsByUserId(userId);
+
+		urls = urls.map((url) => ({
+			id: url.id,
+			originalUrl: url.url,
+			shortCode: this.app.helpers.url.encodeId(url.id),
+			createdAt: url.createdAt
+		}));
+
+		customUrls = customUrls.map((url) => ({
+			id: url.id,
+			originalUrl: url.url,
+			customCode: url.customCode,
+			createdAt: url.createdAt
+		}));
+
+		return {
+			urls,
+			customUrls
+		};
+	}
+
+	public async deleteUrl(id: number, userId: number) {
+		const url = await this.urlRepository.findUrl(id);
+
+		if (!url || url.userId !== userId) {
+			throw new UrlNotFound();
+		}
+
+		await this.urlRepository.deleteUrl(id);
+	}
+
+	public async deleteCustomUrl(id: number, userId: number) {
+		const url = await this.urlRepository.findCustomUrl(id);
+
+		if (!url || url.userId !== userId) {
+			throw new CustomUrlNotFound();
+		}
+
+		await this.urlRepository.deleteCustomUrl(id);
 	}
 }

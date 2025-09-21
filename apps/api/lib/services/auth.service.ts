@@ -89,7 +89,7 @@ export class AuthService {
 	}
 
 	public async me(id: number) {
-		const user = await this.authRepository.findUserById(id);
+		const user = await this.authRepository.findUser(id);
 
 		if (!user) {
 			throw new UserNotFound();
@@ -105,7 +105,7 @@ export class AuthService {
 	}
 
 	public async deleteUser(id: number) {
-		const user = await this.authRepository.findUserById(id);
+		const user = await this.authRepository.findUser(id);
 
 		if (!user) {
 			throw new UserNotFound();
@@ -159,6 +159,11 @@ export class AuthService {
 		};
 	}
 
+	public async getApiKeysOfUser(userId: number) {
+		const apiKeys = await this.authRepository.findAllApiKeysByUserId(userId);
+		return apiKeys;
+	}
+
 	public async verifyApiKey(key?: string) {
 		if (!key) {
 			throw new ApiKeyNotProvided();
@@ -190,13 +195,34 @@ export class AuthService {
 		};
 	}
 
-	public async deleteApiKey(id: number) {
-		const apiKey = await this.authRepository.deleteApiKey(id);
+	public async updateApiKey(id: number, userId: number, name: string) {
+		const apiKey = await this.authRepository.findApiKey(userId, id);
 
 		if (!apiKey) {
 			throw new ApiKeyNotFound();
 		}
 
-		await this.authRepository.deleteApiKey(id);
+		const existingApiKey = await this.authRepository.findApiKeyByName(userId, name);
+		if (existingApiKey && existingApiKey.id !== id) {
+			throw new ApiKeyNameAlreadyInUse();
+		}
+
+		await this.authRepository.updateApiKey(id, { name });
+
+		return {
+			id: apiKey.id,
+			name: name,
+			lastFour: apiKey.lastFour
+		};
+	}
+
+	public async deleteApiKey(id: number, userId: number) {
+		const apiKey = await this.authRepository.findApiKey(userId, id);
+
+		if (!apiKey) {
+			throw new ApiKeyNotFound();
+		}
+
+		await this.authRepository.deleteApiKey(userId, id);
 	}
 }

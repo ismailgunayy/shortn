@@ -6,6 +6,7 @@ export const TestController = (app: App) => {
 	app.get(
 		"/test",
 		{
+			preHandler: [app.authenticate],
 			schema: {
 				response: createResponseSchema(
 					z.object({
@@ -14,7 +15,6 @@ export const TestController = (app: App) => {
 				)
 			}
 		},
-
 		// eslint-disable-next-line require-await
 		async (_request, reply) => {
 			return reply.code(200).send({
