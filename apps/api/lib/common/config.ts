@@ -69,7 +69,11 @@ function structureConfig() {
 				SECRET: env.JWT_SECRET,
 				ACCESS_EXPIRES_IN_SECONDS: env.JWT_ACCESS_EXPIRES_IN_SECONDS,
 				REFRESH_EXPIRES_IN_SECONDS: env.JWT_REFRESH_EXPIRES_IN_SECONDS
-			}
+			},
+			SERVICE_ACCOUNT_EMAIL:
+				env.APP_ENV === "local"
+					? `service-account@${new URL(env.BASE_URL).hostname}.com`
+					: `service-account@${new URL(env.BASE_URL).hostname}`
 		},
 		DATABASE: {
 			URL: env.DATABASE_URL

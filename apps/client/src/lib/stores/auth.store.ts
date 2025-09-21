@@ -1,6 +1,7 @@
 import type { LoginForm, RegisterForm } from '$lib/schemas/auth.schema';
 
-import { clientApi } from '$lib/api';
+import { api } from '$lib/api';
+import { cookieStore } from './cookies.store';
 import { goto } from '$app/navigation';
 import { writable } from 'svelte/store';
 
@@ -12,19 +13,19 @@ interface User {
 
 interface AuthState {
 	isAuthenticated: boolean;
-	user: User | null;
+	user?: User;
 	loading: boolean;
 }
 
 const initialState: AuthState = {
 	isAuthenticated: false,
-	user: null,
+	user: undefined,
 	loading: true
 };
 
 const unauthenticatedState: AuthState = {
 	isAuthenticated: false,
-	user: null,
+	user: undefined,
 	loading: false
 };
 
@@ -41,7 +42,7 @@ function createAuthStore() {
 			const minLoadingTime = 250;
 
 			try {
-				const response = await clientApi.auth.status();
+				const response = await api.auth.status();
 
 				if (response.success && response.data?.user) {
 					const timeElapsed = Date.now() - timeStart;
@@ -49,17 +50,17 @@ function createAuthStore() {
 						await new Promise((resolve) => setTimeout(resolve, minLoadingTime - timeElapsed));
 					}
 
-					set({
+					return set({
 						isAuthenticated: true,
 						user: response.data.user,
 						loading: false
 					});
 				} else {
-					set(unauthenticatedState);
+					return set(unauthenticatedState);
 				}
 			} catch (error) {
 				console.error('Auth status check failed:', error);
-				set(unauthenticatedState);
+				return set(unauthenticatedState);
 			}
 		},
 
@@ -67,7 +68,7 @@ function createAuthStore() {
 			update((state) => ({ ...state, loading: true }));
 
 			try {
-				const response = await clientApi.auth.login(formData);
+				const response = await api.auth.login(formData);
 
 				if (response.success && response.data) {
 					await this.checkStatus();
@@ -89,7 +90,7 @@ function createAuthStore() {
 			update((state) => ({ ...state, loading: true }));
 
 			try {
-				const response = await clientApi.auth.register(formData);
+				const response = await api.auth.register(formData);
 
 				if (response.success) {
 					const loginResult = await this.login({
@@ -113,7 +114,8 @@ function createAuthStore() {
 			update((state) => ({ ...state, loading: true }));
 
 			try {
-				await clientApi.auth.logout();
+				await api.auth.logout();
+				cookieStore.clear();
 			} finally {
 				set(unauthenticatedState);
 				goto('/');

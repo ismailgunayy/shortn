@@ -14,8 +14,6 @@ import { CacheType } from "~/services/cache.service";
 import { TokenType } from "~/services/auth.service";
 import crypto from "crypto";
 
-const ACCESS_TOKEN_PATH = "/api";
-const REFRESH_TOKEN_PATH = "/api/auth";
 const SALT_ROUNDS = 12;
 
 export class AuthHelper {
@@ -26,32 +24,26 @@ export class AuthHelper {
 
 		if (name === TokenType.ACCESS) {
 			options = {
-				path: ACCESS_TOKEN_PATH,
 				maxAge: this.app.config.AUTH.JWT.ACCESS_EXPIRES_IN_SECONDS
 			};
 		} else if (name === TokenType.REFRESH) {
 			options = {
-				path: REFRESH_TOKEN_PATH,
 				maxAge: this.app.config.AUTH.JWT.REFRESH_EXPIRES_IN_SECONDS
 			};
 		}
 
 		reply.setCookie(name, token, {
-			httpOnly: true,
 			secure: this.app.config.IS_PRODUCTION,
-			sameSite: "strict",
+			sameSite: "lax",
 			signed: true,
+			path: "/",
 			...options
 		});
 	}
 
 	public clearTokenCookies(reply: FastifyReply) {
-		reply.clearCookie(TokenType.ACCESS, {
-			path: ACCESS_TOKEN_PATH
-		});
-		reply.clearCookie(TokenType.REFRESH, {
-			path: REFRESH_TOKEN_PATH
-		});
+		reply.clearCookie(TokenType.ACCESS);
+		reply.clearCookie(TokenType.REFRESH);
 	}
 
 	public generateToken(payload: JWTPayload) {

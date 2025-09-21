@@ -1,5 +1,5 @@
+import { api } from '$lib/api';
 import { redirect } from '@sveltejs/kit';
-import { serverApi } from '$lib/api';
 
 export interface AuthUser {
 	id: number;
@@ -7,19 +7,18 @@ export interface AuthUser {
 	email: string;
 }
 
-export async function checkAuthStatus(): Promise<AuthUser | null> {
+export async function checkAuthStatus(): Promise<AuthUser | undefined> {
 	try {
-		const response = await serverApi.auth.status();
+		const response = await api.auth.status();
 
 		if (response.success && response.data?.isAuthenticated && response.data?.user) {
 			return response.data.user;
 		}
 
-		return null;
+		return;
 	} catch (error) {
 		console.warn('Auth status check failed:', error);
-
-		throw redirect(302, '/web/login');
+		return;
 	}
 }
 

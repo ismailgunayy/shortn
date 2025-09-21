@@ -6,11 +6,13 @@ import type {
 	ShortenUrlResponse
 } from '$lib/types/api';
 
-import type { API } from './api';
+import { Service } from './service';
 import { config } from '$lib/common/config';
 
-export class UrlService {
-	constructor(private http: API) {}
+export class UrlService extends Service {
+	constructor() {
+		super();
+	}
 
 	public async shorten({ url }: ShortenUrlRequest): Promise<ApiResponse<ShortenUrlResponse>> {
 		if (!url.trim()) {
@@ -21,14 +23,14 @@ export class UrlService {
 			throw new Error('Please enter a valid URL (starting with https://)');
 		}
 
-		return await this.http.request<ShortenUrlResponse>(config.api.endpoints.url.shorten, {
+		return await this.request<ShortenUrlResponse>(config.api.endpoints.url.shorten, {
 			method: 'POST',
 			body: JSON.stringify({ url })
 		});
 	}
 
 	public async getOriginal(values: OriginalUrlRequest): Promise<ApiResponse<OriginalUrlResponse>> {
-		return await this.http.request<OriginalUrlResponse>(config.api.endpoints.url.original, {
+		return await this.request<OriginalUrlResponse>(config.api.endpoints.url.original, {
 			method: 'POST',
 			body: JSON.stringify(values)
 		});

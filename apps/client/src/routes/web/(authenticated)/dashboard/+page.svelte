@@ -1,10 +1,4 @@
 <script lang="ts">
-	import type { PageData } from './$types';
-
-	let { data }: { data: PageData } = $props();
-
-	// Server-side auth check ensures we have a user here
-	const user = data.user;
 </script>
 
 <svelte:head>
@@ -20,9 +14,6 @@
 		>
 			Dashboard
 		</h1>
-		<p class="bg-gradient-to-r from-slate-300 to-slate-100 bg-clip-text text-transparent">
-			Welcome back, {user.fullName}!
-		</p>
 	</div>
 
 	<!-- Dashboard Content -->

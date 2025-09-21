@@ -15,7 +15,7 @@ export const auth = fastifyPlugin(async (app: App) => {
 		secret: app.config.AUTH.JWT.SECRET
 	});
 
-	app.decorate("authenticate", async (request: FastifyRequest) => {
+	app.decorate("authenticate", async (request, _reply) => {
 		let user;
 
 		if (request.cookies[TokenType.ACCESS]) {
@@ -25,8 +25,15 @@ export const auth = fastifyPlugin(async (app: App) => {
 		} else if (request.headers.authorization) {
 			const apiKey = request.headers.authorization.split(" ")[1];
 			const { userId } = await app.services.auth.verifyApiKey(apiKey);
+
 			user = await app.services.auth.me(userId);
 			user = { ...user, apiKey };
+		}
+		// TODO: Fix this shit
+		else if (request.headers && request.headers["x-service"] === app.config.HTTP.CLIENT_URL) {
+			const serviceUser = await app.services.auth.getServiceAccount();
+
+			user = { ...serviceUser, isServiceAccount: true };
 		} else {
 			throw new Unauthorized();
 		}

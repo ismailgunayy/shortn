@@ -29,10 +29,10 @@
 
 		<div class="space-y-3">
 			<p class="text-sm text-slate-300">This could happen if:</p>
-			<ul class="space-y-1 text-left text-sm text-slate-200">
-				<li>• The link was typed incorrectly</li>
-				<li>• The link was never created</li>
-				<li>• I'm not a good developer</li>
+			<ul class="ml-4 list-disc space-y-1 text-left text-sm text-slate-200">
+				<li>The link was typed incorrectly</li>
+				<li>The link was never created</li>
+				<li>I'm not a good developer</li>
 			</ul>
 		</div>
 

@@ -2,7 +2,7 @@
 	import CheckMark from '$lib/icons/CheckMark.svelte';
 	import Copy from '$lib/icons/Copy.svelte';
 	import Loading from '$lib/icons/Loading.svelte';
-	import { clientApi } from '$lib/api';
+	import { api } from '$lib/api';
 
 	const initialState = {
 		url: '',
@@ -22,7 +22,7 @@
 		error = '';
 
 		try {
-			const response = await clientApi.url.shorten({ url: url.trim() });
+			const response = await api.url.shorten({ url: url.trim() });
 
 			if (response.error) {
 				throw new Error(response.error.message);

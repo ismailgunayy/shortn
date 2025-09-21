@@ -18,8 +18,8 @@ import { AuthRepository } from "~/repositories/auth.repository";
 import z from "zod";
 
 export enum TokenType {
-	ACCESS = "access",
-	REFRESH = "refresh"
+	ACCESS = "accessToken",
+	REFRESH = "refreshToken"
 }
 
 export class AuthService {
@@ -112,6 +112,25 @@ export class AuthService {
 		}
 
 		await this.authRepository.deleteUser(id);
+	}
+
+	public async getServiceAccount() {
+		const serviceAccountEmail = this.app.config.AUTH.SERVICE_ACCOUNT_EMAIL;
+		const serviceAccount = await this.authRepository.findUserByEmail(serviceAccountEmail);
+
+		if (!serviceAccount) {
+			throw new Error("Service account not found");
+		}
+
+		{
+			return {
+				id: serviceAccount.id,
+				fullName: serviceAccount.fullName,
+				email: serviceAccount.email,
+				createdAt: serviceAccount.createdAt,
+				updatedAt: serviceAccount.updatedAt
+			};
+		}
 	}
 
 	public async createApiKey(userId: number, name: string) {
