@@ -1,5 +1,6 @@
 import { API_KEY_LENGTH, ApiKeySchema, PasswordSchema } from "~/schemas/auth.schema";
 import {
+	ApiKeyNameAlreadyInUse,
 	ApiKeyNotFound,
 	ApiKeyNotProvided,
 	InactiveApiKey,
@@ -134,6 +135,11 @@ export class AuthService {
 	}
 
 	public async createApiKey(userId: number, name: string) {
+		const existingApiKey = await this.authRepository.findApiKeyByName(userId, name);
+		if (existingApiKey) {
+			throw new ApiKeyNameAlreadyInUse();
+		}
+
 		const key = this.generateApiKey();
 		const lastFour = key.slice(-4);
 		const keyHash = this.hashApiKey(key);

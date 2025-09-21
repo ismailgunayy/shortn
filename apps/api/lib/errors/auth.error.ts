@@ -36,6 +36,12 @@ export class RefreshTokenNotFound extends AuthError {
 	}
 }
 
+export class ApiKeyNameAlreadyInUse extends AuthError {
+	constructor(cause?: unknown) {
+		super("API key name already in use", 409, cause);
+	}
+}
+
 export class InvalidApiKey extends AuthError {
 	constructor(cause?: unknown) {
 		super("Invalid API key", 400, cause);

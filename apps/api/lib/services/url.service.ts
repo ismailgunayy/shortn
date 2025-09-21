@@ -39,10 +39,10 @@ export class UrlService {
 	}
 
 	private async handleGeneratedCode(originalUrl: string, userId: number) {
-		const existing = await this.urlRepository.findUrlByUrl(originalUrl);
+		const existingUrl = await this.urlRepository.findUrlByUrl(originalUrl);
 
-		if (existing) {
-			return this.buildUrl(this.app.helpers.url.encodeId(existing.id));
+		if (existingUrl) {
+			return this.buildUrl(this.app.helpers.url.encodeId(existingUrl.id));
 		}
 
 		const { id } = await this.urlRepository.insertUrl({ url: originalUrl, userId });
@@ -100,13 +100,13 @@ export class UrlService {
 			return existingCustom.url;
 		} else {
 			const id = this.app.helpers.url.decodeId(slug);
-			const existing = await this.urlRepository.findUrlById(id);
+			const existingUrl = await this.urlRepository.findUrlById(id);
 
-			if (!existing) {
+			if (!existingUrl) {
 				throw new InvalidShortenedUrl();
 			}
 
-			originalUrl = existing.url;
+			originalUrl = existingUrl.url;
 		}
 
 		this.app.services.cache.set(CacheType.URL, shortenedUrl, originalUrl, {

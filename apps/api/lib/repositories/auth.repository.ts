@@ -4,6 +4,8 @@ import { Insertable, Kysely, Updateable } from "kysely";
 export class AuthRepository {
 	constructor(private db: Kysely<DB>) {}
 
+	// ------------------- USER ------------------- //
+
 	async insertUser(values: Insertable<DB["shortn.users"]>) {
 		return await this.db
 			.insertInto("shortn.users")
@@ -28,6 +30,8 @@ export class AuthRepository {
 		return await this.db.selectFrom("shortn.users").selectAll().where("email", "=", email).executeTakeFirst();
 	}
 
+	// ------------------- API KEY ------------------- //
+
 	async insertApiKey(values: Insertable<ShortnApiKeys>) {
 		return await this.db.insertInto("shortn.apiKeys").values(values).returningAll().executeTakeFirstOrThrow();
 	}
@@ -42,6 +46,15 @@ export class AuthRepository {
 
 	async findApiKeyByHash(keyHash: string) {
 		return await this.db.selectFrom("shortn.apiKeys").selectAll().where("keyHash", "=", keyHash).executeTakeFirst();
+	}
+
+	async findApiKeyByName(userId: number, name: string) {
+		return await this.db
+			.selectFrom("shortn.apiKeys")
+			.selectAll()
+			.where("userId", "=", userId)
+			.where("name", "=", name)
+			.executeTakeFirst();
 	}
 
 	async findAllApiKeysByUserId(userId: number) {
