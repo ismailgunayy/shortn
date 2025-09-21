@@ -106,6 +106,7 @@ export const AuthController = (app: App) => {
 	app.get(
 		"/auth/status",
 		{
+			preHandler: [app.authenticate],
 			schema: {
 				response: createResponseSchema(
 					z.object({
@@ -120,8 +121,7 @@ export const AuthController = (app: App) => {
 			}
 		},
 		async (request, reply) => {
-			const decoded = app.helpers.auth.authenticateAccessToken(request);
-			const user = await app.services.auth.me(decoded.id);
+			const user = await app.services.auth.me(request.user.id);
 
 			return reply.code(200).send({
 				success: true,
