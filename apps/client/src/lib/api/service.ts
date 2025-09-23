@@ -1,7 +1,6 @@
 import type { ApiResponse } from '$lib/types/api.types';
 import { browser } from '$app/environment';
 import { config } from '$lib/common/config';
-import { cookieStore } from '$lib/stores/cookies.store';
 
 export interface ServiceConfig {
 	apiKey?: string;
@@ -18,7 +17,6 @@ export abstract class Service {
 			const headers: HeadersInit = {
 				...(options?.body && { 'Content-Type': 'application/json' }),
 				...(!browser && this.apiKey?.apiKey && { Authorization: `Bearer ${this.apiKey.apiKey}` }),
-				...(!browser && { Cookie: cookieStore.getCookieString() }),
 				...options?.headers
 			};
 
