@@ -16,7 +16,7 @@ services:
     ports:
       - 5433:5432
     volumes:
-      - postgres-dev-data:/var/lib/postgresql/data
+      - postgres-prod-data:/var/lib/postgresql/data
     networks:
       - shortn-prod-network
     restart: unless-stopped
@@ -26,7 +26,7 @@ services:
     container_name: shortn-prod-redis
     command: redis-server --requirepass password
     env_file:
-      - .env.local.dev
+      - .env.local.prod
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 2s
@@ -35,7 +35,7 @@ services:
     ports:
       - 6381:6379
     volumes:
-      - redis-dev-data:/data
+      - redis-prod-data:/data
     networks:
       - shortn-prod-network
 
@@ -90,8 +90,8 @@ services:
           memory: 128M
 
 volumes:
-  postgres-dev-data:
-  redis-dev-data:
+  postgres-prod-data:
+  redis-prod-data:
 
 networks:
   shortn-prod-network:
