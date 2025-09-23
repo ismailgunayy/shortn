@@ -68,11 +68,11 @@
 	<!-- Title -->
 	<div class="mb-8 text-center">
 		<h1
-			class="mb-3 bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-3xl font-bold text-transparent sm:text-4xl"
+			class="text-heading-1 mb-3 bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text font-bold text-transparent"
 		>
 			Sign Up
 		</h1>
-		<p class="bg-gradient-to-r from-slate-300 to-slate-100 bg-clip-text text-transparent">
+		<p class="text-body bg-gradient-to-r from-slate-300 to-slate-100 bg-clip-text text-transparent">
 			Create your Shortn account
 		</p>
 	</div>
@@ -86,7 +86,7 @@
 			<!-- General Error -->
 			{#if formError}
 				<div
-					class="mb-4 rounded-lg border border-red-800/50 bg-red-900/20 p-3 text-sm text-red-300 backdrop-blur-lg"
+					class="text-error mb-4 rounded-lg border border-red-800/50 bg-red-900/20 p-3 backdrop-blur-lg"
 				>
 					{formError}
 				</div>
@@ -94,70 +94,55 @@
 
 			<!-- Full Name Field -->
 			<div class="mb-4">
-				<label
-					for="fullName"
-					class="mb-2 block bg-gradient-to-r from-slate-300 to-slate-200 bg-clip-text text-sm font-medium text-transparent"
-				>
-					Full Name
-				</label>
+				<label for="fullName" class="text-form-label"> Full Name </label>
 				<input
 					id="fullName"
 					type="text"
 					bind:value={formData.fullName}
 					onblur={() => validateField('fullName')}
 					placeholder="John Doe"
-					class="w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 text-slate-100 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-600/60 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+					class="text-form-input w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-600/60 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
 					disabled={authState.loading}
 					required
 				/>
 				{#if errors.fullName}
-					<p class="mt-1 text-sm text-red-300">{errors.fullName}</p>
+					<p class="text-error mt-1">{errors.fullName}</p>
 				{/if}
 			</div>
 
 			<!-- Email Field -->
 			<div class="mb-4">
-				<label
-					for="email"
-					class="mb-2 block bg-gradient-to-r from-slate-300 to-slate-200 bg-clip-text text-sm font-medium text-transparent"
-				>
-					Email
-				</label>
+				<label for="email" class="text-form-label"> Email </label>
 				<input
 					id="email"
 					type="email"
 					bind:value={formData.email}
 					onblur={() => validateField('email')}
 					placeholder="your@email.com"
-					class="w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 text-slate-100 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-600/60 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+					class="text-form-input w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-600/60 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
 					disabled={authState.loading}
 					required
 				/>
 				{#if errors.email}
-					<p class="mt-1 text-sm text-red-300">{errors.email}</p>
+					<p class="text-error mt-1">{errors.email}</p>
 				{/if}
 			</div>
 
 			<!-- Password Field -->
 			<div class="mb-6">
-				<label
-					for="password"
-					class="mb-2 block bg-gradient-to-r from-slate-300 to-slate-200 bg-clip-text text-sm font-medium text-transparent"
-				>
-					Password
-				</label>
+				<label for="password" class="text-form-label"> Password </label>
 				<input
 					id="password"
 					type="password"
 					bind:value={formData.password}
 					onblur={() => validateField('password')}
 					placeholder="At least 12 characters"
-					class="w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 text-slate-100 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-600/60 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+					class="text-form-input w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-600/60 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
 					disabled={authState.loading}
 					required
 				/>
 				{#if errors.password}
-					<p class="mt-1 text-sm text-red-300">{errors.password}</p>
+					<p class="text-error mt-1">{errors.password}</p>
 				{/if}
 			</div>
 
@@ -168,7 +153,7 @@
 					!formData.fullName.trim() ||
 					!formData.email.trim() ||
 					!formData.password.trim()}
-				class="w-full transform cursor-pointer rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-6 py-2.5 font-semibold text-slate-100 shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:outline-none focus:ring-2 focus:ring-slate-400/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+				class="text-button w-full transform cursor-pointer rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-6 py-2.5 font-semibold text-slate-100 shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:outline-none focus:ring-2 focus:ring-slate-400/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
 			>
 				{#if authState.loading}
 					<span class="flex items-center justify-center">
@@ -181,7 +166,7 @@
 			</button>
 
 			<!-- Login Link -->
-			<p class="mt-4 text-center text-sm text-slate-400">
+			<p class="text-body-small mt-4 text-center text-slate-400">
 				Already have an account?
 				<a
 					href="/web/login"

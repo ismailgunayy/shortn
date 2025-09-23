@@ -46,11 +46,13 @@ function structureConfig() {
 					status: 'auth/status',
 					refresh: 'auth/refresh',
 					logout: 'auth/logout',
-					apiKey: 'auth/api-keys'
+					apiKeys: 'auth/api-keys'
 				},
 				url: {
 					shorten: 'url/shorten',
-					original: 'url/original'
+					original: 'url/original',
+					list: 'url',
+					delete: 'url'
 				}
 			}
 		}

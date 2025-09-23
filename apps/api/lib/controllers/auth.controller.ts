@@ -106,7 +106,7 @@ export const AuthController = (app: App) => {
 	app.get(
 		"/auth/status",
 		{
-			preHandler: [app.authenticateSession],
+			onRequest: [app.authenticateSession],
 			schema: {
 				response: createResponseSchema(
 					z.object({
@@ -188,7 +188,7 @@ export const AuthController = (app: App) => {
 	app.get(
 		"/auth/logout",
 		{
-			preHandler: [app.authenticateSession],
+			onRequest: [app.authenticateSession],
 			schema: {
 				response: createResponseSchema()
 			}
@@ -204,7 +204,7 @@ export const AuthController = (app: App) => {
 	app.get(
 		"/auth/api-keys",
 		{
-			preHandler: [app.authenticateSession],
+			onRequest: [app.authenticateSession],
 			schema: {
 				response: createResponseSchema(
 					z.object({
@@ -212,7 +212,9 @@ export const AuthController = (app: App) => {
 							z.object({
 								id: z.number(),
 								name: z.string(),
-								lastFour: z.string()
+								lastFour: z.string(),
+								createdAt: z.date(),
+								lastUsedAt: z.date()
 							})
 						)
 					})
@@ -234,7 +236,7 @@ export const AuthController = (app: App) => {
 	app.post(
 		"/auth/api-keys",
 		{
-			preHandler: [app.authenticateSession],
+			onRequest: [app.authenticateSession],
 			schema: {
 				body: z.object({
 					name: z.string()
@@ -266,10 +268,10 @@ export const AuthController = (app: App) => {
 	app.patch(
 		"/auth/api-keys/:id",
 		{
-			preHandler: [app.authenticateSession],
+			onRequest: [app.authenticateSession],
 			schema: {
 				params: z.object({
-					id: z.number()
+					id: z.string().pipe(z.coerce.number())
 				}),
 				body: z.object({
 					name: z.string()
@@ -301,10 +303,10 @@ export const AuthController = (app: App) => {
 	app.delete(
 		"/auth/api-keys/:id",
 		{
-			preHandler: [app.authenticateSession],
+			onRequest: [app.authenticateSession],
 			schema: {
 				params: z.object({
-					id: z.number()
+					id: z.string().pipe(z.coerce.number())
 				}),
 				response: createResponseSchema()
 			}

@@ -28,12 +28,6 @@ export const auth = fastifyPlugin(async (app: App) => {
 
 			user = await app.services.auth.me(userId);
 			user = { ...user, apiKey };
-		}
-		// TODO: Fix this shit
-		else if (request.headers && request.headers["x-service"] === app.config.HTTP.CLIENT_URL) {
-			const serviceUser = await app.services.auth.getServiceAccount();
-
-			user = { ...serviceUser, isServiceAccount: true };
 		} else {
 			throw new Unauthorized();
 		}

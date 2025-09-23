@@ -1,4 +1,5 @@
 import { App } from "~/types/fastify";
+import { CustomCodeSchema } from "~/schemas/url.schema";
 import { createResponseSchema } from "~/schemas/api-response.schema";
 import z from "zod";
 
@@ -6,11 +7,11 @@ export const UrlController = (app: App) => {
 	app.post(
 		"/url/shorten",
 		{
-			preHandler: [app.authenticate],
+			onRequest: [app.authenticate],
 			schema: {
 				body: z.object({
 					url: z.url(),
-					customCode: z.string().optional()
+					customCode: CustomCodeSchema.optional().or(z.literal(""))
 				}),
 				response: createResponseSchema(
 					z.object({
@@ -35,7 +36,7 @@ export const UrlController = (app: App) => {
 	app.post(
 		"/url/original",
 		{
-			preHandler: [app.authenticate],
+			onRequest: [app.authenticate],
 			schema: {
 				body: z.object({
 					url: z.string()
@@ -61,7 +62,7 @@ export const UrlController = (app: App) => {
 	app.get(
 		"/url",
 		{
-			preHandler: [app.authenticate],
+			onRequest: [app.authenticate],
 			schema: {
 				response: createResponseSchema(
 					z.object({
@@ -69,6 +70,7 @@ export const UrlController = (app: App) => {
 							z.object({
 								id: z.number(),
 								originalUrl: z.string(),
+								shortenedUrl: z.string(),
 								shortCode: z.string(),
 								createdAt: z.date()
 							})
@@ -77,6 +79,7 @@ export const UrlController = (app: App) => {
 							z.object({
 								id: z.number(),
 								originalUrl: z.string(),
+								shortenedUrl: z.string(),
 								customCode: z.string(),
 								createdAt: z.date()
 							})
@@ -101,17 +104,22 @@ export const UrlController = (app: App) => {
 	app.delete(
 		"/url/:id",
 		{
-			preHandler: [app.authenticate],
+			onRequest: [app.authenticate],
 			schema: {
 				params: z.object({
-					id: z.number()
+					id: z.string().pipe(z.coerce.number())
+				}),
+				body: z.object({
+					shortenedUrl: z.string()
 				}),
 				response: createResponseSchema()
 			}
 		},
 		async (request, reply) => {
 			const { id } = request.params;
-			await app.services.url.deleteUrl(id, request.user.id);
+			const { shortenedUrl } = request.body;
+
+			await app.services.url.deleteUrl(id, request.user.id, shortenedUrl);
 
 			return reply.code(200).send({ success: true });
 		}

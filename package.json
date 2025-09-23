@@ -13,13 +13,13 @@
 		"dev": "turbo run dev",
 		"dev:client": "turbo run dev --filter client",
 		"dev:api": "turbo run dev --filter api",
+		"start": "turbo run start",
+		"start:client": "turbo run start --filter client",
+		"start:api": "turbo run start --filter api",
 		"check-types": "turbo run check-types",
 		"clean": "rimraf .turbo out; turbo clean",
 		"format": "prettier . --write",
-		"lint": "turbo run lint",
-		"start": "turbo run start",
-		"start:client": "turbo run start --filter client",
-		"start:api": "turbo run start --filter api"
+		"lint": "turbo run lint"
 	},
 	"devDependencies": {
 		"prettier": "^3.6.2",

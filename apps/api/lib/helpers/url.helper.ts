@@ -71,4 +71,9 @@ export class UrlHelper {
 
 		return `${this.app.config.HTTP.CLIENT_URL}/${shortCode}`;
 	}
+
+	public isCustomUrl(shortenedUrl: string) {
+		const shortCode = shortenedUrl.replace(this.app.config.HTTP.CLIENT_URL + "/", "");
+		return shortCode.startsWith(`${URLSegment.Custom}/`);
+	}
 }

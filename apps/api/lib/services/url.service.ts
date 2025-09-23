@@ -11,7 +11,7 @@ export class UrlService {
 		private readonly urlRepository: UrlRepository
 	) {}
 
-	private async handleCustomCode(originalUrl: string, userId: number, customCode: string) {
+	private async createCustomUrl(originalUrl: string, userId: number, customCode: string) {
 		const existingCustom = await this.urlRepository.findCustomUrlByCustomCode(customCode);
 
 		if (existingCustom) {
@@ -27,8 +27,8 @@ export class UrlService {
 		return this.app.helpers.url.buildUrl(customCode, URLSegment.Custom);
 	}
 
-	private async handleGeneratedCode(originalUrl: string, userId: number) {
-		const existingUrl = await this.urlRepository.findUrlByUrl(originalUrl);
+	private async createGeneratedUrl(originalUrl: string, userId: number) {
+		const existingUrl = await this.urlRepository.findUrlByUrl(originalUrl, userId);
 
 		if (existingUrl) {
 			return this.app.helpers.url.buildUrl(this.app.helpers.url.encodeId(existingUrl.id));
@@ -46,8 +46,8 @@ export class UrlService {
 		}
 
 		const shortenedUrl = customCode
-			? await this.handleCustomCode(originalUrl, userId, customCode)
-			: await this.handleGeneratedCode(originalUrl, userId);
+			? await this.createCustomUrl(originalUrl, userId, customCode)
+			: await this.createGeneratedUrl(originalUrl, userId);
 
 		this.app.services.cache.set(CacheType.URL, shortenedUrl, originalUrl, {
 			expiration: {
@@ -76,7 +76,7 @@ export class UrlService {
 
 		let originalUrl;
 
-		if (slug.startsWith(`${URLSegment.Custom}/`)) {
+		if (this.app.helpers.url.isCustomUrl(shortenedUrl)) {
 			const customCode = slug.replace(`${URLSegment.Custom}/`, "");
 			const existingCustom = await this.urlRepository.findCustomUrlByCustomCode(customCode);
 
@@ -117,6 +117,7 @@ export class UrlService {
 		urls = urls.map((url) => ({
 			id: url.id,
 			originalUrl: url.url,
+			shortenedUrl: this.app.helpers.url.buildUrl(this.app.helpers.url.encodeId(url.id)),
 			shortCode: this.app.helpers.url.encodeId(url.id),
 			createdAt: url.createdAt
 		}));
@@ -124,6 +125,7 @@ export class UrlService {
 		customUrls = customUrls.map((url) => ({
 			id: url.id,
 			originalUrl: url.url,
+			shortenedUrl: this.app.helpers.url.buildUrl(url.customCode, URLSegment.Custom),
 			customCode: url.customCode,
 			createdAt: url.createdAt
 		}));
@@ -134,7 +136,17 @@ export class UrlService {
 		};
 	}
 
-	public async deleteUrl(id: number, userId: number) {
+	public async deleteUrl(id: number, userId: number, shortenedUrl: string) {
+		if (this.app.helpers.url.isCustomUrl(shortenedUrl)) {
+			await this.deleteCustomUrl(id, userId);
+		} else {
+			await this.deleteGeneratedUrl(id, userId);
+		}
+
+		this.app.services.cache.del(CacheType.URL, shortenedUrl);
+	}
+
+	private async deleteGeneratedUrl(id: number, userId: number) {
 		const url = await this.urlRepository.findUrl(id);
 
 		if (!url || url.userId !== userId) {
@@ -144,7 +156,7 @@ export class UrlService {
 		await this.urlRepository.deleteUrl(id);
 	}
 
-	public async deleteCustomUrl(id: number, userId: number) {
+	private async deleteCustomUrl(id: number, userId: number) {
 		const url = await this.urlRepository.findCustomUrl(id);
 
 		if (!url || url.userId !== userId) {

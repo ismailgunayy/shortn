@@ -3,18 +3,21 @@ import type {
 	AuthStatusResponse,
 	CreateApiKeyRequest,
 	CreateApiKeyResponse,
+	GetApiKeysResponse,
 	LoginRequest,
 	LoginResponse,
 	RegisterRequest,
-	RegisterResponse
-} from '$lib/types/api';
+	RegisterResponse,
+	UpdateApiKeyRequest,
+	UpdateApiKeyResponse
+} from '$lib/types/api.types';
 
-import { Service } from './service';
+import { Service, type ServiceConfig } from './service';
 import { config } from '$lib/common/config';
 
 export class AuthService extends Service {
-	constructor() {
-		super();
+	constructor(config?: ServiceConfig) {
+		super(config);
 	}
 
 	public async register(values: RegisterRequest): Promise<ApiResponse<RegisterResponse>> {
@@ -48,9 +51,29 @@ export class AuthService extends Service {
 	public async createApiKey(
 		values: CreateApiKeyRequest
 	): Promise<ApiResponse<CreateApiKeyResponse>> {
-		return await this.request<CreateApiKeyResponse>(config.api.endpoints.auth.apiKey, {
+		return await this.request<CreateApiKeyResponse>(config.api.endpoints.auth.apiKeys, {
 			method: 'POST',
 			body: JSON.stringify(values)
+		});
+	}
+
+	public async getApiKeys(): Promise<ApiResponse<GetApiKeysResponse>> {
+		return await this.request<GetApiKeysResponse>(config.api.endpoints.auth.apiKeys);
+	}
+
+	public async updateApiKey(
+		id: number,
+		values: UpdateApiKeyRequest
+	): Promise<ApiResponse<UpdateApiKeyResponse>> {
+		return await this.request<UpdateApiKeyResponse>(`${config.api.endpoints.auth.apiKeys}/${id}`, {
+			method: 'PATCH',
+			body: JSON.stringify(values)
+		});
+	}
+
+	public async deleteApiKey(id: number): Promise<ApiResponse> {
+		return await this.request(`${config.api.endpoints.auth.apiKeys}/${id}`, {
+			method: 'DELETE'
 		});
 	}
 }

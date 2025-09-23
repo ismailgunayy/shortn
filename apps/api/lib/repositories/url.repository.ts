@@ -22,8 +22,13 @@ export class UrlRepository {
 		return await this.db.selectFrom("shortn.urls").selectAll().where("id", "=", id).executeTakeFirst();
 	}
 
-	async findUrlByUrl(url: string) {
-		return await this.db.selectFrom("shortn.urls").selectAll().where("url", "=", url).executeTakeFirst();
+	async findUrlByUrl(url: string, userId: number) {
+		return await this.db
+			.selectFrom("shortn.urls")
+			.selectAll()
+			.where("userId", "=", userId)
+			.where("url", "=", url)
+			.executeTakeFirst();
 	}
 
 	async findAllUrlsByUserId(userId: number) {

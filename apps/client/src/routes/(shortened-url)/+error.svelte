@@ -4,7 +4,7 @@
 </script>
 
 <svelte:head>
-	<title>Link Not Found - Shortn</title>
+	<title>URL Not Found - Shortn</title>
 	<meta name="robots" content="noindex" />
 </svelte:head>
 
@@ -18,7 +18,7 @@
 			>
 				<Error />
 			</div>
-			<h1 class="mb-2 text-xl font-bold text-slate-200 sm:text-2xl">Link Not Found</h1>
+			<h1 class="mb-2 text-xl font-bold text-slate-200 sm:text-2xl">URL Not Found</h1>
 		</div>
 
 		<div class="mb-6 rounded-lg border border-slate-600/60 bg-slate-800/40 p-3 backdrop-blur-lg">
@@ -30,8 +30,8 @@
 		<div class="space-y-3">
 			<p class="text-sm text-slate-300">This could happen if:</p>
 			<ul class="ml-4 list-disc space-y-1 text-left text-sm text-slate-200">
-				<li>The link was typed incorrectly</li>
-				<li>The link was never created</li>
+				<li>The URL was typed incorrectly</li>
+				<li>The URL was never created</li>
 				<li>I'm not a good developer</li>
 			</ul>
 		</div>

@@ -196,7 +196,7 @@ export class AuthService {
 	}
 
 	public async updateApiKey(id: number, userId: number, name: string) {
-		const apiKey = await this.authRepository.findApiKey(userId, id);
+		const apiKey = await this.authRepository.findApiKey(id, userId);
 
 		if (!apiKey) {
 			throw new ApiKeyNotFound();
@@ -207,7 +207,9 @@ export class AuthService {
 			throw new ApiKeyNameAlreadyInUse();
 		}
 
-		await this.authRepository.updateApiKey(id, { name });
+		if (apiKey.name !== name) {
+			await this.authRepository.updateApiKey(id, { name });
+		}
 
 		return {
 			id: apiKey.id,
@@ -217,12 +219,12 @@ export class AuthService {
 	}
 
 	public async deleteApiKey(id: number, userId: number) {
-		const apiKey = await this.authRepository.findApiKey(userId, id);
+		const apiKey = await this.authRepository.findApiKey(id, userId);
 
 		if (!apiKey) {
 			throw new ApiKeyNotFound();
 		}
 
-		await this.authRepository.deleteApiKey(userId, id);
+		await this.authRepository.deleteApiKey(id, userId);
 	}
 }

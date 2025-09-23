@@ -3,7 +3,7 @@ import { cookieStore } from '$lib/stores/cookies.store';
 import { redirectIfAuthenticated } from '$lib/utils/auth.server';
 
 export const load: LayoutServerLoad = async ({ cookies }) => {
-	cookieStore.addCookies(cookies.getAll());
+	cookieStore.setCookies(cookies.getAll());
 
-	await redirectIfAuthenticated();
+	return await redirectIfAuthenticated();
 };

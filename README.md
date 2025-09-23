@@ -12,15 +12,15 @@ A non-innovative URL Shortener
 
 ## Features
 
-- **Instant URL Shortening**: Convert long URLs into short, shareable links
+- **Instant URL Shortening**: Convert long URLs into short, shareable URLs
 - **Fast Redirects**: Optimized for speed
+- **Custom Short URLs**: Your custom aliases for URLs
+- **User Accounts**: Register to manage and track your shortened URLs
+- **API Access**: Generate API keys for programmatic URL shortening
 
 ##### To be implemented:
 
-- **Custom Short URLs**: Your custom aliases for URLs
-- **User Accounts**: Register to manage and track your shortened URLs
-- **Analytics**: View click statistics for your links
-- **API Access**: Generate API keys for programmatic URL shortening
+- **Analytics**: View click statistics for your URLs
 
 ## Tech Stack
 

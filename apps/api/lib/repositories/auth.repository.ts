@@ -69,7 +69,7 @@ export class AuthRepository {
 	async findAllApiKeysByUserId(userId: number) {
 		return await this.db
 			.selectFrom("shortn.apiKeys")
-			.select(["id", "name", "lastFour"])
+			.select(["id", "name", "lastFour", "createdAt", "lastUsedAt"])
 			.where("userId", "=", userId)
 			.execute();
 	}

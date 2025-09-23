@@ -41,16 +41,16 @@
 				<!-- Error Message -->
 				<div class="space-y-2">
 					<h1
-						class="bg-gradient-to-r from-slate-300 to-slate-100 bg-clip-text text-2xl font-bold text-transparent sm:text-3xl"
+						class="text-heading-2 bg-gradient-to-r from-slate-300 to-slate-100 bg-clip-text font-bold text-transparent"
 					>
 						You seem lost
 					</h1>
-					<p class="text-md text-slate-300">And that's okay</p>
+					<p class="text-body text-slate-300">And that's okay</p>
 				</div>
 
 				<!-- Countdown and Redirect Info -->
 				<div class="rounded-lg border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg">
-					<p class="text-sm text-slate-300">
+					<p class="text-body-small text-slate-300">
 						Let's get you back home in <span class="font-semibold text-slate-200">{countdown}</span>
 						seconds...
 					</p>
@@ -59,8 +59,8 @@
 				<!-- Manual Navigation Button -->
 				<a
 					href="/"
-					class="duration-230 inline-flex transform cursor-pointer items-center justify-center rounded-xl bg-gradient-to-r
-						   from-slate-600 to-slate-700 px-6 py-3 text-base font-medium text-slate-100 shadow-lg shadow-slate-900/20
+					class="text-button duration-230 inline-flex transform cursor-pointer items-center justify-center rounded-xl bg-gradient-to-r
+						   from-slate-600 to-slate-700 px-6 py-3 font-medium text-slate-100 shadow-lg shadow-slate-900/20
 						   backdrop-blur-lg transition-all hover:scale-[1.02] hover:from-slate-500 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30
 						   focus:outline-none focus:ring-2 focus:ring-slate-400/20 active:scale-[0.98]"
 				>

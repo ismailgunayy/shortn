@@ -6,7 +6,7 @@ export const TestController = (app: App) => {
 	app.get(
 		"/test",
 		{
-			preHandler: [app.authenticate],
+			onRequest: [app.authenticate],
 			schema: {
 				response: createResponseSchema(
 					z.object({

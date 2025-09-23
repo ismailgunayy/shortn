@@ -37,6 +37,14 @@ function createCookieStore() {
 				.join('; ');
 		},
 
+		setCookies: (cookies: Cookie[]) => {
+			const cookieMap: CookieMap = cookies.reduce((acc, cookie) => {
+				acc[cookie.name] = cookie.value;
+				return acc;
+			}, {} as CookieMap);
+			set(cookieMap);
+		},
+
 		addCookie: (cookie: Cookie) =>
 			update((currentCookies) => ({
 				...currentCookies,

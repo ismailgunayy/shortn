@@ -1,11 +1,11 @@
 import type { LoginForm, RegisterForm } from '$lib/schemas/auth.schema';
 
-import { api } from '$lib/api';
+import { api } from '$lib/api/api.client';
 import { cookieStore } from './cookies.store';
 import { goto } from '$app/navigation';
 import { writable } from 'svelte/store';
 
-interface User {
+export interface User {
 	id: number;
 	fullName: string;
 	email: string;
@@ -134,7 +134,8 @@ function createAuthStore() {
 
 			try {
 				await api.auth.logout();
-				cookieStore.clear();
+				cookieStore.removeCookie('accessToken');
+				cookieStore.removeCookie('refreshToken');
 			} finally {
 				set(unauthenticatedState);
 				goto('/');

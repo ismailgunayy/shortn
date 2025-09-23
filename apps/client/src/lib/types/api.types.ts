@@ -48,6 +48,7 @@ export interface CreateApiKeyResponse {
 
 export interface ShortenUrlRequest {
 	url: string;
+	customCode?: string;
 }
 
 export interface ShortenUrlResponse {
@@ -60,4 +61,51 @@ export interface OriginalUrlRequest {
 
 export interface OriginalUrlResponse {
 	url: string;
+}
+
+export interface UrlItem {
+	id: number;
+	originalUrl: string;
+	shortenedUrl: string;
+	shortCode: string;
+	createdAt: string;
+}
+
+export interface CustomUrlItem {
+	id: number;
+	originalUrl: string;
+	shortenedUrl: string;
+	customCode: string;
+	createdAt: string;
+}
+
+export interface GetUrlsResponse {
+	urls: UrlItem[];
+	customUrls: CustomUrlItem[];
+}
+
+export interface DeleteUrlRequest {
+	shortenedUrl: string;
+}
+
+export interface ApiKeyItem {
+	id: number;
+	name: string;
+	lastFour: string;
+	createdAt: string;
+	lastUsedAt: string;
+}
+
+export interface GetApiKeysResponse {
+	apiKeys: ApiKeyItem[];
+}
+
+export interface UpdateApiKeyRequest {
+	name: string;
+}
+
+export interface UpdateApiKeyResponse {
+	id: number;
+	name: string;
+	lastFour: string;
 }

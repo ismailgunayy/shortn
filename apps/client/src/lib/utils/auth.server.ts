@@ -1,15 +1,10 @@
-import { api } from '$lib/api';
+import type { User } from '$lib/stores/auth.store';
 import { redirect } from '@sveltejs/kit';
+import { serverApi } from '$lib/api/api.server';
 
-export interface AuthUser {
-	id: number;
-	fullName: string;
-	email: string;
-}
-
-export async function checkAuthStatus(): Promise<AuthUser | undefined> {
+export async function checkAuthStatus(): Promise<User | undefined> {
 	try {
-		const response = await api.auth.status();
+		const response = await serverApi.auth.status();
 
 		if (response.success && response.data?.isAuthenticated && response.data?.user) {
 			return response.data.user;
@@ -22,7 +17,7 @@ export async function checkAuthStatus(): Promise<AuthUser | undefined> {
 	}
 }
 
-export async function requireAuth(): Promise<AuthUser> {
+export async function requireAuth(): Promise<User> {
 	const user = await checkAuthStatus();
 
 	if (!user) {
