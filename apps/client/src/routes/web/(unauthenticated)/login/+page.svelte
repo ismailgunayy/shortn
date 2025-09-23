@@ -59,7 +59,7 @@
 </script>
 
 <svelte:head>
-	<title>Sign In - Shortn</title>
+	<title>Shortn | Sign In</title>
 	<meta name="description" content="Sign in to your Shortn account" />
 </svelte:head>
 

@@ -19,7 +19,7 @@
 </script>
 
 <svelte:head>
-	<title>Shortn - Page Not Found</title>
+	<title>Shortn | Page Not Found</title>
 </svelte:head>
 
 <div class="flex min-h-screen flex-col items-center justify-center px-4">

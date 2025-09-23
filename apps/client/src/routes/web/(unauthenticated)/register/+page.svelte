@@ -60,7 +60,7 @@
 </script>
 
 <svelte:head>
-	<title>Sign Up - Shortn</title>
+	<title>Shortn | Sign Up</title>
 	<meta name="description" content="Create your Shortn account" />
 </svelte:head>
 

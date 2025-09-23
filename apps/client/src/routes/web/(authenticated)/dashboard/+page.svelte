@@ -68,7 +68,7 @@
 </script>
 
 <svelte:head>
-	<title>Dashboard - Shortn</title>
+	<title>Shortn | Dashboard</title>
 	<meta name="description" content="Your Shortn dashboard" />
 </svelte:head>
 

@@ -4,7 +4,7 @@
 </script>
 
 <svelte:head>
-	<title>URL Not Found - Shortn</title>
+	<title>Shortn | URL Not Found</title>
 	<meta name="robots" content="noindex" />
 </svelte:head>
 
