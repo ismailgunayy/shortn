@@ -32,21 +32,12 @@ export class AuthHelper {
 			};
 		}
 
-		// Extract domain for cross-domain cookie sharing in production
-		const cookieDomain = this.app.config.IS_PRODUCTION
-			? ".up.railway.app" // Allows cookies to be shared across subdomains
-			: undefined; // Local development - no domain restriction
-
-		console.warn(`🍪 Setting cookie: ${name}`);
-		console.warn(`🍪 Domain: ${cookieDomain || "localhost"}`);
-		console.warn(`🍪 Secure: ${this.app.config.IS_PRODUCTION}`);
-
 		reply.setCookie(name, token, {
 			secure: this.app.config.IS_PRODUCTION,
 			sameSite: "lax",
 			signed: true,
 			path: "/",
-			domain: cookieDomain,
+			domain: this.app.config.IS_PRODUCTION ? ".up.railway.app" : undefined,
 			...options
 		});
 	}
