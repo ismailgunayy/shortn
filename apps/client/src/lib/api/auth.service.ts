@@ -14,7 +14,6 @@ import type {
 
 import { Service, type ServiceConfig } from './service';
 import { config } from '$lib/common/config';
-import type { Cookies } from '@sveltejs/kit';
 
 export class AuthService extends Service {
 	constructor(config?: ServiceConfig) {
@@ -35,14 +34,11 @@ export class AuthService extends Service {
 		});
 	}
 
-	public async status(cookies?: Cookies): Promise<ApiResponse<AuthStatusResponse>> {
+	public async status(cookie?: string): Promise<ApiResponse<AuthStatusResponse>> {
 		return await this.request<AuthStatusResponse>(config.api.endpoints.auth.status, {
 			headers: {
-				...(cookies && {
-					Cookie: cookies
-						.getAll()
-						.map((c) => `${c.name}=${c.value}`)
-						.join('; ')
+				...(cookie && {
+					Cookie: cookie
 				})
 			}
 		});
