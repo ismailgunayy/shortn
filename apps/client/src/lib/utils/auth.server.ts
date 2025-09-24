@@ -1,10 +1,10 @@
 import type { User } from '$lib/stores/auth.store';
-import { redirect } from '@sveltejs/kit';
+import { redirect, type Cookies } from '@sveltejs/kit';
 import { serverApi } from '$lib/api/api.server';
 
-export async function checkAuthStatus(cookie?: string): Promise<User | undefined> {
+export async function checkAuthStatus(cookies: Cookies): Promise<User | undefined> {
 	try {
-		const response = await serverApi.auth.status(cookie);
+		const response = await serverApi.auth.status(cookies);
 
 		if (response.success && response.data?.isAuthenticated && response.data?.user) {
 			return response.data.user;
@@ -17,8 +17,8 @@ export async function checkAuthStatus(cookie?: string): Promise<User | undefined
 	}
 }
 
-export async function requireAuth(cookie?: string): Promise<User> {
-	const user = await checkAuthStatus(cookie);
+export async function requireAuth(cookies: Cookies): Promise<User> {
+	const user = await checkAuthStatus(cookies);
 
 	if (!user) {
 		throw redirect(302, '/web/login');
@@ -29,9 +29,9 @@ export async function requireAuth(cookie?: string): Promise<User> {
 
 export async function redirectIfAuthenticated(
 	redirectTo: string = '/',
-	cookie?: string
+	cookies: Cookies
 ): Promise<void> {
-	const user = await checkAuthStatus(cookie);
+	const user = await checkAuthStatus(cookies);
 
 	if (user) {
 		throw redirect(302, redirectTo);
