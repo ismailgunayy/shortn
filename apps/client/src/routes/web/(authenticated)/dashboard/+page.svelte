@@ -1,16 +1,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { api } from '$lib/api/api.client';
-	import type { ApiKeyItem, CustomUrlItem, UrlItem } from '$lib/types/api.types';
 	import Loading from '$lib/icons/Loading.svelte';
 	import { default as ErrorIcon } from '$lib/icons/Error.svelte';
 	import UrlsSection from '$lib/components/sections/UrlsSection.svelte';
 	import ApiKeysSection from '$lib/components/sections/ApiKeysSection.svelte';
+	import type { UrlItem, CustomUrlItem } from '$lib/api/services/url.service';
+	import type { ApiKey } from '$lib/api/services/auth.service';
 
 	// State
 	let urls: UrlItem[] = $state([]);
 	let customUrls: CustomUrlItem[] = $state([]);
-	let apiKeys: ApiKeyItem[] = $state([]);
+	let apiKeys: ApiKey[] = $state([]);
 	let loading = $state(true);
 	let error = $state('');
 
@@ -62,7 +63,11 @@
 		}
 	}
 
-	function handleApiKeysUpdated(updatedApiKeys: ApiKeyItem[]) {
+	function handleUrlUpdated(updatedUrl: CustomUrlItem) {
+		customUrls = customUrls.map((url) => (url.id === updatedUrl.id ? updatedUrl : url));
+	}
+
+	function handleApiKeysUpdated(updatedApiKeys: ApiKey[]) {
 		apiKeys = updatedApiKeys;
 	}
 </script>
@@ -72,7 +77,7 @@
 	<meta name="description" content="Your Shortn dashboard" />
 </svelte:head>
 
-<div class="min-h-screen px-4 pb-16 pt-20">
+<div>
 	<!-- Header -->
 	<div class="mx-auto max-w-6xl">
 		<div class="mb-8 text-center">
@@ -106,15 +111,19 @@
 			<div class="mb-8 grid gap-4 sm:grid-cols-3">
 				<div class="rounded-xl border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg">
 					<div class="text-heading-2 text-bright font-bold">{customUrls.length}</div>
-					<div class="text-body-small text-tertiary">Custom URLs</div>
+					<div class="text-body-small text-tertiary">
+						Custom URL{customUrls.length !== 1 ? 's' : ''}
+					</div>
 				</div>
 				<div class="rounded-xl border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg">
 					<div class="text-heading-2 text-bright font-bold">{urls.length}</div>
-					<div class="text-body-small text-tertiary">Generated URLs</div>
+					<div class="text-body-small text-tertiary">
+						Generated URL{urls.length !== 1 ? 's' : ''}
+					</div>
 				</div>
 				<div class="rounded-xl border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg">
 					<div class="text-heading-2 text-bright font-bold">{apiKeys.length}</div>
-					<div class="text-body-small text-tertiary">API Keys</div>
+					<div class="text-body-small text-tertiary">API Key{apiKeys.length !== 1 ? 's' : ''}</div>
 				</div>
 			</div>
 
@@ -148,7 +157,12 @@
 
 			<!-- Tab Content -->
 			{#if activeTab === 'urls'}
-				<UrlsSection {urls} {customUrls} onUrlDeleted={handleUrlDeleted} />
+				<UrlsSection
+					{urls}
+					{customUrls}
+					onUrlDeleted={handleUrlDeleted}
+					onUrlUpdated={handleUrlUpdated}
+				/>
 			{:else if activeTab === 'apikeys'}
 				<ApiKeysSection {apiKeys} onApiKeysUpdated={handleApiKeysUpdated} />
 			{/if}

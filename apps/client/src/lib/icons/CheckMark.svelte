@@ -3,7 +3,7 @@
 		class?: string;
 	}
 
-	let { class: className = 'h-4 w-4 text-emerald-400' }: Props = $props();
+	let { class: className = 'h-4 w-4 text-success' }: Props = $props();
 </script>
 
 <svg class={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">

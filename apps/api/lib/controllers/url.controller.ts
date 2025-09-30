@@ -1,21 +1,24 @@
+import { CustomCodeSchema, ShortenedUrlSchema, UrlSchema } from "~/schemas/url.schema";
+
 import { App } from "~/types/fastify";
-import { CustomCodeSchema } from "~/schemas/url.schema";
 import { createResponseSchema } from "~/schemas/api-response.schema";
 import z from "zod";
 
+// TODO: udpate all endpoints to return the ids and other info about url
 export const UrlController = (app: App) => {
 	app.post(
 		"/url/shorten",
 		{
 			onRequest: [app.authenticate],
 			schema: {
+				description: "Shorten a given URL with an optional custom code",
 				body: z.object({
-					url: z.url(),
+					url: UrlSchema,
 					customCode: CustomCodeSchema.optional().or(z.literal(""))
 				}),
 				response: createResponseSchema(
 					z.object({
-						url: z.url()
+						url: z.string()
 					})
 				)
 			}
@@ -38,8 +41,9 @@ export const UrlController = (app: App) => {
 		{
 			onRequest: [app.authenticate],
 			schema: {
+				description: "Get the original URL from a shortened URL",
 				body: z.object({
-					url: z.string()
+					url: ShortenedUrlSchema
 				}),
 				response: createResponseSchema(
 					z.object({
@@ -64,6 +68,7 @@ export const UrlController = (app: App) => {
 		{
 			onRequest: [app.authenticate],
 			schema: {
+				description: "Get all URLs (shortened and custom) of the current user",
 				response: createResponseSchema(
 					z.object({
 						urls: z.array(
@@ -101,16 +106,56 @@ export const UrlController = (app: App) => {
 		}
 	);
 
+	app.post(
+		"/url/:id",
+		{
+			onRequest: [app.authenticate],
+			schema: {
+				description: "Update the original URL of a custom URL by its ID",
+				params: z.object({
+					id: z.string().pipe(z.coerce.number())
+				}),
+				body: z.object({
+					originalUrl: UrlSchema
+				}),
+				response: createResponseSchema(
+					z.object({
+						id: z.number(),
+						originalUrl: z.string(),
+						shortenedUrl: z.string(),
+						customCode: z.string(),
+						createdAt: z.date()
+					})
+				)
+			}
+		},
+		async (request, reply) => {
+			const { id } = request.params;
+			const { originalUrl } = request.body;
+
+			const updatedUrl = await app.services.url.updateCustomUrl(id, request.user.id, originalUrl);
+
+			return reply.code(200).send({
+				success: true,
+				data: {
+					...updatedUrl
+				}
+			});
+		}
+	);
+
 	app.delete(
 		"/url/:id",
 		{
 			onRequest: [app.authenticate],
 			schema: {
+				description: "Delete a URL (shortened or custom) by its ID",
+				tags: ["URL"],
 				params: z.object({
 					id: z.string().pipe(z.coerce.number())
 				}),
 				body: z.object({
-					shortenedUrl: z.string()
+					shortenedUrl: ShortenedUrlSchema
 				}),
 				response: createResponseSchema()
 			}

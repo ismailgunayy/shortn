@@ -13,18 +13,6 @@
 
 	let authState = $derived($authStore);
 
-	function validateField(field: keyof LoginForm) {
-		const fieldSchema = loginSchema.shape[field];
-		const result = fieldSchema.safeParse(formData[field]);
-
-		if (!result.success) {
-			const firstError = result.error.issues[0];
-			errors[field] = firstError?.message || 'Invalid value';
-		} else {
-			errors[field] = '';
-		}
-	}
-
 	function validateForm(): boolean {
 		const result = loginSchema.safeParse(formData);
 
@@ -63,7 +51,7 @@
 	<meta name="description" content="Sign in to your Shortn account" />
 </svelte:head>
 
-<div class="flex min-h-screen flex-col items-center justify-center px-4 pt-20">
+<div class="flex flex-col items-center justify-center">
 	<!-- Title -->
 	<div class="mb-8 text-center">
 		<h1
@@ -96,9 +84,8 @@
 				<label for="email" class="text-form-label"> Email </label>
 				<input
 					id="email"
-					type="email"
+					type="text"
 					bind:value={formData.email}
-					onblur={() => validateField('email')}
 					placeholder="your@email.com"
 					class="text-form-input w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-600/60 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
 					disabled={authState.loading}
@@ -116,7 +103,6 @@
 					id="password"
 					type="password"
 					bind:value={formData.password}
-					onblur={() => validateField('password')}
 					placeholder="Your password"
 					class="text-form-input w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-600/60 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
 					disabled={authState.loading}
@@ -131,7 +117,7 @@
 			<button
 				type="submit"
 				disabled={authState.loading || !formData.email.trim() || !formData.password.trim()}
-				class="text-button w-full transform cursor-pointer rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-6 py-2.5 font-semibold text-slate-100 shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:outline-none focus:ring-2 focus:ring-slate-400/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+				class="text-button text-button-color w-full transform cursor-pointer rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-6 py-2.5 font-semibold shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:outline-none focus:ring-2 focus:ring-slate-400/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
 			>
 				{#if authState.loading}
 					<span class="flex items-center justify-center">
@@ -144,11 +130,11 @@
 			</button>
 
 			<!-- Register Link -->
-			<p class="text-body-small mt-4 text-center text-slate-400">
+			<p class="text-body-small text-muted mt-4 text-center">
 				Don't have an account?
 				<a
 					href="/web/register"
-					class="font-medium text-slate-300 transition-colors hover:text-slate-100"
+					class="text-secondary hover:text-bright font-medium transition-colors"
 				>
 					Sign up
 				</a>

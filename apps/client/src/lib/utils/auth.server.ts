@@ -1,10 +1,15 @@
 import type { User } from '$lib/stores/auth.store';
 import { redirect, type Cookies } from '@sveltejs/kit';
 import { serverApi } from '$lib/api/api.server';
+import { prepareCookieString } from './parseCookies';
 
 export async function checkAuthStatus(cookies: Cookies): Promise<User | undefined> {
 	try {
-		const response = await serverApi.auth.status(cookies);
+		const response = await serverApi.auth.status({
+			headers: {
+				Cookie: prepareCookieString(cookies)
+			}
+		});
 
 		if (response.success && response.data?.isAuthenticated && response.data?.user) {
 			return response.data.user;

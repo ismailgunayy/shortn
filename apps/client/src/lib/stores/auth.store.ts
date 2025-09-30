@@ -66,7 +66,7 @@ function createAuthStore() {
 
 				if (response.success && response.data) {
 					await this.checkStatus();
-					goto('/');
+					goto('/web/dashboard');
 
 					return { success: true };
 				} else {

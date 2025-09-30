@@ -1,3 +1,4 @@
+import { APP_CONFIG } from "~/common/config";
 import { ShortnError } from "./base.error";
 
 export class UrlError extends ShortnError {
@@ -33,5 +34,23 @@ export class UrlNotFound extends UrlError {
 export class CustomUrlNotFound extends UrlError {
 	constructor(cause?: unknown) {
 		super("Custom URL not found", 404, cause);
+	}
+}
+
+export class InvalidUrlProtocol extends UrlError {
+	constructor(cause?: unknown) {
+		super("URL must use HTTPS protocol", 400, cause);
+	}
+}
+
+export class InvalidUrlHostname extends UrlError {
+	constructor(cause?: unknown) {
+		super("URL must have a valid domain name with at least one dot", 400, cause);
+	}
+}
+
+export class InvalidShortenedUrlDomain extends UrlError {
+	constructor(cause?: unknown) {
+		super(`URL must be a valid shortened URL from ${APP_CONFIG.HTTP.CLIENT_URL}`, 400, cause);
 	}
 }

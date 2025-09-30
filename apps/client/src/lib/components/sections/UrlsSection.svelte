@@ -1,20 +1,30 @@
 <script lang="ts">
-	import type { UrlItem, CustomUrlItem } from '$lib/types/api.types';
 	import { api } from '$lib/api/api.client';
 	import CheckMark from '$lib/icons/CheckMark.svelte';
 	import Edit from '$lib/icons/Edit.svelte';
 	import Delete from '$lib/icons/Delete.svelte';
+	import Loading from '$lib/icons/Loading.svelte';
+	import { formatDate } from '$lib/utils/formatDate';
+	import type {
+		CustomUrlItem,
+		UpdateCustomUrlRequest,
+		UrlItem
+	} from '$lib/api/services/url.service';
 
 	interface Props {
 		urls: UrlItem[];
 		customUrls: CustomUrlItem[];
 		onUrlDeleted: (id: number, isCustom: boolean) => void;
+		onUrlUpdated: (updatedUrl: CustomUrlItem) => void;
 	}
 
-	let { urls, customUrls, onUrlDeleted }: Props = $props();
+	let { urls, customUrls, onUrlDeleted, onUrlUpdated }: Props = $props();
 
 	let copiedId: string | null = $state(null);
 	let copiedTimeout: ReturnType<typeof setTimeout> | null = $state(null);
+	let editingUrl: UpdateCustomUrlRequest | null = $state(null);
+	let editOriginalUrl = $state('');
+	let updatingUrl = $state(false);
 
 	async function deleteUrl(id: number, shortenedUrl: string, isCustom = false) {
 		if (!confirm('Are you sure you want to delete this URL?')) return;
@@ -46,16 +56,48 @@
 		}
 	}
 
-	const formatDate = (dateString: string) => {
-		return new Date(dateString).toLocaleDateString('en-US', {
-			year: 'numeric',
-			month: 'short',
-			day: 'numeric',
-			hour: '2-digit',
-			minute: '2-digit',
-			hour12: false
-		});
-	};
+	async function updateCustomUrl() {
+		if (!editingUrl || !editOriginalUrl.trim()) return;
+
+		updatingUrl = true;
+
+		try {
+			const response = await api.url.updateCustomUrl({
+				id: editingUrl.id,
+				originalUrl: editOriginalUrl.trim()
+			});
+
+			if (response.error) {
+				throw new Error(response.error.message);
+			}
+
+			if (response.data) {
+				onUrlUpdated({
+					id: response.data.id,
+					originalUrl: response.data.originalUrl,
+					shortenedUrl: response.data.shortenedUrl,
+					customCode: response.data.customCode,
+					createdAt: response.data.createdAt
+				});
+				editingUrl = null;
+				editOriginalUrl = '';
+			}
+		} catch (err) {
+			alert(err instanceof Error ? err.message : 'Failed to update custom URL');
+		} finally {
+			updatingUrl = false;
+		}
+	}
+
+	function startEditingUrl(url: CustomUrlItem) {
+		editingUrl = { id: url.id, originalUrl: url.originalUrl };
+		editOriginalUrl = url.originalUrl;
+	}
+
+	function cancelEditingUrl() {
+		editingUrl = null;
+		editOriginalUrl = '';
+	}
 </script>
 
 <div class="space-y-6">
@@ -81,10 +123,7 @@
 								>Created Date</th
 							>
 							<th class="text-body-small text-bright w-1/12 px-4 py-3 text-left font-medium"
-								>Edit</th
-							>
-							<th class="text-body-small text-bright w-1/12 px-4 py-3 text-left font-medium"
-								>Delete</th
+								>Actions</th
 							>
 						</tr>
 					</thead>
@@ -93,15 +132,44 @@
 							<tr class="hover:bg-slate-600/20">
 								<td class="px-4 py-3">
 									<div class="flex items-center gap-2">
-										<button
-											onclick={() => copyToClipboard(url.originalUrl, `custom-original-${url.id}`)}
-											class="text-body-small scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-600 hover:scrollbar-thumb-slate-500 text-secondary hover:text-bright max-w-full cursor-pointer overflow-x-auto rounded bg-slate-900/60 px-2 py-1 text-left hover:bg-slate-800/80"
-											title="Click to copy: {url.originalUrl}"
-										>
-											<span class="whitespace-nowrap">{url.originalUrl}</span>
-										</button>
-										{#if copiedId === `custom-original-${url.id}`}
-											<CheckMark class="text-success h-4 w-4" />
+										{#if editingUrl?.id === url.id}
+											<div class="flex w-full items-center gap-2">
+												<input
+													bind:value={editOriginalUrl}
+													class="text-form-input w-min flex-1 rounded-xl border border-slate-600/60 bg-slate-800/40 px-3 py-2 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+													placeholder="Original Url"
+													onkeydown={(e) => e.key === 'Enter' && updateCustomUrl()}
+												/>
+												<button
+													onclick={updateCustomUrl}
+													disabled={updatingUrl || !editOriginalUrl.trim()}
+													class="text-caption text-success cursor-pointer rounded bg-emerald-800/60 px-2 py-1 hover:bg-emerald-800/80 disabled:opacity-50"
+												>
+													{#if updatingUrl}
+														<Loading class="h-3 w-3" />
+													{:else}
+														Save
+													{/if}
+												</button>
+												<button
+													onclick={cancelEditingUrl}
+													class="text-caption text-secondary cursor-pointer rounded bg-slate-600/60 px-2 py-1 hover:bg-slate-600/80"
+												>
+													Cancel
+												</button>
+											</div>
+										{:else}
+											<button
+												onclick={() =>
+													copyToClipboard(url.originalUrl, `custom-original-${url.id}`)}
+												class="text-body-small scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-600 hover:scrollbar-thumb-slate-500 text-secondary hover:text-bright max-w-full cursor-pointer overflow-x-auto rounded bg-slate-900/60 px-2 py-1 text-left hover:bg-slate-800/80"
+												title="Click to copy: {url.originalUrl}"
+											>
+												<span class="whitespace-nowrap">{url.originalUrl}</span>
+											</button>
+											{#if copiedId === `custom-original-${url.id}`}
+												<CheckMark class="text-success h-4 w-4" />
+											{/if}
 										{/if}
 									</div>
 								</td>
@@ -122,20 +190,24 @@
 									<span class="text-body-small text-tertiary">{formatDate(url.createdAt)}</span>
 								</td>
 								<td class="px-4 py-3">
-									<button
-										class="text-caption text-tertiary hover:text-secondary cursor-pointer rounded px-2 py-1 hover:bg-slate-600/40"
-										disabled
-									>
-										<Edit class="h-4 w-4" />
-									</button>
-								</td>
-								<td class="px-4 py-3">
-									<button
-										onclick={() => deleteUrl(url.id, url.shortenedUrl, true)}
-										class="text-caption text-error cursor-pointer rounded px-2 py-1 hover:bg-red-900/20 hover:text-red-300"
-									>
-										<Delete class="h-4 w-4" />
-									</button>
+									{#if editingUrl?.id !== url.id}
+										<div class="flex gap-1">
+											<button
+												onclick={() => startEditingUrl(url)}
+												class="text-caption text-tertiary hover:text-secondary cursor-pointer rounded px-2 py-1 hover:bg-slate-600/40"
+												title="Edit original URL"
+											>
+												<Edit class="h-4 w-4" />
+											</button>
+											<button
+												onclick={() => deleteUrl(url.id, url.shortenedUrl, true)}
+												class="text-caption text-error cursor-pointer rounded px-2 py-1 hover:bg-red-900/20 hover:text-red-300"
+												title="Delete URL"
+											>
+												<Delete class="h-4 w-4" />
+											</button>
+										</div>
+									{/if}
 								</td>
 							</tr>
 						{/each}
@@ -148,43 +220,73 @@
 				{#each customUrls as url}
 					<div class="relative">
 						<div class="rounded-lg border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg">
-							<div class="flex items-start justify-between gap-4">
-								<div class="min-w-0 flex-1">
-									<div class="mb-2 flex items-center gap-2">
+							{#if editingUrl?.id === url.id}
+								<div class="space-y-3">
+									<div class="flex items-center gap-2">
+										<input
+											bind:value={editOriginalUrl}
+											class="text-form-input flex-1 rounded-xl border border-slate-600/60 bg-slate-800/40 px-3 py-2 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+											placeholder="Original Url"
+											onkeydown={(e) => e.key === 'Enter' && updateCustomUrl()}
+										/>
 										<button
-											onclick={() => copyToClipboard(url.shortenedUrl, `custom-${url.id}`)}
-											class="text-body-small scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-600 hover:scrollbar-thumb-slate-500 text-secondary hover:text-bright cursor-pointer overflow-x-auto rounded bg-slate-900/60 px-2 py-1 hover:bg-slate-800/80"
+											onclick={updateCustomUrl}
+											disabled={updatingUrl || !editOriginalUrl.trim()}
+											class="text-caption text-success cursor-pointer rounded bg-emerald-800/60 px-2 py-1 hover:bg-emerald-800/80 disabled:opacity-50"
 										>
-											<span class="whitespace-nowrap">{url.customCode}</span>
+											{#if updatingUrl}
+												<Loading class="h-3 w-3" />
+											{:else}
+												Save
+											{/if}
 										</button>
-										<span class="text-caption rounded bg-purple-800/60 px-2 py-1 text-purple-300">
-											Custom
-										</span>
+										<button
+											onclick={cancelEditingUrl}
+											class="text-caption text-secondary cursor-pointer rounded bg-slate-600/60 px-2 py-1 hover:bg-slate-600/80"
+										>
+											Cancel
+										</button>
 									</div>
-									<button
-										onclick={() => copyToClipboard(url.originalUrl, `custom-mobile-${url.id}`)}
-										class="text-body-small scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-600 hover:scrollbar-thumb-slate-500 text-secondary hover:text-bright mb-1 max-w-full cursor-pointer overflow-x-auto rounded bg-slate-900/60 px-2 py-1 text-left hover:bg-slate-800/80"
-										title="Click to copy: {url.originalUrl}"
-									>
-										<span class="whitespace-nowrap">→ {url.originalUrl}</span>
-									</button>
 									<p class="text-caption text-muted">Created {formatDate(url.createdAt)}</p>
 								</div>
-								<div class="flex gap-2">
-									<button
-										class="text-caption text-tertiary hover:text-secondary cursor-pointer rounded px-2 py-1 hover:bg-slate-600/40"
-										disabled
-									>
-										<Edit class="h-4 w-4" />
-									</button>
-									<button
-										onclick={() => deleteUrl(url.id, url.shortenedUrl, true)}
-										class="text-caption text-error cursor-pointer rounded px-2 py-1 hover:bg-red-900/20 hover:text-red-300"
-									>
-										<Delete class="h-4 w-4" />
-									</button>
+							{:else}
+								<div class="flex items-start justify-between gap-4">
+									<div class="min-w-0 flex-1">
+										<div class="mb-2 flex items-center gap-2">
+											<button
+												onclick={() => copyToClipboard(url.shortenedUrl, `custom-${url.id}`)}
+												class="text-body-small scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-600 hover:scrollbar-thumb-slate-500 text-secondary hover:text-bright cursor-pointer overflow-x-auto rounded bg-slate-900/60 px-2 py-1 hover:bg-slate-800/80"
+											>
+												<span class="whitespace-nowrap">{url.customCode}</span>
+											</button>
+										</div>
+										<button
+											onclick={() => copyToClipboard(url.originalUrl, `custom-mobile-${url.id}`)}
+											class="text-body-small scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-600 hover:scrollbar-thumb-slate-500 text-secondary hover:text-bright mb-1 max-w-full cursor-pointer overflow-x-auto rounded bg-slate-900/60 px-2 py-1 text-left hover:bg-slate-800/80"
+											title="Click to copy: {url.originalUrl}"
+										>
+											<span class="whitespace-nowrap">→ {url.originalUrl}</span>
+										</button>
+										<p class="text-caption text-muted">Created {formatDate(url.createdAt)}</p>
+									</div>
+									<div class="flex gap-2">
+										<button
+											onclick={() => startEditingUrl(url)}
+											class="text-caption text-tertiary hover:text-secondary cursor-pointer rounded px-2 py-1 hover:bg-slate-600/40"
+											title="Edit original URL"
+										>
+											<Edit class="h-4 w-4" />
+										</button>
+										<button
+											onclick={() => deleteUrl(url.id, url.shortenedUrl, true)}
+											class="text-caption text-error cursor-pointer rounded px-2 py-1 hover:bg-red-900/20 hover:text-red-300"
+											title="Delete URL"
+										>
+											<Delete class="h-4 w-4" />
+										</button>
+									</div>
 								</div>
-							</div>
+							{/if}
 						</div>
 						<!-- Checkmarks positioned outside the card -->
 						{#if copiedId === `custom-${url.id}`}

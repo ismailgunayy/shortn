@@ -42,28 +42,6 @@ export class UrlHelper {
 		return result;
 	};
 
-	public isUrlValid(url: string) {
-		try {
-			const parsed = new URL(url);
-
-			if (this.app.config.IS_LOCAL) {
-				return true;
-			}
-
-			return parsed.protocol === "https:" && parsed.hostname.length > 0 && parsed.hostname.includes(".");
-		} catch {
-			return false;
-		}
-	}
-
-	public isShortenedUrlValid(url: string) {
-		if (this.isUrlValid(url) && url.includes(this.app.config.HTTP.CLIENT_URL)) {
-			return true;
-		}
-
-		return false;
-	}
-
 	public buildUrl(shortCode: string, segment?: URLSegment) {
 		if (segment === URLSegment.Custom) {
 			return `${this.app.config.HTTP.CLIENT_URL}/${URLSegment.Custom}/${shortCode}`;

@@ -1,4 +1,4 @@
-import { CustomCodeAlreadyInUse, CustomUrlNotFound, InvalidShortenedUrl, InvalidUrl, UrlNotFound } from "~/errors";
+import { CustomCodeAlreadyInUse, CustomUrlNotFound, InvalidShortenedUrl, UrlNotFound } from "~/errors";
 
 import { App } from "~/types/fastify";
 import { CacheType } from "./cache.service";
@@ -41,10 +41,6 @@ export class UrlService {
 	}
 
 	public async shortenUrl(originalUrl: string, userId: number, customCode?: string) {
-		if (!this.app.helpers.url.isUrlValid(originalUrl)) {
-			throw new InvalidUrl();
-		}
-
 		const shortenedUrl = customCode
 			? await this.createCustomUrl(originalUrl, userId, customCode)
 			: await this.createGeneratedUrl(originalUrl, userId);
@@ -60,10 +56,6 @@ export class UrlService {
 	}
 
 	public async getOriginalUrl(shortenedUrl: string) {
-		if (!this.app.helpers.url.isShortenedUrlValid(shortenedUrl)) {
-			throw new InvalidShortenedUrl();
-		}
-
 		const cachedUrl = await this.app.services.cache.get(CacheType.URL, shortenedUrl);
 		if (cachedUrl) {
 			return cachedUrl;
@@ -89,7 +81,7 @@ export class UrlService {
 			return existingCustom.url;
 		} else {
 			const id = this.app.helpers.url.decodeId(slug);
-			const existingUrl = await this.urlRepository.findUrl(id);
+			const existingUrl = await this.urlRepository.findUrlById(id);
 
 			if (!existingUrl) {
 				throw new InvalidShortenedUrl();
@@ -136,6 +128,24 @@ export class UrlService {
 		};
 	}
 
+	public async updateCustomUrl(id: number, userId: number, originalUrl: string) {
+		const url = await this.urlRepository.findCustomUrlById(id, userId);
+
+		if (!url || url.userId !== userId) {
+			throw new CustomUrlNotFound();
+		}
+
+		const updatedUrl = await this.urlRepository.updateCustomUrl(id, userId, { url: originalUrl });
+
+		return {
+			id: updatedUrl.id,
+			originalUrl: updatedUrl.url,
+			shortenedUrl: this.app.helpers.url.buildUrl(updatedUrl.customCode, URLSegment.Custom),
+			customCode: updatedUrl.customCode,
+			createdAt: updatedUrl.createdAt
+		};
+	}
+
 	public async deleteUrl(id: number, userId: number, shortenedUrl: string) {
 		if (this.app.helpers.url.isCustomUrl(shortenedUrl)) {
 			await this.deleteCustomUrl(id, userId);
@@ -147,22 +157,22 @@ export class UrlService {
 	}
 
 	private async deleteGeneratedUrl(id: number, userId: number) {
-		const url = await this.urlRepository.findUrl(id);
+		const url = await this.urlRepository.findUrlById(id);
 
 		if (!url || url.userId !== userId) {
 			throw new UrlNotFound();
 		}
 
-		await this.urlRepository.deleteUrl(id);
+		await this.urlRepository.deleteUrl(id, userId);
 	}
 
 	private async deleteCustomUrl(id: number, userId: number) {
-		const url = await this.urlRepository.findCustomUrl(id);
+		const url = await this.urlRepository.findCustomUrlById(id, userId);
 
 		if (!url || url.userId !== userId) {
 			throw new CustomUrlNotFound();
 		}
 
-		await this.urlRepository.deleteCustomUrl(id);
+		await this.urlRepository.deleteCustomUrl(id, userId);
 	}
 }

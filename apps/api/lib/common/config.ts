@@ -87,4 +87,4 @@ function structureConfig() {
 }
 
 export type TConfig = ReturnType<typeof structureConfig>;
-export const APP_CONFIG = structureConfig();
+export const APP_CONFIG = Object.freeze(structureConfig());

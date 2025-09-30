@@ -1,5 +1,5 @@
 import { AuthHelper, UrlHelper } from "~/helpers";
-import { AuthService, TokenType } from "~/services/auth.service";
+import { AuthMethod, AuthService, TokenType } from "~/services/auth.service";
 import { FastifyBaseLogger, FastifyInstance, RawServerDefault } from "fastify";
 import { IncomingMessage, ServerResponse } from "http";
 import { Kysely, Selectable } from "kysely";
@@ -16,8 +16,8 @@ interface JWTPayload {
 }
 
 interface UserPayload extends Selectable<Omit<DB["shortn.users"], "password">> {
-	apiKey?: string;
 	isServiceAccount?: boolean;
+	authenticatedWith: AuthMethod;
 }
 
 declare module "@fastify/jwt" {

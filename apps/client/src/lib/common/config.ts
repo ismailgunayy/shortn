@@ -36,27 +36,14 @@ function structureConfig() {
 	};
 
 	return {
-		env,
-		api: {
-			baseUrl: getApiBaseUrl(),
-			endpoints: {
-				auth: {
-					register: 'auth/register',
-					login: 'auth/login',
-					status: 'auth/status',
-					refresh: 'auth/refresh',
-					logout: 'auth/logout',
-					apiKeys: 'auth/api-keys'
-				},
-				url: {
-					shorten: 'url/shorten',
-					original: 'url/original',
-					list: 'url',
-					delete: 'url'
-				}
-			}
-		}
-	} as const;
+		HTTP: {
+			PORT: Number(env.VITE_PORT),
+			CLIENT_HOST: env.VITE_CLIENT_HOST,
+			CLIENT_URL: env.VITE_CLIENT_URL,
+			API_BASE_URL: getApiBaseUrl()
+		},
+		MODE: env.VITE_MODE
+	};
 }
 
 export const config = structureConfig();

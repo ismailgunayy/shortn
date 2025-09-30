@@ -22,6 +22,11 @@ export enum TokenType {
 	REFRESH = "refreshToken"
 }
 
+export enum AuthMethod {
+	ACCESS_TOKEN = "accessToken",
+	API_KEY = "apiKey"
+}
+
 export class AuthService {
 	constructor(
 		private readonly app: App,
@@ -188,7 +193,7 @@ export class AuthService {
 			throw new InvalidApiKey();
 		}
 
-		await this.authRepository.updateApiKey(apiKey.id, { lastUsedAt: new Date() });
+		await this.authRepository.updateApiKey(apiKey.id, apiKey.userId, { lastUsedAt: new Date() });
 
 		return {
 			userId: apiKey.userId
@@ -208,7 +213,7 @@ export class AuthService {
 		}
 
 		if (apiKey.name !== name) {
-			await this.authRepository.updateApiKey(id, { name });
+			await this.authRepository.updateApiKey(id, userId, { name });
 		}
 
 		return {

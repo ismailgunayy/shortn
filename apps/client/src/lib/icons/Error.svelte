@@ -7,7 +7,7 @@
 </script>
 
 <svg
-	class={`h-6 w-6 text-red-400 sm:h-8 sm:w-8 ${className}`}
+	class={`text-error h-6 w-6 sm:h-8 sm:w-8 ${className}`}
 	fill="none"
 	stroke="currentColor"
 	viewBox="0 0 24 24"

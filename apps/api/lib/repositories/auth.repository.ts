@@ -36,8 +36,13 @@ export class AuthRepository {
 		return await this.db.insertInto("shortn.apiKeys").values(values).returningAll().executeTakeFirstOrThrow();
 	}
 
-	async updateApiKey(id: number, values: Updateable<ShortnApiKeys>) {
-		return await this.db.updateTable("shortn.apiKeys").set(values).where("id", "=", id).executeTakeFirstOrThrow();
+	async updateApiKey(id: number, userId: number, values: Updateable<ShortnApiKeys>) {
+		return await this.db
+			.updateTable("shortn.apiKeys")
+			.set(values)
+			.where("id", "=", id)
+			.where("userId", "=", userId)
+			.executeTakeFirstOrThrow();
 	}
 
 	async deleteApiKey(id: number, userId: number) {

@@ -22,7 +22,7 @@
 >
 	<Header />
 
-	<main class="flex-1">
+	<main class="flex-1 px-4 pb-16 pt-20">
 		{@render children?.()}
 	</main>
 

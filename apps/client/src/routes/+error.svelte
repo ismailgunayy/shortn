@@ -22,7 +22,7 @@
 	<title>Shortn | Page Not Found</title>
 </svelte:head>
 
-<div class="flex min-h-screen flex-col items-center justify-center px-4">
+<div class="flex flex-col items-center justify-center">
 	<!-- Main Container -->
 	<div class="w-full max-w-lg px-4 opacity-90 sm:px-0">
 		<div
@@ -45,13 +45,12 @@
 					>
 						You seem lost
 					</h1>
-					<p class="text-body text-slate-300">And that's okay</p>
 				</div>
 
 				<!-- Countdown and Redirect Info -->
 				<div class="rounded-lg border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg">
-					<p class="text-body-small text-slate-300">
-						Let's get you back home in <span class="font-semibold text-slate-200">{countdown}</span>
+					<p class="text-body-small text-secondary">
+						Let's get you back home in <span class="text-bright font-semibold">{countdown}</span>
 						seconds...
 					</p>
 				</div>
@@ -59,8 +58,8 @@
 				<!-- Manual Navigation Button -->
 				<a
 					href="/"
-					class="text-button duration-230 inline-flex transform cursor-pointer items-center justify-center rounded-xl bg-gradient-to-r
-						   from-slate-600 to-slate-700 px-6 py-3 font-medium text-slate-100 shadow-lg shadow-slate-900/20
+					class="text-button duration-230 text-button-color inline-flex transform cursor-pointer items-center justify-center rounded-xl
+						   bg-gradient-to-r from-slate-600 to-slate-700 px-6 py-3 font-medium shadow-lg shadow-slate-900/20
 						   backdrop-blur-lg transition-all hover:scale-[1.02] hover:from-slate-500 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30
 						   focus:outline-none focus:ring-2 focus:ring-slate-400/20 active:scale-[0.98]"
 				>
@@ -70,4 +69,3 @@
 		</div>
 	</div>
 </div>
-rt let error;
