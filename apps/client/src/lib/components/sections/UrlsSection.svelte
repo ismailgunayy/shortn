@@ -14,6 +14,7 @@
 	let { urls, customUrls, onUrlDeleted }: Props = $props();
 
 	let copiedId: string | null = $state(null);
+	let copiedTimeout: ReturnType<typeof setTimeout> | null = $state(null);
 
 	async function deleteUrl(id: number, shortenedUrl: string, isCustom = false) {
 		if (!confirm('Are you sure you want to delete this URL?')) return;
@@ -35,7 +36,9 @@
 		try {
 			await navigator.clipboard.writeText(text);
 			copiedId = id;
-			setTimeout(() => {
+			if (copiedTimeout) clearTimeout(copiedTimeout);
+
+			copiedTimeout = setTimeout(() => {
 				copiedId = null;
 			}, 2000);
 		} catch (err) {

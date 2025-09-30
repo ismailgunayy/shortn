@@ -6,8 +6,8 @@ services:
       - .env.local.dev
     environment:
       POSTGRES_DB: shortn
-      POSTGRES_USER: ${POSTGRES_USER:-user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U user -d shortn"]
       interval: 2s
