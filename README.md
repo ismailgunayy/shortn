@@ -8,7 +8,7 @@
 
 A non-innovative URL Shortener
 
-> ## **[🚀 Try it live now ](https://shortn.up.railway.app)**
+> ## **[🚀 Try it live now ](https://shortn.top)**
 
 ## Features
 

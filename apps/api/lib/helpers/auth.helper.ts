@@ -37,7 +37,7 @@ export class AuthHelper {
 			sameSite: "lax",
 			signed: true,
 			path: "/",
-			domain: this.app.config.IS_PRODUCTION ? ".up.railway.app" : undefined,
+			domain: this.app.config.IS_PRODUCTION ? this.app.config.HTTP.CLIENT_URL.replace("https://", "") : undefined,
 			...options
 		});
 	}
