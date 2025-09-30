@@ -12,7 +12,7 @@ export abstract class Service {
 	// TODO: Implement refresh token logic
 	public async request<T>(endpoint: string, options?: RequestInit): Promise<ApiResponse<T>> {
 		try {
-			const url = `${config.api.baseUrl}/api/${endpoint}`;
+			const url = `${config.api.baseUrl}/${endpoint}`;
 
 			const headers: HeadersInit = {
 				...(options?.body && { 'Content-Type': 'application/json' }),

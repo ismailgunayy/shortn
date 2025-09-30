@@ -4,42 +4,39 @@ import { App } from "~/types/fastify";
 import fastifyPlugin from "fastify-plugin";
 
 export const router = fastifyPlugin((app: App) => {
-	app.register(
-		(app: App) => {
-			// General endpoints
-			app.register(HealthController);
+	app.register((app: App) => {
+		// General endpoints
+		app.register(HealthController);
 
-			// Private endpoints
+		// Private endpoints
+		app.register((app: App) => {
 			app.register((app: App) => {
-				app.register((app: App) => {
-					// TODO: Enable once login system is implemented
-					// app.addHook("onRequest", (request, reply, done) => {
-					// 	if (app.config.IS_LOCAL) {
-					// 		return done();
-					// 	}
+				// TODO: Enable once login system is implemented
+				// app.addHook("onRequest", (request, reply, done) => {
+				// 	if (app.config.IS_LOCAL) {
+				// 		return done();
+				// 	}
 
-					// 	const { origin } = request.headers;
+				// 	const { origin } = request.headers;
 
-					// 	if (!origin || !app.config.HTTP.CLIENT_URL.includes(origin)) {
-					// 		return reply.status(403).send({
-					// 			success: false,
-					// 			error: {
-					// 				message: "Forbidden"
-					// 			}
-					// 		});
-					// 	}
+				// 	if (!origin || !app.config.HTTP.CLIENT_URL.includes(origin)) {
+				// 		return reply.status(403).send({
+				// 			success: false,
+				// 			error: {
+				// 				message: "Forbidden"
+				// 			}
+				// 		});
+				// 	}
 
-					// 	return done();
-					// });
-					app.register(AuthController);
-				});
-
-				app.register((app: App) => {
-					app.register(UrlController);
-					app.register(TestController);
-				});
+				// 	return done();
+				// });
+				app.register(AuthController);
 			});
-		},
-		{ prefix: "/api" }
-	);
+
+			app.register((app: App) => {
+				app.register(UrlController);
+				app.register(TestController);
+			});
+		});
+	});
 });
