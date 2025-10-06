@@ -1,20 +1,20 @@
 <script lang="ts">
-	import CheckMark from '$lib/icons/CheckMark.svelte';
-	import Copy from '$lib/icons/Copy.svelte';
-	import Loading from '$lib/icons/Loading.svelte';
-	import Lock from '$lib/icons/Lock.svelte';
-	import UpgradeModal from '$lib/components/UpgradeModal.svelte';
-	import { config } from '$lib/common/config';
-	import { shortenUrl } from '$lib/utils/shorten-url';
-	import { authStore } from '$lib/stores/auth.store';
-	import { fade } from 'svelte/transition';
+	import CheckMark from "$lib/icons/CheckMark.svelte";
+	import Copy from "$lib/icons/Copy.svelte";
+	import Loading from "$lib/icons/Loading.svelte";
+	import Lock from "$lib/icons/Lock.svelte";
+	import UpgradeModal from "$lib/components/UpgradeModal.svelte";
+	import { config } from "$lib/common/config";
+	import { shortenUrl } from "$lib/utils/shorten-url";
+	import { authStore } from "$lib/stores/auth.store";
+	import { fade } from "svelte/transition";
 
 	// State variables
-	let url = $state('');
-	let customCode = $state('');
-	let shortenedUrl = $state('');
+	let url = $state("");
+	let customCode = $state("");
+	let shortenedUrl = $state("");
 	let loading = $state(false);
-	let error = $state('');
+	let error = $state("");
 	let copied = $state(false);
 	let useCustomCode = $state(false);
 	let showUpgradeModal = $state(false);
@@ -28,7 +28,7 @@
 		}
 
 		loading = true;
-		error = '';
+		error = "";
 
 		try {
 			// Using the internal +server endpoint to avoid exposing the API key to the client
@@ -37,8 +37,8 @@
 
 			if (response.error) {
 				if (
-					response.error.message?.includes('authentication') ||
-					response.error.message?.includes('Custom URLs require')
+					response.error.message?.includes("authentication") ||
+					response.error.message?.includes("Custom URLs require")
 				) {
 					showUpgradeModal = true;
 					return;
@@ -50,7 +50,7 @@
 				shortenedUrl = response.data.url;
 			}
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Something went wrong';
+			error = err instanceof Error ? err.message : "Something went wrong";
 		} finally {
 			loading = false;
 		}
@@ -70,16 +70,16 @@
 			copied = true;
 			setTimeout(() => (copied = false), 2300);
 		} catch (err) {
-			console.error('Failed to copy:', err);
+			console.error("Failed to copy:", err);
 		}
 	}
 
 	function reset() {
-		url = '';
-		customCode = '';
-		shortenedUrl = '';
+		url = "";
+		customCode = "";
+		shortenedUrl = "";
 		loading = false;
-		error = '';
+		error = "";
 		copied = false;
 		useCustomCode = false;
 	}
@@ -87,7 +87,10 @@
 
 <svelte:head>
 	<title>Shortn - URL Shortener</title>
-	<meta name="description" content="Shortn your URLs. Simple, fast." />
+	<meta
+		name="description"
+		content="Shortn your URLs. Simple, fast."
+	/>
 </svelte:head>
 
 <div class="flex flex-col items-center justify-center px-4">
@@ -111,7 +114,10 @@
 		>
 			{#if !shortenedUrl}
 				<!-- URL Input Form -->
-				<form onsubmit={shorten} class="space-y-4 sm:space-y-6">
+				<form
+					onsubmit={shorten}
+					class="space-y-4 sm:space-y-6"
+				>
 					<!-- URL Type Selection -->
 					<div>
 						<div class="text-form-label mb-1">URL Type</div>
@@ -124,9 +130,7 @@
 								type="button"
 								onclick={() => handleCustomCodeToggle(false)}
 								class={`text-button-small flex-1 cursor-pointer rounded-lg px-4 py-2 transition-all duration-200 ${
-									!useCustomCode
-										? 'text-bright bg-slate-600/60 shadow-sm'
-										: 'text-muted hover:text-tertiary'
+									!useCustomCode ? "text-bright bg-slate-600/60 shadow-sm" : "text-muted hover:text-tertiary"
 								}`}
 								disabled={loading}
 							>
@@ -136,15 +140,16 @@
 								type="button"
 								onclick={() => handleCustomCodeToggle(true)}
 								class={`text-button-small relative flex-1 cursor-pointer rounded-lg px-4 py-2 transition-all duration-200 ${
-									useCustomCode
-										? 'text-bright bg-slate-600/60 shadow-sm'
-										: 'text-muted hover:text-tertiary'
+									useCustomCode ? "text-bright bg-slate-600/60 shadow-sm" : "text-muted hover:text-tertiary"
 								}`}
 								disabled={loading}
 							>
 								<span>Custom</span>
 								{#if !$authStore.isAuthenticated && !$authStore.loading}
-									<div transition:fade class="absolute right-2 top-1/2 -translate-y-1/2">
+									<div
+										transition:fade
+										class="absolute right-2 top-1/2 -translate-y-1/2"
+									>
 										<Lock />
 									</div>
 								{/if}
@@ -154,7 +159,12 @@
 
 					<!--  URL Input -->
 					<div>
-						<label for="url" class="text-form-label"> Enter your URL </label>
+						<label
+							for="url"
+							class="text-form-label"
+						>
+							Enter your URL
+						</label>
 						<input
 							id="url"
 							type="url"
@@ -171,20 +181,21 @@
 					<!-- Custom Code Input -->
 					{#if useCustomCode}
 						<div>
-							<label for="customCode" class="text-form-label"> Custom short code </label>
+							<label
+								for="customCode"
+								class="text-form-label"
+							>
+								Custom short code
+							</label>
 							<div
 								class={`mt-1 flex items-center rounded-xl border border-slate-600/60 bg-slate-800/40 backdrop-blur-lg transition-all duration-200 focus-within:border-slate-500/80 focus-within:ring-2 focus-within:ring-slate-400/20`}
 							>
-								<span class="text-form-input text-muted py-2.5 pl-4 sm:py-3"
-									>{config.HTTP.CLIENT_HOST}/c/</span
-								>
+								<span class="text-form-input text-muted py-2.5 pl-4 sm:py-3">{config.HTTP.CLIENT_HOST}/c/</span>
 								<input
 									id="customCode"
 									type="text"
 									bind:value={customCode}
-									placeholder={$authStore.isAuthenticated
-										? 'custom-code'
-										: 'Sign up to use custom codes'}
+									placeholder={$authStore.isAuthenticated ? "custom-code" : "Sign up to use custom codes"}
 									class="text-form-input flex-1 border-none bg-transparent py-2.5 pl-0.5 pr-4 placeholder-slate-500 outline-none focus:ring-0 sm:py-3"
 									disabled={loading || !$authStore.isAuthenticated}
 									pattern="[a-zA-Z0-9_-]+"
@@ -196,9 +207,7 @@
 					{/if}
 
 					{#if error}
-						<div
-							class="text-error rounded-lg border border-red-800/50 bg-red-900/20 p-3 backdrop-blur-lg"
-						>
+						<div class="text-error rounded-lg border border-red-800/50 bg-red-900/20 p-3 backdrop-blur-lg">
 							{error}
 						</div>
 					{/if}
@@ -225,7 +234,7 @@
 									<Lock />
 									Sign Up for Custom URLs
 								{:else}
-									{useCustomCode ? 'Create Custom URL' : 'Generate Shortened URL'}
+									{useCustomCode ? "Create Custom URL" : "Generate Shortened URL"}
 								{/if}
 							</span>
 						{/if}
@@ -234,15 +243,13 @@
 			{:else}
 				<!-- Result Display -->
 				<div class="space-y-4 text-center sm:space-y-6">
-					<div
-						class="rounded-xl border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg sm:p-6"
-					>
+					<div class="rounded-xl border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg sm:p-6">
 						<p class="text-body-small text-secondary mb-2">Your short URL:</p>
 						<div class="flex flex-col gap-3 sm:flex-row sm:items-center">
 							<code
 								class="text-body text-bright flex-1 overflow-x-auto rounded-lg border border-slate-600/60 bg-slate-900/40 px-3 py-2 font-mono backdrop-blur-lg sm:px-4"
 							>
-								{shortenedUrl.replace(/^(https?:\/\/)/, '')}
+								{shortenedUrl.replace(/^(https?:\/\/)/, "")}
 							</code>
 							<button
 								onclick={copyToClipboard}

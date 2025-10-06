@@ -1,5 +1,5 @@
-import { browser } from '$app/environment';
-import { config } from '$lib/common/config';
+import { browser } from "$app/environment";
+import { config } from "$lib/common/config";
 
 export interface ServiceConfig {
 	apiKey?: string;
@@ -14,15 +14,14 @@ export abstract class Service {
 			const url = `${config.HTTP.API_BASE_URL}/${endpoint}`;
 
 			const headers: HeadersInit = {
-				...(options?.body && { 'Content-Type': 'application/json' }),
-				...(!browser &&
-					this.serviceConfig?.apiKey && { Authorization: `Bearer ${this.serviceConfig.apiKey}` }),
+				...(options?.body && { "Content-Type": "application/json" }),
+				...(!browser && this.serviceConfig?.apiKey && { Authorization: `Bearer ${this.serviceConfig.apiKey}` }),
 				...options?.headers
 			};
 
 			const fetched = await fetch(url, {
 				...options,
-				...(browser && { credentials: 'include' }),
+				...(browser && { credentials: "include" }),
 				headers
 			});
 
@@ -31,7 +30,7 @@ export abstract class Service {
 			return {
 				success: false,
 				error: {
-					message: err instanceof Error ? err.message : 'Network error'
+					message: err instanceof Error ? err.message : "Network error"
 				}
 			};
 		}
@@ -39,11 +38,7 @@ export abstract class Service {
 }
 
 // Good practice, but I don't have time to implement this now :/
-export interface ApiRequest<
-	P = Record<string, unknown>,
-	Q = Record<string, unknown>,
-	B = Record<string, unknown>
-> {
+export interface ApiRequest<P = Record<string, unknown>, Q = Record<string, unknown>, B = Record<string, unknown>> {
 	params?: P;
 	query?: Q;
 	body?: B;

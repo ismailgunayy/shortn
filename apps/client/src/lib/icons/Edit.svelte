@@ -3,10 +3,15 @@
 		class?: string;
 	}
 
-	let { class: className = 'h-4 w-4 text-tertiary' }: Props = $props();
+	let { class: className = "h-4 w-4 text-tertiary" }: Props = $props();
 </script>
 
-<svg class={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<svg
+	class={className}
+	fill="none"
+	stroke="currentColor"
+	viewBox="0 0 24 24"
+>
 	<path
 		stroke-linecap="round"
 		stroke-linejoin="round"

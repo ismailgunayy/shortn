@@ -1,14 +1,14 @@
 <script lang="ts">
-	import { api } from '$lib/api/api.client';
-	import Loading from '$lib/icons/Loading.svelte';
-	import Copy from '$lib/icons/Copy.svelte';
-	import Edit from '$lib/icons/Edit.svelte';
-	import Delete from '$lib/icons/Delete.svelte';
-	import CheckMark from '$lib/icons/CheckMark.svelte';
-	import Key from '$lib/icons/Key.svelte';
-	import Plus from '$lib/icons/Plus.svelte';
-	import { formatDate } from '$lib/utils/formatDate';
-	import type { ApiKey } from '$lib/api/services/auth.service';
+	import { api } from "$lib/api/api.client";
+	import Loading from "$lib/icons/Loading.svelte";
+	import Copy from "$lib/icons/Copy.svelte";
+	import Edit from "$lib/icons/Edit.svelte";
+	import Delete from "$lib/icons/Delete.svelte";
+	import CheckMark from "$lib/icons/CheckMark.svelte";
+	import Key from "$lib/icons/Key.svelte";
+	import Plus from "$lib/icons/Plus.svelte";
+	import { formatDate } from "$lib/utils/formatDate";
+	import type { ApiKey } from "$lib/api/services/auth.service";
 
 	interface Props {
 		apiKeys: ApiKey[];
@@ -17,14 +17,14 @@
 
 	let { apiKeys, onApiKeysUpdated }: Props = $props();
 
-	let newApiKeyName = $state('');
+	let newApiKeyName = $state("");
 	let creatingApiKey = $state(false);
 	let newApiKeyResult: { key: string; name: string; id: number } | null = $state(null);
 	let copiedId: string | null = $state(null);
 
 	// Edit state
 	let editingApiKey: { id: number; name: string } | null = $state(null);
-	let editApiKeyName = $state('');
+	let editApiKeyName = $state("");
 	let updatingApiKey = $state(false);
 
 	async function createApiKey() {
@@ -51,10 +51,10 @@
 						lastUsedAt: new Date().toString()
 					}
 				]);
-				newApiKeyName = '';
+				newApiKeyName = "";
 			}
 		} catch (err) {
-			alert(err instanceof Error ? err.message : 'Failed to create API key');
+			alert(err instanceof Error ? err.message : "Failed to create API key");
 		} finally {
 			creatingApiKey = false;
 		}
@@ -80,10 +80,10 @@
 				);
 				onApiKeysUpdated(updatedApiKeys);
 				editingApiKey = null;
-				editApiKeyName = '';
+				editApiKeyName = "";
 			}
 		} catch (err) {
-			alert(err instanceof Error ? err.message : 'Failed to update API key');
+			alert(err instanceof Error ? err.message : "Failed to update API key");
 		} finally {
 			updatingApiKey = false;
 		}
@@ -102,7 +102,7 @@
 			const updatedApiKeys = apiKeys.filter((key) => key.id !== id);
 			onApiKeysUpdated(updatedApiKeys);
 		} catch (err) {
-			alert(err instanceof Error ? err.message : 'Failed to delete API key');
+			alert(err instanceof Error ? err.message : "Failed to delete API key");
 		}
 	}
 
@@ -114,7 +114,7 @@
 				copiedId = null;
 			}, 2000);
 		} catch (err) {
-			console.error('Failed to copy:', err);
+			console.error("Failed to copy:", err);
 		}
 	}
 
@@ -125,7 +125,7 @@
 
 	function cancelEditingApiKey() {
 		editingApiKey = null;
-		editApiKeyName = '';
+		editApiKeyName = "";
 	}
 </script>
 
@@ -139,7 +139,7 @@
 					bind:value={newApiKeyName}
 					placeholder="Key name..."
 					class="text-form-input rounded-lg border border-slate-600/60 bg-slate-800/40 px-3 py-2 text-sm placeholder-slate-500 transition-all focus:border-slate-500/80 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
-					onkeydown={(e) => e.key === 'Enter' && createApiKey()}
+					onkeydown={(e) => e.key === "Enter" && createApiKey()}
 				/>
 				<button
 					onclick={createApiKey}
@@ -171,17 +171,10 @@
 									Name
 								</div>
 							</th>
-							<th class="text-body-small text-bright w-2/12 px-4 py-3 text-left font-medium">Key</th
-							>
-							<th class="text-body-small text-bright w-2/12 px-4 py-3 text-left font-medium"
-								>Created</th
-							>
-							<th class="text-body-small text-bright w-2/12 px-4 py-3 text-left font-medium"
-								>Last Used</th
-							>
-							<th class="text-body-small text-bright w-1/12 px-4 py-3 text-left font-medium"
-								>Actions</th
-							>
+							<th class="text-body-small text-bright w-2/12 px-4 py-3 text-left font-medium">Key</th>
+							<th class="text-body-small text-bright w-2/12 px-4 py-3 text-left font-medium">Created</th>
+							<th class="text-body-small text-bright w-2/12 px-4 py-3 text-left font-medium">Last Used</th>
+							<th class="text-body-small text-bright w-1/12 px-4 py-3 text-left font-medium">Actions</th>
 						</tr>
 					</thead>
 					<tbody class="divide-y divide-slate-600/30">
@@ -302,12 +295,20 @@
 											<Key class="text-tertiary h-4 w-4" />
 											<span class="text-body-small text-bright font-medium">{apiKey.name}</span>
 										</div>
-										<button
-											class="text-body-small scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-600 hover:scrollbar-thumb-slate-500 text-secondary hover:text-bright mb-2 cursor-pointer overflow-x-auto rounded bg-slate-900/60 px-2 py-1 hover:bg-slate-800/80"
-											title="Click to copy partial key"
-										>
-											<span class="whitespace-nowrap font-mono">****{apiKey.lastFour}</span>
-										</button>
+										<div class="mb-2 flex items-center gap-2">
+											<span class="text-body-small text-bright whitespace-nowrap font-mono">****{apiKey.lastFour}</span>
+											<button
+												onclick={() => copyToClipboard(`****${apiKey.lastFour}`, `api-key-mobile-${apiKey.id}`)}
+												class="text-secondary hover:text-bright cursor-pointer rounded p-1 hover:bg-slate-600/40"
+												title="Copy partial key"
+											>
+												{#if copiedId === `api-key-mobile-${apiKey.id}`}
+													<CheckMark class="text-success h-4 w-4" />
+												{:else}
+													<Copy class="h-4 w-4" />
+												{/if}
+											</button>
+										</div>
 										<div class="space-y-1">
 											<p class="text-caption text-muted">Created {formatDate(apiKey.createdAt)}</p>
 											<p class="text-caption text-muted">
@@ -334,24 +335,14 @@
 								</div>
 							{/if}
 						</div>
-						<!-- Checkmark positioned outside the card -->
-						{#if copiedId === `api-key-mobile-${apiKey.id}`}
-							<div class="absolute left-2 top-12">
-								<CheckMark class="text-success h-5 w-5" />
-							</div>
-						{/if}
 					</div>
 				{/each}
 			</div>
 		{:else}
-			<div
-				class="rounded-lg border border-slate-600/60 bg-slate-700/40 p-8 text-center backdrop-blur-lg"
-			>
+			<div class="rounded-lg border border-slate-600/60 bg-slate-700/40 p-8 text-center backdrop-blur-lg">
 				<Key class="text-muted mx-auto mb-4 h-8 w-8" />
 				<p class="text-body text-secondary mb-2">No API Keys yet</p>
-				<p class="text-body-small text-muted">
-					Create your first API key to get started with programmatic access!
-				</p>
+				<p class="text-body-small text-muted">Create your first API key to get started with programmatic access!</p>
 			</div>
 		{/if}
 	</div>
@@ -365,11 +356,9 @@
 		aria-modal="true"
 		tabindex="-1"
 		onclick={(e) => e.target === e.currentTarget && (newApiKeyResult = null)}
-		onkeydown={(e) => e.key === 'Escape' && (newApiKeyResult = null)}
+		onkeydown={(e) => e.key === "Escape" && (newApiKeyResult = null)}
 	>
-		<div
-			class="w-full max-w-md rounded-xl border border-slate-600/60 bg-slate-700/40 p-6 backdrop-blur-lg"
-		>
+		<div class="w-full max-w-md rounded-xl border border-slate-600/60 bg-slate-700/40 p-6 backdrop-blur-lg">
 			<div class="space-y-4">
 				<div>
 					<span class="text-caption text-muted font-medium">Key Name</span>
@@ -385,11 +374,11 @@
 							{newApiKeyResult.key}
 						</code>
 						<button
-							onclick={() => copyToClipboard(newApiKeyResult!.key, 'modal-api-key')}
+							onclick={() => copyToClipboard(newApiKeyResult!.key, "modal-api-key")}
 							class="text-button-small text-secondary hover:text-bright cursor-pointer rounded bg-slate-600/60 px-3 py-2 hover:bg-slate-600/80"
 							title="Copy to clipboard"
 						>
-							{#if copiedId === 'modal-api-key'}
+							{#if copiedId === "modal-api-key"}
 								<CheckMark class="text-success h-4 w-4" />
 							{:else}
 								<Copy class="h-4 w-4" />
@@ -399,16 +388,14 @@
 				</div>
 
 				<div class="rounded-lg border border-amber-800/50 bg-amber-900/20 p-3">
-					<p class="text-caption text-warning">
-						⚠️ Save this key immediately - it won't be shown again
-					</p>
+					<p class="text-caption text-warning">⚠️ Save this key immediately - it won't be shown again</p>
 				</div>
 			</div>
 
 			<button
 				onclick={() => {
 					newApiKeyResult = null;
-					newApiKeyName = '';
+					newApiKeyName = "";
 				}}
 				class="text-button text-button-color mt-6 w-full cursor-pointer rounded-lg bg-slate-600/60 px-4 py-2.5 hover:bg-slate-600/80"
 			>

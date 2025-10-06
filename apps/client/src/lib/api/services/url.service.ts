@@ -1,21 +1,18 @@
-import { Service, type ApiResponse, type ServiceConfig } from './service';
-import { config } from '$lib/common/config';
+import { Service, type ApiResponse, type ServiceConfig } from "./service";
+import { config } from "$lib/common/config";
 
 export class UrlService extends Service {
 	constructor(config?: ServiceConfig) {
 		super(config);
 	}
 
-	public async shorten(
-		values: ShortenUrlRequest,
-		options?: RequestInit
-	): Promise<ApiResponse<ShortenUrlResponse>> {
+	public async shorten(values: ShortenUrlRequest, options?: RequestInit): Promise<ApiResponse<ShortenUrlResponse>> {
 		if (!values.url.trim()) {
-			throw new Error('Please enter a URL');
+			throw new Error("Please enter a URL");
 		}
 
-		if (config.MODE !== 'development' && !values.url.match(/^https:\/\/.+\..+/)) {
-			throw new Error('Please enter a valid URL (starting with https://)');
+		if (config.MODE !== "development" && !values.url.match(/^https:\/\/.+\..+/)) {
+			throw new Error("Please enter a valid URL (starting with https://)");
 		}
 
 		const body: ShortenUrlRequest = { url: values.url };
@@ -23,8 +20,8 @@ export class UrlService extends Service {
 			body.customCode = values.customCode.trim();
 		}
 
-		return await this.request<ShortenUrlResponse>('url/shorten', {
-			method: 'POST',
+		return await this.request<ShortenUrlResponse>("url/shorten", {
+			method: "POST",
 			body: JSON.stringify(body),
 			...options
 		});
@@ -34,16 +31,16 @@ export class UrlService extends Service {
 		values: OriginalUrlRequest,
 		options?: RequestInit
 	): Promise<ApiResponse<OriginalUrlResponse>> {
-		return await this.request<OriginalUrlResponse>('url/original', {
-			method: 'POST',
+		return await this.request<OriginalUrlResponse>("url/original", {
+			method: "POST",
 			body: JSON.stringify(values),
 			...options
 		});
 	}
 
 	public async getUserUrls(options?: RequestInit): Promise<ApiResponse<GetUrlsResponse>> {
-		return await this.request<GetUrlsResponse>('url', {
-			method: 'GET',
+		return await this.request<GetUrlsResponse>("url", {
+			method: "GET",
 			...options
 		});
 	}
@@ -53,19 +50,15 @@ export class UrlService extends Service {
 		options?: RequestInit
 	): Promise<ApiResponse<UpdateCustomUrlResponse>> {
 		return await this.request<UpdateCustomUrlResponse>(`url/${values.id}`, {
-			method: 'POST',
+			method: "POST",
 			body: JSON.stringify(values),
 			...options
 		});
 	}
 
-	public async deleteUrl(
-		id: number,
-		values: DeleteUrlRequest,
-		options?: RequestInit
-	): Promise<ApiResponse> {
+	public async deleteUrl(id: number, values: DeleteUrlRequest, options?: RequestInit): Promise<ApiResponse> {
 		return await this.request(`url/${id}`, {
-			method: 'DELETE',
+			method: "DELETE",
 			body: JSON.stringify(values),
 			...options
 		});

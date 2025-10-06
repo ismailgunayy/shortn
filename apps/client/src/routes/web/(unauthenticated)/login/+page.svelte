@@ -1,15 +1,15 @@
 <script lang="ts">
-	import Loading from '$lib/icons/Loading.svelte';
-	import { loginSchema, type LoginForm } from '$lib/schemas/auth.schema';
-	import { authStore } from '$lib/stores/auth.store';
+	import Loading from "$lib/icons/Loading.svelte";
+	import { loginSchema, type LoginForm } from "$lib/schemas/auth.schema";
+	import { authStore } from "$lib/stores/auth.store";
 
 	let formData = $state<LoginForm>({
-		email: '',
-		password: ''
+		email: "",
+		password: ""
 	});
 
 	let errors = $state<Partial<Record<keyof LoginForm, string>>>({});
-	let formError = $state<string>('');
+	let formError = $state<string>("");
 
 	let authState = $derived($authStore);
 
@@ -21,13 +21,13 @@
 
 			for (const error of result.error.issues) {
 				const field = error.path[0] as keyof LoginForm;
-				errors[field] = error.message || 'Invalid value';
+				errors[field] = error.message || "Invalid value";
 			}
 			return false;
 		}
 
 		errors = {};
-		formError = '';
+		formError = "";
 		return true;
 	}
 
@@ -41,14 +41,17 @@
 		const result = await authStore.login(formData);
 
 		if (!result.success) {
-			formError = result.error || 'Login failed';
+			formError = result.error || "Login failed";
 		}
 	}
 </script>
 
 <svelte:head>
 	<title>Shortn | Sign In</title>
-	<meta name="description" content="Sign in to your Shortn account" />
+	<meta
+		name="description"
+		content="Sign in to your Shortn account"
+	/>
 </svelte:head>
 
 <div class="flex flex-col items-center justify-center">
@@ -72,16 +75,19 @@
 		>
 			<!-- General Error -->
 			{#if formError}
-				<div
-					class="text-error mb-4 rounded-lg border border-red-800/50 bg-red-900/20 p-3 backdrop-blur-lg"
-				>
+				<div class="text-error mb-4 rounded-lg border border-red-800/50 bg-red-900/20 p-3 backdrop-blur-lg">
 					{formError}
 				</div>
 			{/if}
 
 			<!-- Email Field -->
 			<div class="mb-4">
-				<label for="email" class="text-form-label"> Email </label>
+				<label
+					for="email"
+					class="text-form-label"
+				>
+					Email
+				</label>
 				<input
 					id="email"
 					type="text"
@@ -98,7 +104,12 @@
 
 			<!-- Password Field -->
 			<div class="mb-6">
-				<label for="password" class="text-form-label"> Password </label>
+				<label
+					for="password"
+					class="text-form-label"
+				>
+					Password
+				</label>
 				<input
 					id="password"
 					type="password"

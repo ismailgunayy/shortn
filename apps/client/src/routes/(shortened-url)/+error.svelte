@@ -1,11 +1,14 @@
 <script lang="ts">
-	import { page } from '$app/state';
-	import Error from '$lib/icons/Error.svelte';
+	import { page } from "$app/state";
+	import Error from "$lib/icons/Error.svelte";
 </script>
 
 <svelte:head>
 	<title>Shortn | URL Not Found</title>
-	<meta name="robots" content="noindex" />
+	<meta
+		name="robots"
+		content="noindex"
+	/>
 </svelte:head>
 
 <div class="flex items-center justify-center p-4">
@@ -23,7 +26,7 @@
 
 		<div class="mb-6 rounded-lg border border-slate-600/60 bg-slate-800/40 p-3 backdrop-blur-lg">
 			<p class="text-secondary text-sm">
-				<span class="text-error font-mono">{page.url.href || 'unknown'}</span>
+				<span class="text-error font-mono">{page.url.href || "unknown"}</span>
 			</p>
 		</div>
 

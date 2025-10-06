@@ -1,8 +1,8 @@
-import { browser } from '$app/environment';
-import z from 'zod';
+import { browser } from "$app/environment";
+import z from "zod";
 
 const ConfigSchema = z.object({
-	VITE_MODE: z.enum(['development', 'production']),
+	VITE_MODE: z.enum(["development", "production"]),
 	VITE_CLIENT_HOST: z.string(),
 	VITE_CLIENT_URL: z.string(),
 	VITE_API_BASE_URL: z.string(),
@@ -16,7 +16,7 @@ function validateEnv() {
 
 		return structuredClone(config);
 	} catch (err) {
-		console.error('Environment validation failed:', err);
+		console.error("Environment validation failed:", err);
 		process.exit(1);
 	}
 }

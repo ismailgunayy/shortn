@@ -1,8 +1,8 @@
-import type { LoginForm, RegisterForm } from '$lib/schemas/auth.schema';
+import type { LoginForm, RegisterForm } from "$lib/schemas/auth.schema";
 
-import { api } from '$lib/api/api.client';
-import { goto } from '$app/navigation';
-import { writable } from 'svelte/store';
+import { api } from "$lib/api/api.client";
+import { goto } from "$app/navigation";
+import { writable } from "svelte/store";
 
 export interface User {
 	id: number;
@@ -50,11 +50,11 @@ function createAuthStore() {
 				} else {
 					update((state) => ({ ...state, loading: false }));
 
-					return { success: false, error: response.error?.message || 'Registration failed' };
+					return { success: false, error: response.error?.message || "Registration failed" };
 				}
 			} catch {
 				update((state) => ({ ...state, loading: false }));
-				return { success: false, error: 'Network error' };
+				return { success: false, error: "Network error" };
 			}
 		},
 
@@ -66,17 +66,17 @@ function createAuthStore() {
 
 				if (response.success && response.data) {
 					await this.checkStatus();
-					goto('/web/dashboard');
+					goto("/web/dashboard");
 
 					return { success: true };
 				} else {
 					update((state) => ({ ...state, loading: false }));
 
-					return { success: false, error: response.error?.message || 'Login failed' };
+					return { success: false, error: response.error?.message || "Login failed" };
 				}
 			} catch {
 				update((state) => ({ ...state, loading: false }));
-				return { success: false, error: 'Network error' };
+				return { success: false, error: "Network error" };
 			}
 		},
 
@@ -104,7 +104,7 @@ function createAuthStore() {
 					return set(unauthenticatedState);
 				}
 			} catch (error) {
-				console.error('Auth status check failed:', error);
+				console.error("Auth status check failed:", error);
 				return set(unauthenticatedState);
 			}
 		},
@@ -120,11 +120,11 @@ function createAuthStore() {
 					return { success: true };
 				} else {
 					set(unauthenticatedState);
-					return { success: false, error: response.error?.message || 'Refresh failed' };
+					return { success: false, error: response.error?.message || "Refresh failed" };
 				}
 			} catch {
 				set(unauthenticatedState);
-				return { success: false, error: 'Network error' };
+				return { success: false, error: "Network error" };
 			}
 		},
 
@@ -135,7 +135,8 @@ function createAuthStore() {
 				await api.auth.logout();
 			} finally {
 				set(unauthenticatedState);
-				goto('/');
+				goto("/");
+				window.location.reload();
 			}
 		},
 

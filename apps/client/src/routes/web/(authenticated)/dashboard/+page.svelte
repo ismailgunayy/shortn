@@ -1,22 +1,22 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { api } from '$lib/api/api.client';
-	import Loading from '$lib/icons/Loading.svelte';
-	import { default as ErrorIcon } from '$lib/icons/Error.svelte';
-	import UrlsSection from '$lib/components/sections/UrlsSection.svelte';
-	import ApiKeysSection from '$lib/components/sections/ApiKeysSection.svelte';
-	import type { UrlItem, CustomUrlItem } from '$lib/api/services/url.service';
-	import type { ApiKey } from '$lib/api/services/auth.service';
+	import { onMount } from "svelte";
+	import { api } from "$lib/api/api.client";
+	import Loading from "$lib/icons/Loading.svelte";
+	import { default as ErrorIcon } from "$lib/icons/Error.svelte";
+	import UrlsSection from "$lib/components/sections/UrlsSection.svelte";
+	import ApiKeysSection from "$lib/components/sections/ApiKeysSection.svelte";
+	import type { UrlItem, CustomUrlItem } from "$lib/api/services/url.service";
+	import type { ApiKey } from "$lib/api/services/auth.service";
 
 	// State
 	let urls: UrlItem[] = $state([]);
 	let customUrls: CustomUrlItem[] = $state([]);
 	let apiKeys: ApiKey[] = $state([]);
 	let loading = $state(true);
-	let error = $state('');
+	let error = $state("");
 
 	// Tab state
-	let activeTab: 'urls' | 'apikeys' = $state('urls');
+	let activeTab: "urls" | "apikeys" = $state("urls");
 
 	onMount(async () => {
 		await loadData();
@@ -24,13 +24,10 @@
 
 	async function loadData() {
 		loading = true;
-		error = '';
+		error = "";
 
 		try {
-			const [urlsResponse, apiKeysResponse] = await Promise.all([
-				api.url.getUserUrls(),
-				api.auth.getApiKeys()
-			]);
+			const [urlsResponse, apiKeysResponse] = await Promise.all([api.url.getUserUrls(), api.auth.getApiKeys()]);
 
 			if (urlsResponse.error) {
 				throw new Error(urlsResponse.error.message);
@@ -49,7 +46,7 @@
 				apiKeys = apiKeysResponse.data.apiKeys;
 			}
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Failed to load data';
+			error = err instanceof Error ? err.message : "Failed to load data";
 		} finally {
 			loading = false;
 		}
@@ -74,7 +71,10 @@
 
 <svelte:head>
 	<title>Shortn | Dashboard</title>
-	<meta name="description" content="Your Shortn dashboard" />
+	<meta
+		name="description"
+		content="Your Shortn dashboard"
+	/>
 </svelte:head>
 
 <div>
@@ -94,9 +94,7 @@
 				<Loading class="h-8 w-8" />
 			</div>
 		{:else if error}
-			<div
-				class="text-error mx-auto max-w-md rounded-lg border border-red-800/50 bg-red-900/20 p-4 text-center"
-			>
+			<div class="text-error mx-auto max-w-md rounded-lg border border-red-800/50 bg-red-900/20 p-4 text-center">
 				<ErrorIcon class="mx-auto mb-2 h-6 w-6" />
 				{error}
 				<button
@@ -112,42 +110,40 @@
 				<div class="rounded-xl border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg">
 					<div class="text-heading-2 text-bright font-bold">{customUrls.length}</div>
 					<div class="text-body-small text-tertiary">
-						Custom URL{customUrls.length !== 1 ? 's' : ''}
+						Custom URL{customUrls.length !== 1 ? "s" : ""}
 					</div>
 				</div>
 				<div class="rounded-xl border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg">
 					<div class="text-heading-2 text-bright font-bold">{urls.length}</div>
 					<div class="text-body-small text-tertiary">
-						Generated URL{urls.length !== 1 ? 's' : ''}
+						Generated URL{urls.length !== 1 ? "s" : ""}
 					</div>
 				</div>
 				<div class="rounded-xl border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg">
 					<div class="text-heading-2 text-bright font-bold">{apiKeys.length}</div>
-					<div class="text-body-small text-tertiary">API Key{apiKeys.length !== 1 ? 's' : ''}</div>
+					<div class="text-body-small text-tertiary">API Key{apiKeys.length !== 1 ? "s" : ""}</div>
 				</div>
 			</div>
 
 			<!-- Tabs -->
 			<div class="mb-6">
-				<div
-					class="flex space-x-1 rounded-lg border border-slate-600/60 bg-slate-700/40 p-1 backdrop-blur-lg"
-				>
+				<div class="flex space-x-1 rounded-lg border border-slate-600/60 bg-slate-700/40 p-1 backdrop-blur-lg">
 					<button
-						onclick={() => (activeTab = 'urls')}
+						onclick={() => (activeTab = "urls")}
 						class={`text-button-small flex-1 cursor-pointer rounded-md px-3 py-2 font-medium transition-all duration-200 ${
-							activeTab === 'urls'
-								? 'text-bright bg-slate-600/60 shadow-sm'
-								: 'text-secondary hover:text-bright hover:bg-slate-600/40'
+							activeTab === "urls"
+								? "text-bright bg-slate-600/60 shadow-sm"
+								: "text-secondary hover:text-bright hover:bg-slate-600/40"
 						}`}
 					>
 						URLs ({urls.length + customUrls.length})
 					</button>
 					<button
-						onclick={() => (activeTab = 'apikeys')}
+						onclick={() => (activeTab = "apikeys")}
 						class={`text-button-small flex-1 cursor-pointer rounded-md px-3 py-2 font-medium transition-all duration-200 ${
-							activeTab === 'apikeys'
-								? 'text-bright bg-slate-600/60 shadow-sm'
-								: 'text-secondary hover:text-bright hover:bg-slate-600/40'
+							activeTab === "apikeys"
+								? "text-bright bg-slate-600/60 shadow-sm"
+								: "text-secondary hover:text-bright hover:bg-slate-600/40"
 						}`}
 					>
 						API Keys ({apiKeys.length})
@@ -156,15 +152,18 @@
 			</div>
 
 			<!-- Tab Content -->
-			{#if activeTab === 'urls'}
+			{#if activeTab === "urls"}
 				<UrlsSection
 					{urls}
 					{customUrls}
 					onUrlDeleted={handleUrlDeleted}
 					onUrlUpdated={handleUrlUpdated}
 				/>
-			{:else if activeTab === 'apikeys'}
-				<ApiKeysSection {apiKeys} onApiKeysUpdated={handleApiKeysUpdated} />
+			{:else if activeTab === "apikeys"}
+				<ApiKeysSection
+					{apiKeys}
+					onApiKeysUpdated={handleApiKeysUpdated}
+				/>
 			{/if}
 		{/if}
 	</div>

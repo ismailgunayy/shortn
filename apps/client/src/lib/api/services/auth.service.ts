@@ -1,53 +1,47 @@
-import { Service, type ApiResponse, type ServiceConfig } from './service';
+import { Service, type ApiResponse, type ServiceConfig } from "./service";
 
 export class AuthService extends Service {
 	constructor(config?: ServiceConfig) {
 		super(config);
 	}
 
-	public async register(
-		values: RegisterRequest,
-		options?: RequestInit
-	): Promise<ApiResponse<RegisterResponse>> {
-		return await this.request<RegisterResponse>('auth/register', {
-			method: 'POST',
+	public async register(values: RegisterRequest, options?: RequestInit): Promise<ApiResponse<RegisterResponse>> {
+		return await this.request<RegisterResponse>("auth/register", {
+			method: "POST",
 			body: JSON.stringify(values),
 			...options
 		});
 	}
 
-	public async login(
-		values: LoginRequest,
-		options?: RequestInit
-	): Promise<ApiResponse<LoginResponse>> {
-		return await this.request<LoginResponse>('auth/login', {
-			method: 'POST',
+	public async login(values: LoginRequest, options?: RequestInit): Promise<ApiResponse<LoginResponse>> {
+		return await this.request<LoginResponse>("auth/login", {
+			method: "POST",
 			body: JSON.stringify(values),
 			...options
 		});
 	}
 
 	public async status(options?: RequestInit): Promise<ApiResponse<AuthStatusResponse>> {
-		return await this.request<AuthStatusResponse>('auth/status', {
+		return await this.request<AuthStatusResponse>("auth/status", {
 			...options
 		});
 	}
 
 	public async refresh(options?: RequestInit): Promise<ApiResponse<LoginResponse>> {
-		return await this.request<LoginResponse>('auth/refresh', {
-			method: 'POST',
+		return await this.request<LoginResponse>("auth/refresh", {
+			method: "POST",
 			...options
 		});
 	}
 
 	public async logout(options?: RequestInit): Promise<ApiResponse> {
-		return await this.request('auth/logout', {
+		return await this.request("auth/logout", {
 			...options
 		});
 	}
 
 	public async getApiKeys(options?: RequestInit): Promise<ApiResponse<GetApiKeysResponse>> {
-		return await this.request<GetApiKeysResponse>('auth/api-keys', {
+		return await this.request<GetApiKeysResponse>("auth/api-keys", {
 			...options
 		});
 	}
@@ -56,8 +50,8 @@ export class AuthService extends Service {
 		values: CreateApiKeyRequest,
 		options?: RequestInit
 	): Promise<ApiResponse<CreateApiKeyResponse>> {
-		return await this.request<CreateApiKeyResponse>('auth/api-keys', {
-			method: 'POST',
+		return await this.request<CreateApiKeyResponse>("auth/api-keys", {
+			method: "POST",
 			body: JSON.stringify(values),
 			...options
 		});
@@ -69,7 +63,7 @@ export class AuthService extends Service {
 		options?: RequestInit
 	): Promise<ApiResponse<UpdateApiKeyResponse>> {
 		return await this.request<UpdateApiKeyResponse>(`auth/api-keys/${id}`, {
-			method: 'PATCH',
+			method: "PATCH",
 			body: JSON.stringify(values),
 			...options
 		});
@@ -77,7 +71,7 @@ export class AuthService extends Service {
 
 	public async deleteApiKey(id: number, options?: RequestInit): Promise<ApiResponse> {
 		return await this.request(`auth/api-keys/${id}`, {
-			method: 'DELETE',
+			method: "DELETE",
 			...options
 		});
 	}

@@ -1,6 +1,6 @@
-import type { LayoutServerLoad } from './$types';
-import { redirectIfAuthenticated } from '$lib/utils/auth.server';
+import type { LayoutServerLoad } from "./$types";
+import { redirectIfAuthenticated } from "$lib/utils/auth.server";
 
 export const load: LayoutServerLoad = async ({ cookies }) => {
-	return await redirectIfAuthenticated('/', cookies);
+	return await redirectIfAuthenticated("/", cookies);
 };

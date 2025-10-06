@@ -1,22 +1,22 @@
-import { error, redirect } from '@sveltejs/kit';
+import { error, redirect } from "@sveltejs/kit";
 
-import { serverApi } from '$lib/api/api.server';
+import { serverApi } from "$lib/api/api.server";
 
 export async function resolveAndRedirect(shortenedUrl: string) {
 	try {
 		const response = await serverApi.url.getOriginal({ url: shortenedUrl });
 
 		if (response.error || !response.data?.url) {
-			throw error(500, response.error || 'Failed to resolve URL');
+			throw error(500, response.error || "Failed to resolve URL");
 		}
 
 		return redirect(302, response.data.url);
 	} catch (err) {
-		if (err && typeof err === 'object' && ('status' in err || 'location' in err)) {
+		if (err && typeof err === "object" && ("status" in err || "location" in err)) {
 			throw err;
 		}
 
-		console.error('Redirect error:', err);
-		throw error(500, 'Failed to resolve short URL');
+		console.error("Redirect error:", err);
+		throw error(500, "Failed to resolve short URL");
 	}
 }

@@ -1,18 +1,18 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import Link from '$lib/icons/Link.svelte';
-	import Dashboard from '$lib/icons/Dashboard.svelte';
-	import Key from '$lib/icons/Key.svelte';
-	import Close from '$lib/icons/Close.svelte';
+	import { goto } from "$app/navigation";
+	import Link from "$lib/icons/Link.svelte";
+	import Dashboard from "$lib/icons/Dashboard.svelte";
+	import Key from "$lib/icons/Key.svelte";
+	import Close from "$lib/icons/Close.svelte";
 
 	let { isOpen = $bindable(false) } = $props();
 
 	function handleRegister() {
-		goto('/web/register');
+		goto("/web/register");
 	}
 
 	function handleLogin() {
-		goto('/web/login');
+		goto("/web/login");
 	}
 
 	function handleClose() {
@@ -28,7 +28,7 @@
 
 	// Close modal on Escape key
 	function handleKeydown(event: KeyboardEvent) {
-		if (event.key === 'Escape') {
+		if (event.key === "Escape") {
 			handleClose();
 		}
 	}
@@ -68,16 +68,12 @@
 				>
 					Unlock All Features
 				</h2>
-				<p class="text-secondary mt-2">
-					Create your free account and get access to powerful features
-				</p>
+				<p class="text-secondary mt-2">Create your free account and get access to powerful features</p>
 			</div>
 
 			<!-- Features list -->
 			<div class="mb-6 space-y-4">
-				<div
-					class="flex items-start gap-4 rounded-xl border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg"
-				>
+				<div class="flex items-start gap-4 rounded-xl border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg">
 					<div
 						class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-r from-slate-400/20 to-slate-600/20"
 					>
@@ -89,9 +85,7 @@
 					</div>
 				</div>
 
-				<div
-					class="flex items-start gap-4 rounded-xl border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg"
-				>
+				<div class="flex items-start gap-4 rounded-xl border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg">
 					<div
 						class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-r from-slate-400/20 to-slate-600/20"
 					>
@@ -99,15 +93,11 @@
 					</div>
 					<div>
 						<h3 class="text-bright font-semibold">API Keys & Integration</h3>
-						<p class="text-muted text-sm">
-							Generate API keys to integrate Shortn into your apps and workflows.
-						</p>
+						<p class="text-muted text-sm">Generate API keys to integrate Shortn into your apps and workflows.</p>
 					</div>
 				</div>
 
-				<div
-					class="flex items-start gap-4 rounded-xl border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg"
-				>
+				<div class="flex items-start gap-4 rounded-xl border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg">
 					<div
 						class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-r from-slate-400/20 to-slate-600/20"
 					>
@@ -115,9 +105,7 @@
 					</div>
 					<div>
 						<h3 class="text-bright font-semibold">Personal Dashboard</h3>
-						<p class="text-muted text-sm">
-							Manage your URLs and API keys from a centralized dashboard.
-						</p>
+						<p class="text-muted text-sm">Manage your URLs and API keys from a centralized dashboard.</p>
 					</div>
 				</div>
 			</div>

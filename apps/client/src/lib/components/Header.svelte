@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { authStore } from '$lib/stores/auth.store';
+	import { authStore } from "$lib/stores/auth.store";
 
-	import Loading from '$lib/icons/Loading.svelte';
-	import { page } from '$app/state';
+	import Loading from "$lib/icons/Loading.svelte";
+	import { page } from "$app/state";
 
 	const auth = $derived($authStore);
 
-	const isHome = $derived(page.url.pathname === '/');
+	const isHome = $derived(page.url.pathname === "/");
 </script>
 
 <header class="z-10 w-full px-4 py-4 sm:px-6">

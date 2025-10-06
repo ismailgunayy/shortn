@@ -1,7 +1,7 @@
 <script>
-	import { onMount } from 'svelte';
-	import { goto } from '$app/navigation';
-	import Error from '$lib/icons/Error.svelte';
+	import { onMount } from "svelte";
+	import { goto } from "$app/navigation";
+	import Error from "$lib/icons/Error.svelte";
 
 	let countdown = $state(5);
 
@@ -10,7 +10,7 @@
 			countdown--;
 			if (countdown <= 0) {
 				clearInterval(interval);
-				goto('/');
+				goto("/");
 			}
 		}, 1000);
 

@@ -1,8 +1,8 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-export const emailSchema = z.email('Please enter a valid email address');
-export const passwordSchema = z.string().min(12, 'Password must be at least 12 characters');
-export const fullNameSchema = z.string().min(1, 'Full name is required').trim();
+export const emailSchema = z.email("Please enter a valid email address");
+export const passwordSchema = z.string().min(12, "Password must be at least 12 characters");
+export const fullNameSchema = z.string().min(1, "Full name is required").trim();
 
 export const loginSchema = z.object({
 	email: emailSchema,
