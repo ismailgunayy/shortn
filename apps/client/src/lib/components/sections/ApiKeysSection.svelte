@@ -178,7 +178,7 @@
 						</tr>
 					</thead>
 					<tbody class="divide-y divide-slate-600/30">
-						{#each apiKeys as apiKey}
+						{#each apiKeys as apiKey (apiKey.id)}
 							<tr class="hover:bg-slate-600/20">
 								<td class="px-4 py-3">
 									{#if editingApiKey?.id === apiKey.id}
@@ -254,7 +254,7 @@
 
 			<!-- Mobile Card View -->
 			<div class="block space-y-3 md:hidden">
-				{#each apiKeys as apiKey}
+				{#each apiKeys as apiKey (apiKey.id)}
 					<div class="relative">
 						<div class="rounded-lg border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg">
 							{#if editingApiKey?.id === apiKey.id}

@@ -117,7 +117,7 @@
 						</tr>
 					</thead>
 					<tbody class="divide-y divide-slate-600/30">
-						{#each customUrls as url}
+						{#each customUrls as url (url.id)}
 							<tr class="hover:bg-slate-600/20">
 								<td class="px-4 py-3">
 									<div class="flex items-center gap-2">
@@ -212,7 +212,7 @@
 
 			<!-- Mobile Card View -->
 			<div class="block space-y-3 md:hidden">
-				{#each customUrls as url}
+				{#each customUrls as url (url.id)}
 					<div class="relative">
 						<div class="rounded-lg border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg">
 							{#if editingUrl?.id === url.id}
@@ -323,7 +323,7 @@
 						</tr>
 					</thead>
 					<tbody class="divide-y divide-slate-600/30">
-						{#each urls as url}
+						{#each urls as url (url.id)}
 							<tr class="hover:bg-slate-600/20">
 								<td class="px-4 py-3">
 									<div class="flex items-center gap-2">
@@ -378,7 +378,7 @@
 
 			<!-- Mobile Card View -->
 			<div class="block space-y-3 md:hidden">
-				{#each urls as url}
+				{#each urls as url (url.id)}
 					<div class="relative">
 						<div class="rounded-lg border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg">
 							<div class="flex items-start justify-between gap-4">

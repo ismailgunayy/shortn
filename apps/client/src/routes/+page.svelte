@@ -188,7 +188,7 @@
 								Custom short code
 							</label>
 							<div
-								class={`mt-1 flex items-center rounded-xl border border-slate-600/60 bg-slate-800/40 backdrop-blur-lg transition-all duration-200 focus-within:border-slate-500/80 focus-within:ring-2 focus-within:ring-slate-400/20`}
+								class="mt-1 flex items-center rounded-xl border border-slate-600/60 bg-slate-800/40 backdrop-blur-lg transition-all duration-200 focus-within:border-slate-500/80 focus-within:ring-2 focus-within:ring-slate-400/20"
 							>
 								<span class="text-form-input text-muted py-2.5 pl-4 sm:py-3">{config.HTTP.CLIENT_HOST}/c/</span>
 								<input
