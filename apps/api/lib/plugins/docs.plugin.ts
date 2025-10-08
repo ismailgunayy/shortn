@@ -63,7 +63,7 @@ export const docs = fastifyPlugin(async (app: App) => {
 
 	await app.register(fastifySwaggerUi, {
 		routePrefix: "/",
-		staticCSP: false,
+		staticCSP: true,
 		uiConfig: {
 			deepLinking: true,
 			displayOperationId: false,
@@ -82,5 +82,20 @@ export const docs = fastifyPlugin(async (app: App) => {
 				theme: "monokai"
 			}
 		}
+	});
+
+	app.addHook("onSend", (request, reply, _payload, done) => {
+		if (request.headers.host === app.config.HTTP.DOCS_URL) {
+			reply.header(
+				"Content-Security-Policy",
+				`default-src 'self' ${app.config.HTTP.BASE_URL}; ` +
+					`connect-src 'self' ${app.config.HTTP.BASE_URL}; ` +
+					"script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+					"style-src 'self' 'unsafe-inline'; " +
+					"img-src 'self' data: https:; " +
+					"font-src 'self';"
+			);
+		}
+		done();
 	});
 });
