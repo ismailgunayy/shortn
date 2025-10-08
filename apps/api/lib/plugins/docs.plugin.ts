@@ -84,8 +84,10 @@ export const docs = fastifyPlugin(async (app: App) => {
 		}
 	});
 
-	app.addHook("onSend", (request, reply, _payload, done) => {
-		if (request.headers.host === app.config.HTTP.DOCS_URL) {
+	app.addHook("onRequest", (request, reply, done) => {
+		const docsHostname = new URL(app.config.HTTP.DOCS_URL).hostname;
+
+		if (request.headers.host === docsHostname) {
 			reply.header(
 				"Content-Security-Policy",
 				`default-src 'self' ${app.config.HTTP.BASE_URL}; ` +
