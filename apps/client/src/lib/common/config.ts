@@ -4,9 +4,10 @@ import z from "zod";
 const ConfigSchema = z.object({
 	VITE_MODE: z.enum(["development", "production"]),
 	VITE_CLIENT_HOST: z.string(),
-	VITE_CLIENT_URL: z.string(),
-	VITE_API_BASE_URL: z.string(),
-	VITE_API_BASE_URL_SERVER: z.string(),
+	VITE_CLIENT_URL: z.url(),
+	VITE_API_BASE_URL: z.url(),
+	VITE_API_BASE_URL_SERVER: z.url(),
+	VITE_DOCS_URL: z.url(),
 	VITE_PORT: z.string()
 });
 
@@ -40,7 +41,8 @@ function structureConfig() {
 			PORT: Number(env.VITE_PORT),
 			CLIENT_HOST: env.VITE_CLIENT_HOST,
 			CLIENT_URL: env.VITE_CLIENT_URL,
-			API_BASE_URL: getApiBaseUrl()
+			API_BASE_URL: getApiBaseUrl(),
+			DOCS_URL: env.VITE_DOCS_URL
 		},
 		MODE: env.VITE_MODE
 	};

@@ -62,7 +62,7 @@ export const docs = fastifyPlugin(async (app: App) => {
 	});
 
 	await app.register(fastifySwaggerUi, {
-		routePrefix: "/docs",
+		routePrefix: "/",
 		staticCSP: true,
 		uiConfig: {
 			deepLinking: true,
@@ -82,18 +82,5 @@ export const docs = fastifyPlugin(async (app: App) => {
 				theme: "monokai"
 			}
 		}
-	});
-
-	// Add host-based routing for docs.shortn.top
-	app.addHook("preHandler", (request, reply, done) => {
-		const host = request.headers.host || "";
-
-		if (app.config.HTTP.DOCS_URL.includes(host)) {
-			// Redirect root to /docs
-			if (request.url === "/") {
-				return reply.redirect("/docs");
-			}
-		}
-		done();
 	});
 });

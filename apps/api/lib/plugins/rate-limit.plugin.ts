@@ -8,7 +8,7 @@ export const rateLimit = fastifyPlugin(async (app: App) => {
 		hook: "onRequest",
 		global: true,
 		max: (request) => {
-			if (request.url.startsWith("/docs")) {
+			if (request.url === "/") {
 				return Number.MAX_SAFE_INTEGER;
 			}
 
