@@ -63,7 +63,7 @@ export const docs = fastifyPlugin(async (app: App) => {
 
 	await app.register(fastifySwaggerUi, {
 		routePrefix: "/",
-		staticCSP: true,
+		staticCSP: false,
 		uiConfig: {
 			deepLinking: true,
 			displayOperationId: false,
