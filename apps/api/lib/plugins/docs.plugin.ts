@@ -64,6 +64,9 @@ export const docs = fastifyPlugin(async (app: App) => {
 	await app.register(fastifySwaggerUi, {
 		routePrefix: "/",
 		staticCSP: false,
+		theme: {
+			title: "Shortn API Docs"
+		},
 		uiConfig: {
 			deepLinking: true,
 			displayOperationId: false,

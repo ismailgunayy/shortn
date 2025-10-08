@@ -1,4 +1,5 @@
-import { auth, cors, db, docs, error, helmet, helpers, log, notFound, rateLimit, router, services } from "./plugins";
+import * as plugins from "./plugins";
+
 import { fastifyZodOpenApiPlugin, serializerCompiler, validatorCompiler } from "fastify-zod-openapi";
 
 import { APP_CONFIG } from "./common/config";
@@ -18,18 +19,18 @@ app.setSerializerCompiler(serializerCompiler);
 
 await app.register(fastifyZodOpenApiPlugin);
 
-await app.register(log);
-await app.register(error);
-await app.register(helmet);
-await app.register(db);
-await app.register(auth);
-await app.register(rateLimit);
-await app.register(notFound);
-await app.register(cors);
-await app.register(helpers);
-await app.register(services);
-await app.register(docs);
-await app.register(router);
+await app.register(plugins.log);
+await app.register(plugins.error);
+await app.register(plugins.helmet);
+await app.register(plugins.db);
+await app.register(plugins.auth);
+await app.register(plugins.rateLimit);
+await app.register(plugins.notFound);
+await app.register(plugins.cors);
+await app.register(plugins.helpers);
+await app.register(plugins.services);
+await app.register(plugins.docs);
+await app.register(plugins.router);
 
 const start = async () => {
 	await app.listen({
