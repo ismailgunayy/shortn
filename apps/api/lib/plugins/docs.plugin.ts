@@ -63,7 +63,7 @@ export const docs = fastifyPlugin(async (app: App) => {
 
 	await app.register(fastifySwaggerUi, {
 		routePrefix: "/",
-		staticCSP: true,
+		staticCSP: false,
 		uiConfig: {
 			deepLinking: true,
 			displayOperationId: false,
@@ -85,19 +85,19 @@ export const docs = fastifyPlugin(async (app: App) => {
 	});
 
 	app.addHook("onRequest", (request, reply, done) => {
-		const docsHostname = new URL(app.config.HTTP.DOCS_URL).hostname;
+		const isDocsHost = request.headers.host === new URL(app.config.HTTP.DOCS_URL).hostname;
 
-		if (request.headers.host === docsHostname) {
-			reply.header(
-				"Content-Security-Policy",
-				`default-src 'self' ${app.config.HTTP.BASE_URL}; ` +
-					`connect-src 'self' ${app.config.HTTP.BASE_URL}; ` +
-					"script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
-					"style-src 'self' 'unsafe-inline'; " +
-					"img-src 'self' data: https:; " +
-					"font-src 'self';"
-			);
-		}
+		const baseCsp =
+			"script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+			"style-src 'self' 'unsafe-inline'; " +
+			"img-src 'self' data: https:; " +
+			"font-src 'self';";
+
+		const defaultSrc = "'self'" + (isDocsHost ? ` ${app.config.HTTP.BASE_URL}` : "");
+		const connectSrc = "'self'" + (isDocsHost ? ` ${app.config.HTTP.BASE_URL}` : "");
+
+		reply.header("Content-Security-Policy", `default-src ${defaultSrc}; connect-src ${connectSrc}; ${baseCsp}`);
+
 		done();
 	});
 });
