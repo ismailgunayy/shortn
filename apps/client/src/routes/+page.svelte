@@ -214,7 +214,7 @@
 
 					<button
 						type="submit"
-						disabled={loading || !url.trim()}
+						disabled={loading || !url.trim() || (useCustomCode && !$authStore.isAuthenticated)}
 						class="text-button text-button-color w-full transform cursor-pointer rounded-xl bg-gradient-to-r
 							   from-slate-400/80 to-slate-600/80 px-6 py-2.5 font-semibold
 							   shadow-lg backdrop-blur-lg transition-all duration-200

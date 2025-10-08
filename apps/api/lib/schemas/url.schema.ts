@@ -1,11 +1,4 @@
-import {
-	InvalidShortenedUrl,
-	InvalidShortenedUrlDomain,
-	InvalidUrl,
-	InvalidUrlHostname,
-	InvalidUrlProtocol,
-	UrlError
-} from "~/errors";
+import { InvalidShortenedUrl, InvalidShortenedUrlDomain, InvalidUrl, InvalidUrlProtocol, UrlError } from "~/errors";
 
 import { APP_CONFIG } from "~/common/config";
 import z from "zod";
@@ -13,10 +6,6 @@ import z from "zod";
 export const UrlSchema = z.url().refine((url) => {
 	try {
 		const parsedUrl = new URL(url);
-
-		if (parsedUrl.hostname.split(".").length < 2) {
-			throw new InvalidUrlHostname();
-		}
 
 		if (APP_CONFIG.IS_PRODUCTION && parsedUrl.protocol !== "https:") {
 			throw new InvalidUrlProtocol();
@@ -33,14 +22,11 @@ export const UrlSchema = z.url().refine((url) => {
 });
 
 export const ShortenedUrlSchema = UrlSchema.refine((url) => {
-	if (APP_CONFIG.IS_LOCAL) {
-		return true;
-	}
-
 	try {
 		const parsedUrl = new URL(url);
+		const clientUrl = new URL(APP_CONFIG.HTTP.CLIENT_URL);
 
-		if (parsedUrl.hostname !== APP_CONFIG.HTTP.CLIENT_URL.replace(/^https?:\/\//, "")) {
+		if (parsedUrl.hostname !== clientUrl.hostname) {
 			throw new InvalidShortenedUrlDomain();
 		}
 

@@ -1,6 +1,7 @@
 export * from "./auth.plugin";
 export * from "./cors.plugin";
 export * from "./db.plugin";
+export * from "./docs.plugin";
 export * from "./error-handler.plugin";
 export * from "./helmet.plugin";
 export * from "./helpers.plugin";

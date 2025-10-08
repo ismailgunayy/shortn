@@ -43,12 +43,6 @@ export class InvalidUrlProtocol extends UrlError {
 	}
 }
 
-export class InvalidUrlHostname extends UrlError {
-	constructor(cause?: unknown) {
-		super("URL must have a valid domain name with at least one dot", 400, cause);
-	}
-}
-
 export class InvalidShortenedUrlDomain extends UrlError {
 	constructor(cause?: unknown) {
 		super(`URL must be a valid shortened URL from ${APP_CONFIG.HTTP.CLIENT_URL}`, 400, cause);

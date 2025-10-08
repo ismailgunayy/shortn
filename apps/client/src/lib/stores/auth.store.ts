@@ -136,7 +136,6 @@ function createAuthStore() {
 			} finally {
 				set(unauthenticatedState);
 				goto("/");
-				window.location.reload();
 			}
 		},
 

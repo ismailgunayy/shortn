@@ -297,17 +297,6 @@
 										</div>
 										<div class="mb-2 flex items-center gap-2">
 											<span class="text-body-small text-bright whitespace-nowrap font-mono">****{apiKey.lastFour}</span>
-											<button
-												onclick={() => copyToClipboard(`****${apiKey.lastFour}`, `api-key-mobile-${apiKey.id}`)}
-												class="text-secondary hover:text-bright cursor-pointer rounded p-1 hover:bg-slate-600/40"
-												title="Copy partial key"
-											>
-												{#if copiedId === `api-key-mobile-${apiKey.id}`}
-													<CheckMark class="text-success h-4 w-4" />
-												{:else}
-													<Copy class="h-4 w-4" />
-												{/if}
-											</button>
 										</div>
 										<div class="space-y-1">
 											<p class="text-caption text-muted">Created {formatDate(apiKey.createdAt)}</p>

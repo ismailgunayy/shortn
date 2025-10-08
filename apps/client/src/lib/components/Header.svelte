@@ -3,6 +3,7 @@
 
 	import Loading from "$lib/icons/Loading.svelte";
 	import { page } from "$app/state";
+	import { config } from "$lib/common/config";
 
 	const auth = $derived($authStore);
 
@@ -11,13 +12,23 @@
 
 <header class="z-10 w-full px-4 py-4 sm:px-6">
 	<nav class="mx-auto flex max-w-7xl items-center justify-between">
-		<a
-			href="/"
-			data-sveltekit-reload={isHome}
-			class="text-heading-2 text-bright font-bold transition-colors hover:text-white"
-		>
-			Shortn
-		</a>
+		<div class="flex items-end gap-8">
+			<a
+				href="/"
+				data-sveltekit-reload={isHome}
+				class="text-heading-2 text-bright font-bold hover:text-white"
+			>
+				Shortn
+			</a>
+			<a
+				href={`${config.HTTP.API_BASE_URL}/docs`}
+				data-sveltekit-preload-code="off"
+				data-sveltekit-preload-data="off"
+				class="text-button-small text-secondary hover:text-bright leading-6"
+			>
+				Docs
+			</a>
+		</div>
 
 		<!-- Auth Navigation -->
 		<div class="flex items-center gap-3 sm:gap-4">

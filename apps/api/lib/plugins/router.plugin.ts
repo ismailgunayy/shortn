@@ -1,4 +1,4 @@
-import { AuthController, HealthController, TestController, UrlController } from "~/controllers";
+import { AuthController, HealthController, UrlController } from "~/controllers";
 
 import { App } from "~/types/fastify";
 import { AuthMethod } from "~/services/auth.service";
@@ -41,7 +41,6 @@ export const router = fastifyPlugin((app: App) => {
 
 		app.register((app: App) => {
 			app.register(UrlController);
-			app.register(TestController);
 		});
 	});
 });

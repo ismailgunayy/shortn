@@ -9,6 +9,7 @@ const EnvSchema = z.object({
 	HOST: z.string(),
 	BASE_URL: z.url(),
 	CLIENT_URL: z.url(),
+	DOCS_URL: z.url(),
 	ALLOWED_ORIGINS: z
 		.string()
 		.default("")
@@ -61,6 +62,7 @@ function structureConfig() {
 			PORT: env.PORT,
 			BASE_URL: env.BASE_URL,
 			CLIENT_URL: env.CLIENT_URL,
+			DOCS_URL: env.DOCS_URL,
 			ALLOWED_ORIGINS: env.ALLOWED_ORIGINS
 		},
 		AUTH: {

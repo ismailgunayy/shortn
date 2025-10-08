@@ -8,7 +8,7 @@ import { CacheService } from "~/services/cache.service";
 import { DB } from "./db";
 import { TConfig } from "~/common/config";
 import { UrlService } from "~/services/url.service";
-import { ZodTypeProvider } from "fastify-type-provider-zod";
+import { FastifyZodOpenApiTypeProvider } from "fastify-zod-openapi";
 
 interface JWTPayload {
 	tokenType: TokenType;
@@ -56,5 +56,5 @@ export type App = FastifyInstance<
 	IncomingMessage,
 	ServerResponse<IncomingMessage>,
 	FastifyBaseLogger,
-	ZodTypeProvider
+	FastifyZodOpenApiTypeProvider
 >;

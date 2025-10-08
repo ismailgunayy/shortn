@@ -1,5 +1,5 @@
-import { auth, cors, db, error, helmet, helpers, log, notFound, rateLimit, router, services } from "./plugins";
-import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
+import { auth, cors, db, docs, error, helmet, helpers, log, notFound, rateLimit, router, services } from "./plugins";
+import { fastifyZodOpenApiPlugin, serializerCompiler, validatorCompiler } from "fastify-zod-openapi";
 
 import { APP_CONFIG } from "./common/config";
 import Fastify from "fastify";
@@ -16,6 +16,8 @@ app.decorate("config", APP_CONFIG);
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
+await app.register(fastifyZodOpenApiPlugin);
+
 await app.register(log);
 await app.register(error);
 await app.register(helmet);
@@ -26,6 +28,7 @@ await app.register(notFound);
 await app.register(cors);
 await app.register(helpers);
 await app.register(services);
+await app.register(docs);
 await app.register(router);
 
 const start = async () => {

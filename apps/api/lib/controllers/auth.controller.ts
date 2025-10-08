@@ -13,6 +13,7 @@ export const AuthController = (app: App) => {
 		"/auth/register",
 		{
 			schema: {
+				hide: true,
 				description: "Register a new user",
 				body: z.object({
 					fullName: z.string(),
@@ -52,6 +53,7 @@ export const AuthController = (app: App) => {
 		"/auth/login",
 		{
 			schema: {
+				hide: true,
 				description: "Login to your account",
 				body: z.object({
 					email: z.email(),
@@ -110,6 +112,7 @@ export const AuthController = (app: App) => {
 		{
 			onRequest: [app.authenticateSession],
 			schema: {
+				hide: true,
 				description: "Get the authentication status of the current user",
 				response: createResponseSchema(
 					z.object({
@@ -144,6 +147,7 @@ export const AuthController = (app: App) => {
 		"/auth/refresh",
 		{
 			schema: {
+				hide: true,
 				description: "Refresh the access and refresh tokens",
 				response: createResponseSchema(
 					z.object({
@@ -194,6 +198,7 @@ export const AuthController = (app: App) => {
 		{
 			onRequest: [app.authenticateSession],
 			schema: {
+				hide: true,
 				description: "Logout the current user",
 				response: createResponseSchema()
 			}
@@ -211,6 +216,7 @@ export const AuthController = (app: App) => {
 		{
 			onRequest: [app.authenticateSession],
 			schema: {
+				hide: true,
 				description: "Get all API keys of the current user",
 				response: createResponseSchema(
 					z.object({
@@ -244,6 +250,7 @@ export const AuthController = (app: App) => {
 		{
 			onRequest: [app.authenticateSession],
 			schema: {
+				hide: true,
 				description: "Create a new API key for the current user",
 				body: z.object({
 					name: z.string()
@@ -277,6 +284,7 @@ export const AuthController = (app: App) => {
 		{
 			onRequest: [app.authenticateSession],
 			schema: {
+				hide: true,
 				description: "Update an existing API key of the current user",
 				params: z.object({
 					id: z.string().pipe(z.coerce.number())
@@ -313,6 +321,7 @@ export const AuthController = (app: App) => {
 		{
 			onRequest: [app.authenticateSession],
 			schema: {
+				hide: true,
 				description: "Delete an existing API key of the current user",
 				params: z.object({
 					id: z.string().pipe(z.coerce.number())
