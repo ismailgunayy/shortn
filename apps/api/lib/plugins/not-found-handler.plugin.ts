@@ -10,11 +10,10 @@ export const notFound = fastifyPlugin((app: App) => {
 			})
 		},
 		function (_request, reply) {
-			// TODO: Add "Please check our docs" once the docs are ready
 			reply.code(404).send({
 				success: false,
 				error: {
-					message: "No such endpoint :("
+					message: `No such endpoint. Please check our docs at ${app.config.HTTP.DOCS_URL}`
 				}
 			});
 		}

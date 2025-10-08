@@ -22,7 +22,7 @@ export class AuthService extends Service {
 	}
 
 	public async status(options?: RequestInit): Promise<ApiResponse<AuthStatusResponse>> {
-		return await this.request<AuthStatusResponse>("auth/status", {
+		return await this.request<AuthStatusResponse>("auth", {
 			...options
 		});
 	}
@@ -36,6 +36,24 @@ export class AuthService extends Service {
 
 	public async logout(options?: RequestInit): Promise<ApiResponse> {
 		return await this.request("auth/logout", {
+			...options
+		});
+	}
+
+	public async update(
+		values: Pick<Partial<RegisterRequest>, "fullName" | "password">,
+		options?: RequestInit
+	): Promise<ApiResponse<RegisterResponse>> {
+		return await this.request<RegisterResponse>("auth", {
+			method: "PATCH",
+			body: JSON.stringify(values),
+			...options
+		});
+	}
+
+	public async delete(options?: RequestInit): Promise<ApiResponse> {
+		return await this.request("auth", {
+			method: "DELETE",
 			...options
 		});
 	}

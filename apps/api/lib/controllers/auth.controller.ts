@@ -108,7 +108,7 @@ export const AuthController = (app: App) => {
 	);
 
 	app.get(
-		"/auth/status",
+		"/auth",
 		{
 			onRequest: [app.authenticateSession],
 			schema: {
@@ -127,7 +127,7 @@ export const AuthController = (app: App) => {
 			}
 		},
 		async (request, reply) => {
-			const user = await app.services.auth.me(request.user.id);
+			const user = await app.services.auth.status(request.user.id);
 
 			return reply.code(200).send({
 				success: true,
@@ -190,6 +190,64 @@ export const AuthController = (app: App) => {
 					expiresIn: accessTokenExpiry
 				}
 			});
+		}
+	);
+
+	app.patch(
+		"/auth",
+		{
+			onRequest: [app.authenticateSession],
+			schema: {
+				hide: true,
+				description: "Update the current user's details",
+				body: z.object({
+					fullName: z.string().optional(),
+					password: PasswordSchema.optional()
+				}),
+				response: createResponseSchema(
+					z.object({
+						id: z.number(),
+						fullName: z.string(),
+						email: z.email()
+					})
+				)
+			}
+		},
+		async (request, reply) => {
+			const { fullName, password } = request.body;
+
+			const user = await app.services.auth.updateUser(request.user.id, {
+				fullName,
+				password
+			});
+
+			return reply.code(200).send({
+				success: true,
+				data: {
+					id: user.id,
+					fullName: user.fullName,
+					email: user.email
+				}
+			});
+		}
+	);
+
+	app.delete(
+		"/auth",
+		{
+			onRequest: [app.authenticateSession],
+			schema: {
+				hide: true,
+				description: "Delete the current user's account",
+				response: createResponseSchema()
+			}
+		},
+		async (request, reply) => {
+			app.helpers.auth.clearTokenCookies(reply);
+			await app.services.auth.deleteUser(request.user.id);
+			await app.services.cache.del(CacheType.REFRESH, request.user.id.toString());
+
+			return reply.code(200).send({ success: true });
 		}
 	);
 

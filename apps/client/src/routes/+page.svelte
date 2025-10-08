@@ -195,7 +195,7 @@
 									id="customCode"
 									type="text"
 									bind:value={customCode}
-									placeholder={$authStore.isAuthenticated ? "custom-code" : "Sign up to use custom codes"}
+									placeholder={$authStore.isAuthenticated ? "custom-code" : "Register to use custom codes"}
 									class="text-form-input flex-1 border-none bg-transparent py-2.5 pl-0.5 pr-4 placeholder-slate-500 outline-none focus:ring-0 sm:py-3"
 									disabled={loading || !$authStore.isAuthenticated}
 									pattern="[a-zA-Z0-9_-]+"
@@ -232,7 +232,7 @@
 							<span class="flex items-center justify-center gap-2">
 								{#if useCustomCode && !$authStore.isAuthenticated && !$authStore.loading}
 									<Lock />
-									Sign Up for Custom URLs
+									Register for Custom URLs
 								{:else}
 									{useCustomCode ? "Create Custom URL" : "Generate Shortened URL"}
 								{/if}

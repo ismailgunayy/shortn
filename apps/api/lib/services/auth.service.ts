@@ -15,11 +15,12 @@ import { ApiKeySchema, PasswordSchema } from "~/schemas/auth.schema";
 
 import { App } from "~/types/fastify";
 import { AuthRepository } from "~/repositories/auth.repository";
+import { ShortnUsers } from "~/types/db";
 import z from "zod";
 
 export enum TokenType {
-	ACCESS = "accessToken",
-	REFRESH = "refreshToken"
+	ACCESS = "s_ac", // shortn access token
+	REFRESH = "s_rc" // shortn refresh token
 }
 
 export enum AuthMethod {
@@ -33,7 +34,7 @@ export class AuthService {
 		private readonly authRepository: AuthRepository
 	) {}
 
-	public async register(values: { fullName: string; email: string; password: string }) {
+	public async register(values: Pick<ShortnUsers, "fullName" | "email" | "password">) {
 		let { fullName, email, password } = values;
 
 		fullName = fullName.trim();
@@ -93,7 +94,7 @@ export class AuthService {
 		};
 	}
 
-	public async me(id: number) {
+	public async status(id: number) {
 		const user = await this.authRepository.findUser(id);
 
 		if (!user) {
@@ -106,6 +107,52 @@ export class AuthService {
 			email: user.email,
 			createdAt: user.createdAt,
 			updatedAt: user.updatedAt
+		};
+	}
+
+	public async updateUser(id: number, values: Pick<Partial<ShortnUsers>, "fullName" | "password">) {
+		const { fullName, password } = values;
+
+		const user = await this.authRepository.findUser(id);
+
+		if (!user) {
+			throw new UserNotFound();
+		}
+
+		const updateData: typeof values = {};
+
+		if (fullName && fullName.trim() !== "" && fullName.trim() !== user.fullName) {
+			updateData.fullName = fullName.trim();
+		}
+
+		if (password && password.trim() !== "") {
+			const isPasswordOK = PasswordSchema.safeParse(password).success;
+			if (!isPasswordOK) {
+				throw new InvalidPasswordFormat();
+			}
+
+			updateData.password = await this.app.helpers.auth.hashPassword(password.trim());
+		}
+
+		if (Object.keys(updateData).length === 0) {
+			return {
+				id: user.id,
+				fullName: user.fullName,
+				email: user.email
+			};
+		}
+
+		await this.authRepository.updateUser(id, updateData);
+
+		const updatedUser = await this.authRepository.findUser(id);
+		if (!updatedUser) {
+			throw new UserNotFound();
+		}
+
+		return {
+			id: updatedUser.id,
+			fullName: updatedUser.fullName,
+			email: updatedUser.email
 		};
 	}
 

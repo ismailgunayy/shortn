@@ -128,6 +128,49 @@ function createAuthStore() {
 			}
 		},
 
+		async updateUser(values: { fullName?: string; password?: string }) {
+			update((state) => ({ ...state, loading: true }));
+
+			try {
+				const response = await api.auth.update(values);
+
+				if (response.success && response.data) {
+					update((state) => ({
+						...state,
+						user: response.data,
+						loading: false
+					}));
+					return { success: true };
+				} else {
+					update((state) => ({ ...state, loading: false }));
+					return { success: false, error: response.error?.message || "Update failed" };
+				}
+			} catch {
+				update((state) => ({ ...state, loading: false }));
+				return { success: false, error: "Network error" };
+			}
+		},
+
+		async deleteAccount() {
+			update((state) => ({ ...state, loading: true }));
+
+			try {
+				const response = await api.auth.delete();
+
+				if (response.success) {
+					set(unauthenticatedState);
+					goto("/");
+					return { success: true };
+				} else {
+					update((state) => ({ ...state, loading: false }));
+					return { success: false, error: response.error?.message || "Delete failed" };
+				}
+			} catch {
+				update((state) => ({ ...state, loading: false }));
+				return { success: false, error: "Network error" };
+			}
+		},
+
 		async logout() {
 			update((state) => ({ ...state, loading: true }));
 

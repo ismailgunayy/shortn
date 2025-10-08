@@ -1,5 +1,7 @@
 <script lang="ts">
 	import Loading from "$lib/icons/Loading.svelte";
+	import Eye from "$lib/icons/Eye.svelte";
+	import EyeOff from "$lib/icons/EyeOff.svelte";
 	import { loginSchema, type LoginForm } from "$lib/schemas/auth.schema";
 	import { authStore } from "$lib/stores/auth.store";
 
@@ -7,6 +9,8 @@
 		email: "",
 		password: ""
 	});
+
+	let showPassword = $state(false);
 
 	let errors = $state<Partial<Record<keyof LoginForm, string>>>({});
 	let formError = $state<string>("");
@@ -47,10 +51,10 @@
 </script>
 
 <svelte:head>
-	<title>Shortn | Sign In</title>
+	<title>Shortn | Log In</title>
 	<meta
 		name="description"
-		content="Sign in to your Shortn account"
+		content="Log in to your Shortn account"
 	/>
 </svelte:head>
 
@@ -60,7 +64,7 @@
 		<h1
 			class="text-heading-1 mb-3 bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text font-bold text-transparent"
 		>
-			Sign In
+			Log In
 		</h1>
 		<p class="text-body bg-gradient-to-r from-slate-300 to-slate-100 bg-clip-text text-transparent">
 			Welcome back to Shortn
@@ -110,15 +114,29 @@
 				>
 					Password
 				</label>
-				<input
-					id="password"
-					type="password"
-					bind:value={formData.password}
-					placeholder="Your password"
-					class="text-form-input w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-600/60 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
-					disabled={authState.loading}
-					required
-				/>
+				<div class="relative">
+					<input
+						id="password"
+						type={showPassword ? "text" : "password"}
+						bind:value={formData.password}
+						placeholder="Your password"
+						class="text-form-input w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 pr-12 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-600/60 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+						disabled={authState.loading}
+						required
+					/>
+					<button
+						type="button"
+						onclick={() => (showPassword = !showPassword)}
+						class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 focus:outline-none"
+						disabled={authState.loading}
+					>
+						{#if showPassword}
+							<EyeOff class="h-5 w-5" />
+						{:else}
+							<Eye class="h-5 w-5" />
+						{/if}
+					</button>
+				</div>
 				{#if errors.password}
 					<p class="text-error mt-1">{errors.password}</p>
 				{/if}
@@ -133,10 +151,10 @@
 				{#if authState.loading}
 					<span class="flex items-center justify-center">
 						<Loading />
-						Signing In...
+						Logging In...
 					</span>
 				{:else}
-					Sign In
+					Log In
 				{/if}
 			</button>
 
@@ -147,7 +165,7 @@
 					href="/web/register"
 					class="text-secondary hover:text-bright font-medium transition-colors"
 				>
-					Sign up
+					Register
 				</a>
 			</p>
 		</form>
