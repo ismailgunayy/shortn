@@ -19,8 +19,8 @@ import { ShortnUsers } from "~/types/db";
 import z from "zod";
 
 export enum TokenType {
-	ACCESS = "s_ac", // shortn access token
-	REFRESH = "s_rc" // shortn refresh token
+	ACCESS = "accessToken",
+	REFRESH = "refreshToken"
 }
 
 export enum AuthMethod {
