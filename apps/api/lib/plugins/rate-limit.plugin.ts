@@ -1,5 +1,5 @@
 import { App } from "~/types/fastify";
-import { AuthMethod } from "~/services/auth.service";
+import { AuthMethod } from "~/helpers";
 import fastifyPlugin from "fastify-plugin";
 import fastifyRateLimit from "@fastify/rate-limit";
 

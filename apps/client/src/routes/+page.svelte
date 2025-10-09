@@ -66,7 +66,7 @@
 
 	async function copyToClipboard() {
 		try {
-			await navigator.clipboard.writeText(shortenedUrl);
+			await navigator.clipboard.writeText(shortenedUrl.replace(/^(https?:\/\/)/, ""));
 			copied = true;
 			setTimeout(() => (copied = false), 2300);
 		} catch (err) {

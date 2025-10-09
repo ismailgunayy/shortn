@@ -1,7 +1,7 @@
 import { AuthController, HealthController, UrlController } from "~/controllers";
 
 import { App } from "~/types/fastify";
-import { AuthMethod } from "~/services/auth.service";
+import { AuthMethod } from "~/helpers";
 import fastifyPlugin from "fastify-plugin";
 
 const restrictAuthEndpoints = (app: App) => {

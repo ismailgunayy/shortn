@@ -61,15 +61,15 @@ export class UrlService {
 			return cachedUrl;
 		}
 
-		const slug = shortenedUrl.replace(this.app.config.HTTP.CLIENT_URL + "/", "");
-		if (!slug) {
+		const shortCode = shortenedUrl.replace(this.app.config.HTTP.CLIENT_URL + "/", "");
+		if (!shortCode) {
 			throw new InvalidShortenedUrl();
 		}
 
 		let originalUrl;
 
 		if (this.app.helpers.url.isCustomUrl(shortenedUrl)) {
-			const customCode = slug.replace(`${URLSegment.Custom}/`, "");
+			const customCode = shortCode.replace(`${URLSegment.Custom}/`, "");
 			const existingCustom = await this.urlRepository.findCustomUrlByCustomCode(customCode);
 
 			if (!existingCustom) {
@@ -80,7 +80,7 @@ export class UrlService {
 
 			return existingCustom.url;
 		} else {
-			const id = this.app.helpers.url.decodeId(slug);
+			const id = this.app.helpers.url.decodeId(shortCode);
 			const existingUrl = await this.urlRepository.findUrlById(id);
 
 			if (!existingUrl) {

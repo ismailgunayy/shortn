@@ -1,4 +1,4 @@
-import { AuthMethod, TokenType } from "~/services/auth.service";
+import { AuthMethod, TokenType } from "~/helpers";
 
 import { App } from "~/types/fastify";
 import { FastifyRequest } from "fastify";

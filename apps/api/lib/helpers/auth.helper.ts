@@ -11,13 +11,33 @@ import { compare, hash } from "bcrypt";
 
 import { API_KEY_LENGTH } from "~/schemas/auth.schema";
 import { CacheType } from "~/services/cache.service";
-import { TokenType } from "~/services/auth.service";
+import { CookieSerializeOptions } from "@fastify/cookie";
 import crypto from "crypto";
 
 const SALT_ROUNDS = 12;
 
+export enum TokenType {
+	ACCESS = "accessToken",
+	REFRESH = "refreshToken"
+}
+
+export enum AuthMethod {
+	ACCESS_TOKEN = "accessToken",
+	API_KEY = "apiKey"
+}
+
 export class AuthHelper {
-	constructor(private readonly app: App) {}
+	private defaultCookieOptions: CookieSerializeOptions;
+
+	constructor(private readonly app: App) {
+		this.defaultCookieOptions = {
+			secure: this.app.config.IS_PRODUCTION,
+			sameSite: "lax",
+			signed: true,
+			path: "/",
+			domain: new URL(this.app.config.HTTP.CLIENT_URL).hostname
+		};
+	}
 
 	public setTokenCookie(name: TokenType, token: string, reply: FastifyReply) {
 		let options = {};
@@ -33,18 +53,20 @@ export class AuthHelper {
 		}
 
 		reply.setCookie(name, token, {
-			secure: this.app.config.IS_PRODUCTION,
-			sameSite: "lax",
-			signed: true,
-			path: "/",
-			domain: this.app.config.IS_PRODUCTION ? this.app.config.HTTP.CLIENT_URL.replace("https://", "") : undefined,
+			...this.defaultCookieOptions,
 			...options
 		});
 	}
 
 	public clearTokenCookies(reply: FastifyReply) {
-		reply.clearCookie(TokenType.ACCESS);
-		reply.clearCookie(TokenType.REFRESH);
+		reply.clearCookie(TokenType.ACCESS, {
+			...this.defaultCookieOptions,
+			maxAge: this.app.config.AUTH.JWT.ACCESS_EXPIRES_IN_SECONDS
+		});
+		reply.clearCookie(TokenType.REFRESH, {
+			...this.defaultCookieOptions,
+			maxAge: this.app.config.AUTH.JWT.REFRESH_EXPIRES_IN_SECONDS
+		});
 	}
 
 	public generateToken(payload: JWTPayload) {

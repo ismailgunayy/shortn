@@ -1,7 +1,7 @@
 import { App } from "~/types/fastify";
 import { CacheType } from "~/services/cache.service";
 import { PasswordSchema } from "~/schemas/auth.schema";
-import { TokenType } from "~/services/auth.service";
+import { TokenType } from "~/helpers";
 import { createResponseSchema } from "~/schemas/api-response.schema";
 import z from "zod";
 

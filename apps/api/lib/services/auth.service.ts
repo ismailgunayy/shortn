@@ -18,16 +18,6 @@ import { AuthRepository } from "~/repositories/auth.repository";
 import { ShortnUsers } from "~/types/db";
 import z from "zod";
 
-export enum TokenType {
-	ACCESS = "accessToken",
-	REFRESH = "refreshToken"
-}
-
-export enum AuthMethod {
-	ACCESS_TOKEN = "accessToken",
-	API_KEY = "apiKey"
-}
-
 export class AuthService {
 	constructor(
 		private readonly app: App,
