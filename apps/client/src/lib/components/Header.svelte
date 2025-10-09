@@ -14,7 +14,6 @@
 
 	// Close dropdown when navigating
 	$effect(() => {
-		page.url.pathname;
 		dropdownOpen = false;
 	});
 
@@ -50,8 +49,6 @@
 			</a>
 			<a
 				href={config.HTTP.DOCS_URL}
-				data-sveltekit-preload-code="off"
-				data-sveltekit-preload-data="off"
 				class="text-button-small text-secondary hover:text-bright leading-6"
 			>
 				Docs

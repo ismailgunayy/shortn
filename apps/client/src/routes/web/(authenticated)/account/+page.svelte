@@ -102,7 +102,7 @@
 			} else {
 				updateError = result.error || "Failed to update account";
 			}
-		} catch (error) {
+		} catch {
 			updateError = "Network error occurred";
 		} finally {
 			updateLoading = false;
@@ -126,7 +126,7 @@
 				deleteLoading = false;
 			}
 			// If successful, the store will redirect to home
-		} catch (error) {
+		} catch {
 			deleteError = "Network error occurred";
 			deleteLoading = false;
 		}
