@@ -1,14 +1,15 @@
 <script lang="ts">
 	import { api } from "$lib/api/api.client";
-	import Loading from "$lib/icons/Loading.svelte";
-	import Copy from "$lib/icons/Copy.svelte";
-	import Edit from "$lib/icons/Edit.svelte";
-	import Delete from "$lib/icons/Delete.svelte";
-	import CheckMark from "$lib/icons/CheckMark.svelte";
-	import Key from "$lib/icons/Key.svelte";
-	import Plus from "$lib/icons/Plus.svelte";
-	import { formatDate } from "$lib/utils/formatDate";
+	import Loading from "$lib/icons/loading.svelte";
+
+	import Edit from "$lib/icons/edit.svelte";
+	import Delete from "$lib/icons/delete.svelte";
+	import CheckMark from "$lib/icons/check-mark.svelte";
+	import Key from "$lib/icons/key.svelte";
+	import Plus from "$lib/icons/plus.svelte";
+	import { formatDate } from "$lib/utils/format-date";
 	import type { ApiKey } from "$lib/api/services/auth.service";
+	import Copy from "$lib/icons/copy.svelte";
 
 	interface Props {
 		apiKeys: ApiKey[];

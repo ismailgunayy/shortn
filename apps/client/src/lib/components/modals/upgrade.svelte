@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
-	import Link from "$lib/icons/Link.svelte";
-	import Dashboard from "$lib/icons/Dashboard.svelte";
-	import Key from "$lib/icons/Key.svelte";
-	import Close from "$lib/icons/Close.svelte";
+	import Link from "$lib/icons/link.svelte";
+	import Dashboard from "$lib/icons/dashboard.svelte";
+	import Key from "$lib/icons/key.svelte";
+	import Close from "$lib/icons/close.svelte";
 
 	let { isOpen = $bindable(false) } = $props();
 

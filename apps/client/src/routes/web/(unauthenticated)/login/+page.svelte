@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Loading from "$lib/icons/Loading.svelte";
-	import Eye from "$lib/icons/Eye.svelte";
-	import EyeOff from "$lib/icons/EyeOff.svelte";
+	import Loading from "$lib/icons/loading.svelte";
+	import Eye from "$lib/icons/eye.svelte";
+	import EyeOff from "$lib/icons/eye-off.svelte";
 	import { loginSchema, type LoginForm } from "$lib/schemas/auth.schema";
 	import { authStore } from "$lib/stores/auth.store";
 

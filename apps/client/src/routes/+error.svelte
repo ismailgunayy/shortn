@@ -1,7 +1,7 @@
 <script>
 	import { onMount } from "svelte";
 	import { goto } from "$app/navigation";
-	import Error from "$lib/icons/Error.svelte";
+	import Error from "$lib/icons/error.svelte";
 
 	let countdown = $state(5);
 

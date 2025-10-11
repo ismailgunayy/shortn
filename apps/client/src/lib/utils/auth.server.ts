@@ -1,7 +1,7 @@
 import type { User } from "$lib/stores/auth.store";
 import { redirect, type Cookies } from "@sveltejs/kit";
 import { serverApi } from "$lib/api/api.server";
-import { prepareCookieString } from "./parseCookies";
+import { prepareCookieString } from "./parse-cookies";
 
 export async function checkAuthStatus(cookies: Cookies): Promise<User | undefined> {
 	try {

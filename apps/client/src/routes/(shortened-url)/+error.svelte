@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from "$app/state";
-	import Error from "$lib/icons/Error.svelte";
+	import Error from "$lib/icons/error.svelte";
 </script>
 
 <svelte:head>

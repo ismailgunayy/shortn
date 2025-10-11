@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { api } from "$lib/api/api.client";
-	import CheckMark from "$lib/icons/CheckMark.svelte";
-	import Copy from "$lib/icons/Copy.svelte";
-	import Edit from "$lib/icons/Edit.svelte";
-	import Delete from "$lib/icons/Delete.svelte";
-	import Loading from "$lib/icons/Loading.svelte";
-	import { formatDate } from "$lib/utils/formatDate";
+	import CheckMark from "$lib/icons/check-mark.svelte";
+	import Copy from "$lib/icons/copy.svelte";
+	import Edit from "$lib/icons/edit.svelte";
+	import Delete from "$lib/icons/delete.svelte";
+	import Loading from "$lib/icons/loading.svelte";
+	import { formatDate } from "$lib/utils/format-date";
 	import type { CustomUrlItem, UpdateCustomUrlRequest, UrlItem } from "$lib/api/services/url.service";
 
 	interface Props {

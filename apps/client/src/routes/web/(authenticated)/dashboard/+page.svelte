@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount } from "svelte";
 	import { api } from "$lib/api/api.client";
-	import Loading from "$lib/icons/Loading.svelte";
-	import { default as ErrorIcon } from "$lib/icons/Error.svelte";
-	import UrlsSection from "$lib/components/sections/UrlsSection.svelte";
-	import ApiKeysSection from "$lib/components/sections/ApiKeysSection.svelte";
+	import Loading from "$lib/icons/loading.svelte";
+	import { default as ErrorIcon } from "$lib/icons/error.svelte";
+	import UrlsSection from "$lib/components/sections/urls.svelte";
+	import ApiKeysSection from "$lib/components/sections/api-keys.svelte";
 	import type { UrlItem, CustomUrlItem } from "$lib/api/services/url.service";
 	import type { ApiKey } from "$lib/api/services/auth.service";
 

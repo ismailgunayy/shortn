@@ -1,9 +1,9 @@
 <script lang="ts">
-	import CheckMark from "$lib/icons/CheckMark.svelte";
-	import Copy from "$lib/icons/Copy.svelte";
-	import Loading from "$lib/icons/Loading.svelte";
-	import Lock from "$lib/icons/Lock.svelte";
-	import UpgradeModal from "$lib/components/UpgradeModal.svelte";
+	import CheckMark from "$lib/icons/check-mark.svelte";
+	import Copy from "$lib/icons/copy.svelte";
+	import Loading from "$lib/icons/loading.svelte";
+	import Lock from "$lib/icons/lock.svelte";
+	import UpgradeModal from "$lib/components/modals/upgrade.svelte";
 	import { config } from "$lib/common/config";
 	import { shortenUrl } from "$lib/utils/shorten-url";
 	import { authStore } from "$lib/stores/auth.store";

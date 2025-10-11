@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { authStore } from "$lib/stores/auth.store";
 
-	import Loading from "$lib/icons/Loading.svelte";
-	import ChevronDown from "$lib/icons/ChevronDown.svelte";
+	import Loading from "$lib/icons/loading.svelte";
+	import ChevronDown from "$lib/icons/chevron-down.svelte";
 	import { page } from "$app/state";
 	import { config } from "$lib/common/config";
 

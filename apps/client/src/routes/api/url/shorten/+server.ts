@@ -1,5 +1,5 @@
 import type { RequestHandler } from "@sveltejs/kit";
-import { prepareCookieString } from "$lib/utils/parseCookies";
+import { prepareCookieString } from "$lib/utils/parse-cookies";
 import { serverApi } from "$lib/api/api.server";
 
 /**
