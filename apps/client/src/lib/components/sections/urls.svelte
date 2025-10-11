@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { api } from "$lib/api/api.client";
+	import { errorStore } from "$lib/stores/error.store";
 	import CheckMark from "$lib/icons/check-mark.svelte";
 	import Copy from "$lib/icons/copy.svelte";
 	import Edit from "$lib/icons/edit.svelte";
@@ -24,18 +25,27 @@
 	let updatingUrl = $state(false);
 
 	async function deleteUrl(id: number, shortenedUrl: string, isCustom = false) {
-		if (!confirm("Are you sure you want to delete this URL?")) return;
+		const confirmed = confirm("Are you sure you want to delete this URL?");
+		if (!confirmed) return;
 
 		try {
 			const response = await api.url.deleteUrl(id, { shortenedUrl });
 
 			if (response.error) {
-				throw new Error(response.error.message);
+				errorStore.handleApiError(response, {
+					source: "urls_component",
+					action: "delete_url"
+				});
+				return;
 			}
 
 			onUrlDeleted(id, isCustom);
+			errorStore.showSuccess("URL deleted successfully!");
 		} catch (err) {
-			alert(err instanceof Error ? err.message : "Failed to delete URL");
+			errorStore.handleNetworkError(err, {
+				source: "urls_component",
+				action: "delete_url"
+			});
 		}
 	}
 
@@ -49,7 +59,10 @@
 				copiedId = null;
 			}, 2000);
 		} catch (err) {
-			console.error("Failed to copy:", err);
+			errorStore.handleUnknownError(err, {
+				source: "urls_component",
+				action: "copy_to_clipboard"
+			});
 		}
 	}
 
@@ -65,7 +78,11 @@
 			});
 
 			if (response.error) {
-				throw new Error(response.error.message);
+				errorStore.handleApiError(response, {
+					source: "urls_component",
+					action: "update_custom_url"
+				});
+				return;
 			}
 
 			if (response.data) {
@@ -78,9 +95,13 @@
 				});
 				editingUrl = null;
 				editOriginalUrl = "";
+				errorStore.showSuccess("Custom URL updated successfully!");
 			}
 		} catch (err) {
-			alert(err instanceof Error ? err.message : "Failed to update custom URL");
+			errorStore.handleNetworkError(err, {
+				source: "urls_component",
+				action: "update_custom_url"
+			});
 		} finally {
 			updatingUrl = false;
 		}

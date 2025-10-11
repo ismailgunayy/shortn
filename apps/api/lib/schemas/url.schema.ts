@@ -19,9 +19,9 @@ export const UrlSchema = z.url().refine((url) => {
 		}
 
 		return true;
-	} catch (error) {
-		if (error instanceof UrlError) {
-			throw error;
+	} catch (err) {
+		if (err instanceof UrlError) {
+			throw err;
 		}
 
 		throw new InvalidUrl();
@@ -38,9 +38,9 @@ export const ShortenedUrlSchema = UrlSchema.refine((url) => {
 		}
 
 		return true;
-	} catch (error) {
-		if (error instanceof UrlError) {
-			throw error;
+	} catch (err) {
+		if (err instanceof UrlError) {
+			throw err;
 		}
 
 		throw new InvalidShortenedUrl();

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { authStore } from "$lib/stores/auth.store";
+	import { errorStore } from "$lib/stores/error.store";
 	import { fullNameSchema, passwordSchema } from "$lib/schemas/auth.schema";
 	import Loading from "$lib/icons/loading.svelte";
 	import Delete from "$lib/icons/delete.svelte";
@@ -19,9 +20,6 @@
 		currentPassword?: string;
 		newPassword?: string;
 	}>({});
-	let updateError = $state("");
-	let updateSuccess = $state("");
-	let deleteError = $state("");
 
 	let showDeleteConfirm = $state(false);
 	let deleteConfirmText = $state("");
@@ -73,8 +71,6 @@
 		if (!validateUpdateForm()) return;
 
 		updateLoading = true;
-		updateSuccess = "";
-		updateError = "";
 
 		try {
 			const updateData: { fullName?: string; password?: string } = {};
@@ -88,22 +84,24 @@
 			}
 
 			if (Object.keys(updateData).length === 0) {
-				updateSuccess = "No changes to save";
+				errorStore.showInfo("No changes to save");
 				return;
 			}
 
 			const result = await authStore.updateUser(updateData);
 
 			if (result.success) {
-				updateSuccess = "Account updated successfully";
 				currentPassword = "";
 				newPassword = "";
 				showPassword = false;
-			} else {
-				updateError = result.error || "Failed to update account";
+				// Success message is handled by the auth store
 			}
-		} catch {
-			updateError = "Network error occurred";
+			// Errors are handled by the auth store
+		} catch (err) {
+			errorStore.handleUnknownError(err, {
+				source: "account_page",
+				action: "update_account"
+			});
 		} finally {
 			updateLoading = false;
 		}
@@ -111,23 +109,24 @@
 
 	async function handleDeleteAccount() {
 		if (deleteConfirmText !== "DELETE") {
-			deleteError = "Please type 'DELETE' to confirm";
+			errorStore.showInfo("Please type 'DELETE' to confirm");
 			return;
 		}
 
 		deleteLoading = true;
-		deleteError = "";
 
 		try {
 			const result = await authStore.deleteAccount();
-
+			// Success and errors are handled by the auth store
 			if (!result.success) {
-				deleteError = result.error || "Failed to delete account";
 				deleteLoading = false;
 			}
 			// If successful, the store will redirect to home
-		} catch {
-			deleteError = "Network error occurred";
+		} catch (err) {
+			errorStore.handleUnknownError(err, {
+				source: "account_page",
+				action: "delete_account"
+			});
 			deleteLoading = false;
 		}
 	}
@@ -135,7 +134,6 @@
 	function cancelDelete() {
 		showDeleteConfirm = false;
 		deleteConfirmText = "";
-		deleteError = "";
 	}
 </script>
 
@@ -236,6 +234,7 @@
 								onclick={() => (showPassword = !showPassword)}
 								class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 focus:outline-none"
 								disabled={updateLoading}
+								tabindex="-1"
 							>
 								{#if showPassword}
 									<EyeOff class="h-5 w-5" />
@@ -271,6 +270,7 @@
 								onclick={() => (showPassword = !showPassword)}
 								class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 focus:outline-none"
 								disabled={updateLoading}
+								tabindex="-1"
 							>
 								{#if showPassword}
 									<EyeOff class="h-5 w-5" />
@@ -301,19 +301,6 @@
 					{/if}
 				</button>
 			</div>
-
-			<!-- Update Messages -->
-			{#if updateError}
-				<div class="text-error rounded-lg border border-red-800/50 bg-red-900/20 p-3 backdrop-blur-lg">
-					{updateError}
-				</div>
-			{/if}
-
-			{#if updateSuccess}
-				<div class="text-success rounded-lg border border-green-800/50 bg-green-900/20 p-3 backdrop-blur-lg">
-					{updateSuccess}
-				</div>
-			{/if}
 		</form>
 	</div>
 
@@ -354,12 +341,6 @@
 						disabled={deleteLoading}
 					/>
 				</div>
-
-				{#if deleteError}
-					<div class="text-error rounded-lg border border-red-800/50 bg-red-900/40 p-3 backdrop-blur-lg">
-						{deleteError}
-					</div>
-				{/if}
 
 				<div class="flex gap-3">
 					<button

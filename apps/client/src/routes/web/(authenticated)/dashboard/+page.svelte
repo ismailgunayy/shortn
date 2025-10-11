@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount } from "svelte";
 	import { api } from "$lib/api/api.client";
+	import { errorStore } from "$lib/stores/error.store";
 	import Loading from "$lib/icons/loading.svelte";
-	import { default as ErrorIcon } from "$lib/icons/error.svelte";
 	import UrlsSection from "$lib/components/sections/urls.svelte";
 	import ApiKeysSection from "$lib/components/sections/api-keys.svelte";
 	import type { UrlItem, CustomUrlItem } from "$lib/api/services/url.service";
@@ -13,7 +13,6 @@
 	let customUrls: CustomUrlItem[] = $state([]);
 	let apiKeys: ApiKey[] = $state([]);
 	let loading = $state(true);
-	let error = $state("");
 
 	// Tab state
 	let activeTab: "urls" | "apikeys" = $state("urls");
@@ -24,17 +23,24 @@
 
 	async function loadData() {
 		loading = true;
-		error = "";
 
 		try {
 			const [urlsResponse, apiKeysResponse] = await Promise.all([api.url.getUserUrls(), api.auth.getApiKeys()]);
 
 			if (urlsResponse.error) {
-				throw new Error(urlsResponse.error.message);
+				errorStore.handleApiError(urlsResponse, {
+					source: "dashboard",
+					action: "load_user_urls"
+				});
+				return;
 			}
 
 			if (apiKeysResponse.error) {
-				throw new Error(apiKeysResponse.error.message);
+				errorStore.handleApiError(apiKeysResponse, {
+					source: "dashboard",
+					action: "load_api_keys"
+				});
+				return;
 			}
 
 			if (urlsResponse.data) {
@@ -46,7 +52,10 @@
 				apiKeys = apiKeysResponse.data.apiKeys;
 			}
 		} catch (err) {
-			error = err instanceof Error ? err.message : "Failed to load data";
+			errorStore.handleNetworkError(err, {
+				source: "dashboard",
+				action: "load_dashboard_data"
+			});
 		} finally {
 			loading = false;
 		}
@@ -92,17 +101,6 @@
 		{#if loading}
 			<div class="flex justify-center">
 				<Loading class="h-8 w-8" />
-			</div>
-		{:else if error}
-			<div class="text-error mx-auto max-w-md rounded-lg border border-red-800/50 bg-red-900/20 p-4 text-center">
-				<ErrorIcon class="mx-auto mb-2 h-6 w-6" />
-				{error}
-				<button
-					onclick={loadData}
-					class="text-button-small mt-2 block w-full cursor-pointer rounded bg-red-800/30 px-3 py-1 hover:bg-red-800/50"
-				>
-					Retry
-				</button>
 			</div>
 		{:else}
 			<!-- Stats -->

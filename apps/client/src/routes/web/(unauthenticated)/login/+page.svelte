@@ -4,6 +4,8 @@
 	import EyeOff from "$lib/icons/eye-off.svelte";
 	import { loginSchema, type LoginForm } from "$lib/schemas/auth.schema";
 	import { authStore } from "$lib/stores/auth.store";
+	import { errorStore } from "$lib/stores/error.store";
+	import { extractValidationErrors } from "$lib/utils/error-handler";
 
 	let formData = $state<LoginForm>({
 		email: "",
@@ -11,10 +13,7 @@
 	});
 
 	let showPassword = $state(false);
-
 	let errors = $state<Partial<Record<keyof LoginForm, string>>>({});
-	let formError = $state<string>("");
-
 	let authState = $derived($authStore);
 
 	function validateForm(): boolean {
@@ -31,7 +30,6 @@
 		}
 
 		errors = {};
-		formError = "";
 		return true;
 	}
 
@@ -44,9 +42,8 @@
 
 		const result = await authStore.login(formData);
 
-		if (!result.success) {
-			formError = result.error || "Login failed";
-		}
+		// Errors are now handled by the auth store using errorStore
+		// No need to display form errors here as they'll show as toasts
 	}
 </script>
 
@@ -77,13 +74,6 @@
 			onsubmit={handleSubmit}
 			class="rounded-2xl border border-slate-600/60 bg-slate-600/25 p-6 shadow-2xl shadow-slate-900/20 backdrop-blur-3xl sm:p-8"
 		>
-			<!-- General Error -->
-			{#if formError}
-				<div class="text-error mb-4 rounded-lg border border-red-800/50 bg-red-900/20 p-3 backdrop-blur-lg">
-					{formError}
-				</div>
-			{/if}
-
 			<!-- Email Field -->
 			<div class="mb-4">
 				<label

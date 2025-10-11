@@ -12,10 +12,7 @@
 	});
 
 	let showPassword = $state(false);
-
 	let errors = $state<Partial<Record<keyof RegisterForm, string>>>({});
-	let formError = $state<string>("");
-
 	let authState = $derived($authStore);
 
 	function validateForm(): boolean {
@@ -32,7 +29,6 @@
 		}
 
 		errors = {};
-		formError = "";
 		return true;
 	}
 
@@ -45,9 +41,8 @@
 
 		const result = await authStore.register(formData);
 
-		if (!result.success) {
-			formError = result.error || "Registration failed";
-		}
+		// Errors are now handled by the auth store using errorStore
+		// No need to display form errors here as they'll show as toasts
 	}
 </script>
 
@@ -78,13 +73,6 @@
 			onsubmit={handleSubmit}
 			class="rounded-2xl border border-slate-600/60 bg-slate-600/25 p-6 shadow-2xl shadow-slate-900/20 backdrop-blur-3xl sm:p-8"
 		>
-			<!-- General Error -->
-			{#if formError}
-				<div class="text-error mb-4 rounded-lg border border-red-800/50 bg-red-900/20 p-3 backdrop-blur-lg">
-					{formError}
-				</div>
-			{/if}
-
 			<!-- Full Name Field -->
 			<div class="mb-4">
 				<label

@@ -16,8 +16,8 @@ export async function checkAuthStatus(cookies: Cookies): Promise<User | undefine
 		}
 
 		return;
-	} catch (error) {
-		console.warn("Auth status check failed:", error);
+	} catch (err) {
+		console.warn("Auth status check failed:", err);
 		return;
 	}
 }

@@ -2,6 +2,7 @@
 	import { onMount } from "svelte";
 	import "../app.css";
 	import favicon from "$lib/assets/favicon.svg";
+	import { Toaster } from "svelte-french-toast";
 
 	import { authStore } from "$lib/stores/auth.store";
 	import Footer from "$lib/components/layouts/footer.svelte";
@@ -29,4 +30,6 @@
 	</main>
 
 	<Footer />
+
+	<Toaster />
 </div>

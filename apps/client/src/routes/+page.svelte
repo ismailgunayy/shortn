@@ -7,14 +7,13 @@
 	import { config } from "$lib/common/config";
 	import { shortenUrl } from "$lib/utils/shorten-url";
 	import { authStore } from "$lib/stores/auth.store";
+	import { errorStore } from "$lib/stores/error.store";
 	import { fade } from "svelte/transition";
 
-	// State variables
 	let url = $state("");
 	let customCode = $state("");
 	let shortenedUrl = $state("");
 	let loading = $state(false);
-	let error = $state("");
 	let copied = $state(false);
 	let useCustomCode = $state(false);
 	let showUpgradeModal = $state(false);
@@ -28,7 +27,6 @@
 		}
 
 		loading = true;
-		error = "";
 
 		try {
 			// Using the internal +server endpoint to avoid exposing the API key to the client
@@ -43,14 +41,17 @@
 					showUpgradeModal = true;
 					return;
 				}
-				throw new Error(response.error.message);
+				return;
 			}
 
 			if (response.data?.url) {
 				shortenedUrl = response.data.url;
 			}
 		} catch (err) {
-			error = err instanceof Error ? err.message : "Something went wrong";
+			errorStore.handleUnknownError(err, {
+				source: "main_page",
+				action: "shorten_url"
+			});
 		} finally {
 			loading = false;
 		}
@@ -70,7 +71,10 @@
 			copied = true;
 			setTimeout(() => (copied = false), 2300);
 		} catch (err) {
-			console.error("Failed to copy:", err);
+			errorStore.handleUnknownError(err, {
+				source: "main_page",
+				action: "copy_to_clipboard"
+			});
 		}
 	}
 
@@ -79,7 +83,6 @@
 		customCode = "";
 		shortenedUrl = "";
 		loading = false;
-		error = "";
 		copied = false;
 		useCustomCode = false;
 	}
@@ -203,12 +206,6 @@
 									onclick={() => !$authStore.isAuthenticated && (showUpgradeModal = true)}
 								/>
 							</div>
-						</div>
-					{/if}
-
-					{#if error}
-						<div class="text-error rounded-lg border border-red-800/50 bg-red-900/20 p-3 backdrop-blur-lg">
-							{error}
 						</div>
 					{/if}
 

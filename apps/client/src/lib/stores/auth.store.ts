@@ -1,6 +1,7 @@
 import type { LoginForm, RegisterForm } from "$lib/schemas/auth.schema";
 
 import { api } from "$lib/api/api.client";
+import { errorStore } from "./error.store";
 import { goto } from "$app/navigation";
 import { writable } from "svelte/store";
 
@@ -49,11 +50,18 @@ function createAuthStore() {
 					return loginResult;
 				} else {
 					update((state) => ({ ...state, loading: false }));
-
+					errorStore.handleApiError(response, {
+						source: "auth.register",
+						action: "register_user"
+					});
 					return { success: false, error: response.error?.message || "Registration failed" };
 				}
-			} catch {
+			} catch (err) {
 				update((state) => ({ ...state, loading: false }));
+				errorStore.handleNetworkError(err, {
+					source: "auth.register",
+					action: "register_user"
+				});
 				return { success: false, error: "Network error" };
 			}
 		},
@@ -71,11 +79,18 @@ function createAuthStore() {
 					return { success: true };
 				} else {
 					update((state) => ({ ...state, loading: false }));
-
+					errorStore.handleApiError(response, {
+						source: "auth.login",
+						action: "login_user"
+					});
 					return { success: false, error: response.error?.message || "Login failed" };
 				}
-			} catch {
+			} catch (err) {
 				update((state) => ({ ...state, loading: false }));
+				errorStore.handleNetworkError(err, {
+					source: "auth.login",
+					action: "login_user"
+				});
 				return { success: false, error: "Network error" };
 			}
 		},
@@ -103,8 +118,12 @@ function createAuthStore() {
 				} else {
 					return set(unauthenticatedState);
 				}
-			} catch (error) {
-				console.error("Auth status check failed:", error);
+			} catch (err) {
+				console.error("Auth status check failed:", err);
+				errorStore.handleNetworkError(err, {
+					source: "auth.checkStatus",
+					action: "check_auth_status"
+				});
 				return set(unauthenticatedState);
 			}
 		},
@@ -120,10 +139,18 @@ function createAuthStore() {
 					return { success: true };
 				} else {
 					set(unauthenticatedState);
+					errorStore.handleApiError(response, {
+						source: "auth.refresh",
+						action: "refresh_token"
+					});
 					return { success: false, error: response.error?.message || "Refresh failed" };
 				}
-			} catch {
+			} catch (err) {
 				set(unauthenticatedState);
+				errorStore.handleNetworkError(err, {
+					source: "auth.refresh",
+					action: "refresh_token"
+				});
 				return { success: false, error: "Network error" };
 			}
 		},
@@ -140,13 +167,22 @@ function createAuthStore() {
 						user: response.data,
 						loading: false
 					}));
+					errorStore.showSuccess("Account updated successfully");
 					return { success: true };
 				} else {
 					update((state) => ({ ...state, loading: false }));
+					errorStore.handleApiError(response, {
+						source: "auth.updateUser",
+						action: "update_user_profile"
+					});
 					return { success: false, error: response.error?.message || "Update failed" };
 				}
-			} catch {
+			} catch (err) {
 				update((state) => ({ ...state, loading: false }));
+				errorStore.handleNetworkError(err, {
+					source: "auth.updateUser",
+					action: "update_user_profile"
+				});
 				return { success: false, error: "Network error" };
 			}
 		},
@@ -160,13 +196,22 @@ function createAuthStore() {
 				if (response.success) {
 					set(unauthenticatedState);
 					goto("/");
+					errorStore.showInfo("Account deleted successfully");
 					return { success: true };
 				} else {
 					update((state) => ({ ...state, loading: false }));
+					errorStore.handleApiError(response, {
+						source: "auth.deleteAccount",
+						action: "delete_user_account"
+					});
 					return { success: false, error: response.error?.message || "Delete failed" };
 				}
-			} catch {
+			} catch (err) {
 				update((state) => ({ ...state, loading: false }));
+				errorStore.handleNetworkError(err, {
+					source: "auth.deleteAccount",
+					action: "delete_user_account"
+				});
 				return { success: false, error: "Network error" };
 			}
 		},

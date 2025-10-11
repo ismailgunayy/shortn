@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { api } from "$lib/api/api.client";
+	import { errorStore } from "$lib/stores/error.store";
 	import Loading from "$lib/icons/loading.svelte";
 
 	import Edit from "$lib/icons/edit.svelte";
@@ -23,7 +24,6 @@
 	let newApiKeyResult: { key: string; name: string; id: number } | null = $state(null);
 	let copiedId: string | null = $state(null);
 
-	// Edit state
 	let editingApiKey: { id: number; name: string } | null = $state(null);
 	let editApiKeyName = $state("");
 	let updatingApiKey = $state(false);
@@ -37,7 +37,11 @@
 			const response = await api.auth.createApiKey({ name: newApiKeyName.trim() });
 
 			if (response.error) {
-				throw new Error(response.error.message);
+				errorStore.handleApiError(response, {
+					source: "api_keys_component",
+					action: "create_api_key"
+				});
+				return;
 			}
 
 			if (response.data) {
@@ -55,7 +59,10 @@
 				newApiKeyName = "";
 			}
 		} catch (err) {
-			alert(err instanceof Error ? err.message : "Failed to create API key");
+			errorStore.handleNetworkError(err, {
+				source: "api_keys_component",
+				action: "create_api_key"
+			});
 		} finally {
 			creatingApiKey = false;
 		}
@@ -72,7 +79,11 @@
 			});
 
 			if (response.error) {
-				throw new Error(response.error.message);
+				errorStore.handleApiError(response, {
+					source: "api_keys_component",
+					action: "update_api_key"
+				});
+				return;
 			}
 
 			if (response.data) {
@@ -82,28 +93,41 @@
 				onApiKeysUpdated(updatedApiKeys);
 				editingApiKey = null;
 				editApiKeyName = "";
+				errorStore.showSuccess("API key updated successfully!");
 			}
 		} catch (err) {
-			alert(err instanceof Error ? err.message : "Failed to update API key");
+			errorStore.handleNetworkError(err, {
+				source: "api_keys_component",
+				action: "update_api_key"
+			});
 		} finally {
 			updatingApiKey = false;
 		}
 	}
 
 	async function deleteApiKey(id: number, name: string) {
-		if (!confirm(`Are you sure you want to delete the API key "${name}"?`)) return;
+		const confirmed = confirm(`Are you sure you want to delete the API key "${name}"?`);
+		if (!confirmed) return;
 
 		try {
 			const response = await api.auth.deleteApiKey(id);
 
 			if (response.error) {
-				throw new Error(response.error.message);
+				errorStore.handleApiError(response, {
+					source: "api_keys_component",
+					action: "delete_api_key"
+				});
+				return;
 			}
 
 			const updatedApiKeys = apiKeys.filter((key) => key.id !== id);
 			onApiKeysUpdated(updatedApiKeys);
+			errorStore.showSuccess("API key deleted successfully!");
 		} catch (err) {
-			alert(err instanceof Error ? err.message : "Failed to delete API key");
+			errorStore.handleNetworkError(err, {
+				source: "api_keys_component",
+				action: "delete_api_key"
+			});
 		}
 	}
 
@@ -115,7 +139,10 @@
 				copiedId = null;
 			}, 2000);
 		} catch (err) {
-			console.error("Failed to copy:", err);
+			errorStore.handleUnknownError(err, {
+				source: "api_keys_component",
+				action: "copy_to_clipboard"
+			});
 		}
 	}
 
