@@ -48,3 +48,9 @@ export class InvalidShortenedUrlDomain extends UrlError {
 		super(`URL must be a valid shortened URL from ${APP_CONFIG.HTTP.CLIENT_URL}`, 400, cause);
 	}
 }
+
+export class InvalidCustomCode extends UrlError {
+	constructor(cause?: unknown) {
+		super("Custom code can only contain letters, numbers, underscores, and hyphens.", 400, cause);
+	}
+}

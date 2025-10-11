@@ -1,4 +1,11 @@
-import { InvalidShortenedUrl, InvalidShortenedUrlDomain, InvalidUrl, InvalidUrlProtocol, UrlError } from "~/errors";
+import {
+	InvalidCustomCode,
+	InvalidShortenedUrl,
+	InvalidShortenedUrlDomain,
+	InvalidUrl,
+	InvalidUrlProtocol,
+	UrlError
+} from "~/errors";
 
 import { APP_CONFIG } from "~/common/config";
 import z from "zod";
@@ -43,4 +50,9 @@ export const ShortenedUrlSchema = UrlSchema.refine((url) => {
 export const CustomCodeSchema = z
 	.string()
 	.max(30)
-	.regex(/^[a-zA-Z0-9_-]+$/, "Custom code can only contain letters, numbers, underscores, and hyphens.");
+	.refine((value) => {
+		if (!/^[a-zA-Z0-9_-]+$/.test(value)) {
+			throw new InvalidCustomCode();
+		}
+		return true;
+	});

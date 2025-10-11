@@ -8,7 +8,6 @@ const BaseErrorSchema = z.object({
 	success: z.literal(false),
 	error: z.object({
 		message: z.string(),
-		code: z.string().optional(),
 		details: z
 			.array(
 				z.object({
@@ -25,8 +24,11 @@ const createSuccessDataSchema = <T extends ZodObject>(dataSchema: T) =>
 		data: dataSchema
 	});
 
-type SuccessStatusCode = 200 | 201;
-type ErrorStatusCode = 400 | 401 | 500;
+const SUCCESS_CODES = [200, 201] as const;
+const ERROR_CODES = [400, 401, 403, 404, 409, 500] as const;
+
+type SuccessStatusCode = (typeof SUCCESS_CODES)[number];
+type ErrorStatusCode = (typeof ERROR_CODES)[number];
 
 export function createResponseSchema(): Record<ErrorStatusCode, typeof BaseErrorSchema> &
 	Record<SuccessStatusCode, typeof BaseSuccessSchema>;
@@ -40,12 +42,15 @@ export function createResponseSchema<T extends ZodObject>(dataSchema?: T) {
 	const successSchema = dataSchema ? createSuccessDataSchema(dataSchema) : BaseSuccessSchema;
 	const errorSchema = BaseErrorSchema;
 
-	return {
-		200: successSchema,
-		201: successSchema,
+	const response = {} as Record<SuccessStatusCode | ErrorStatusCode, typeof successSchema | typeof errorSchema>;
 
-		400: errorSchema,
-		401: errorSchema,
-		500: errorSchema
-	};
+	SUCCESS_CODES.forEach((code) => {
+		response[code] = successSchema;
+	});
+
+	ERROR_CODES.forEach((code) => {
+		response[code] = errorSchema;
+	});
+
+	return response;
 }
