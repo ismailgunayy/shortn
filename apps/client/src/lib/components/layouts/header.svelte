@@ -12,7 +12,6 @@
 
 	let dropdownOpen = $state(false);
 
-	// Close dropdown when navigating
 	$effect(() => {
 		dropdownOpen = false;
 	});
@@ -50,8 +49,8 @@
 			<a
 				href={config.HTTP.DOCS_URL}
 				class="text-button-small text-secondary hover:text-bright leading-6"
-			>
-				Docs
+				target="_blank"
+				>Docs
 			</a>
 		</div>
 
