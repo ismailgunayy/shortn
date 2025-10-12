@@ -5,18 +5,15 @@ import {
 	InactiveApiKey,
 	InvalidApiKey,
 	InvalidApiKeyFormat,
-	InvalidEmailFormat,
-	InvalidPasswordFormat,
 	UserAlreadyExists,
 	UserNotFound,
 	WrongPassword
 } from "~/errors";
-import { ApiKeySchema, PasswordSchema } from "~/schemas/auth.schema";
 
+import { ApiKeySchema } from "~/schemas/auth.schema";
 import { App } from "~/types/fastify";
 import { AuthRepository } from "~/repositories/auth.repository";
 import { ShortnUsers } from "~/types/db";
-import z from "zod";
 
 export class AuthService {
 	constructor(
@@ -34,16 +31,6 @@ export class AuthService {
 		const userFound = await this.authRepository.findUserByEmail(email);
 		if (userFound) {
 			throw new UserAlreadyExists();
-		}
-
-		const isEmailOK = z.email().safeParse(email).success;
-		if (!isEmailOK) {
-			throw new InvalidEmailFormat();
-		}
-
-		const isPasswordOK = PasswordSchema.safeParse(password).success;
-		if (!isPasswordOK) {
-			throw new InvalidPasswordFormat();
 		}
 
 		const user = await this.authRepository.insertUser({
@@ -100,11 +87,7 @@ export class AuthService {
 		};
 	}
 
-	// TODO: Separate update password and update profile methods
-	// FIXME: Check current password before allowing update
-	public async updateUser(id: number, values: Pick<Partial<ShortnUsers>, "fullName" | "password">) {
-		const { fullName, password } = values;
-
+	public async updateUser(id: number, values: Pick<Partial<ShortnUsers>, "fullName">) {
 		const user = await this.authRepository.findUser(id);
 
 		if (!user) {
@@ -113,20 +96,45 @@ export class AuthService {
 
 		const updateData: typeof values = {};
 
-		if (fullName && fullName.trim() !== "" && fullName.trim() !== user.fullName) {
-			updateData.fullName = fullName.trim();
-		}
-
-		if (password && password.trim() !== "") {
-			const isPasswordOK = PasswordSchema.safeParse(password).success;
-			if (!isPasswordOK) {
-				throw new InvalidPasswordFormat();
+		for (const key of Object.keys(values) as (keyof typeof values)[]) {
+			if (values[key] !== user[key]) {
+				updateData[key] = values[key];
 			}
-
-			updateData.password = await this.app.helpers.auth.hashPassword(password.trim());
 		}
 
-		if (Object.keys(updateData).length === 0) {
+		if (Object.keys(updateData).length === 0)
+			return {
+				id: user.id,
+				email: user.email,
+				fullName: user.fullName
+			};
+
+		await this.authRepository.updateUser(id, values);
+
+		const updatedUser = await this.authRepository.findUser(id);
+		if (!updatedUser) {
+			throw new UserNotFound();
+		}
+
+		return {
+			id: updatedUser.id,
+			email: updatedUser.email,
+			fullName: updatedUser.fullName
+		};
+	}
+
+	public async changePassword(
+		id: number,
+		currentPassword: ShortnUsers["password"],
+		newPassword: ShortnUsers["password"]
+	) {
+		const user = await this.authRepository.findUser(id);
+
+		if (!user) {
+			throw new UserNotFound();
+		}
+
+		if (currentPassword === newPassword) {
 			return {
 				id: user.id,
 				fullName: user.fullName,
@@ -134,7 +142,14 @@ export class AuthService {
 			};
 		}
 
-		await this.authRepository.updateUser(id, updateData);
+		const isCurrentPasswordMatched = await this.app.helpers.auth.verifyPassword(currentPassword, user.password);
+		if (!isCurrentPasswordMatched) {
+			throw new WrongPassword();
+		}
+
+		const hashedPassword = await this.app.helpers.auth.hashPassword(newPassword);
+
+		await this.authRepository.updateUser(id, { password: hashedPassword });
 
 		const updatedUser = await this.authRepository.findUser(id);
 		if (!updatedUser) {

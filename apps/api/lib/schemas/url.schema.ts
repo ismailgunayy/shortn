@@ -1,5 +1,6 @@
 import {
-	InvalidCustomCode,
+	InvalidCustomCodeFormat,
+	InvalidCustomCodeLength,
 	InvalidShortenedUrl,
 	InvalidShortenedUrlDomain,
 	InvalidUrl,
@@ -49,10 +50,7 @@ export const ShortenedUrlSchema = UrlSchema.refine((url) => {
 
 export const CustomCodeSchema = z
 	.string()
-	.max(30)
-	.refine((value) => {
-		if (!/^[a-zA-Z0-9_-]+$/.test(value)) {
-			throw new InvalidCustomCode();
-		}
-		return true;
-	});
+	.trim()
+	.min(1, { error: new InvalidCustomCodeLength().message })
+	.max(50, { error: new InvalidCustomCodeLength().message })
+	.regex(/^[a-zA-Z0-9_-]+$/, { message: new InvalidCustomCodeFormat().message });

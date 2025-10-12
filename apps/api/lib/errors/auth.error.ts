@@ -60,6 +60,12 @@ export class InvalidApiKeyFormat extends AuthError {
 	}
 }
 
+export class InvalidApiKeyNameLength extends AuthError {
+	constructor(cause?: unknown) {
+		super("API Key name must be at least 4 characters long", 400, cause);
+	}
+}
+
 export class ApiKeyNotFound extends AuthError {
 	constructor(cause?: unknown) {
 		super("API key not found", 404, cause);
@@ -102,8 +108,14 @@ export class InvalidEmailFormat extends AuthError {
 	}
 }
 
-export class InvalidPasswordFormat extends AuthError {
+export class InvalidPasswordLength extends AuthError {
 	constructor(cause?: unknown) {
-		super("Invalid password format", 400, cause);
+		super("Password must be at least 12 characters long", 400, cause);
+	}
+}
+
+export class InvalidFullNameLength extends AuthError {
+	constructor(cause?: unknown) {
+		super("Full name must be at least 2 characters long", 400, cause);
 	}
 }

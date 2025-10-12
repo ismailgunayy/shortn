@@ -13,7 +13,8 @@
 
 	let showPassword = $state(false);
 
-	let updateLoading = $state(false);
+	let updateProfileLoading = $state(false);
+	let changePasswordLoading = $state(false);
 	let deleteLoading = $state(false);
 	let errors = $state<{
 		fullName?: string;
@@ -33,77 +34,94 @@
 		}
 	});
 
-	function validateUpdateForm(): boolean {
-		errors = {};
+	function validateProfileForm(): boolean {
+		errors.fullName = undefined;
 
-		// Always validate full name if it's being changed
-		if (fullName.trim() !== auth.user?.fullName) {
-			const fullNameResult = fullNameSchema.safeParse(fullName);
-			if (!fullNameResult.success) {
-				const firstError = fullNameResult.error.issues[0];
-				errors.fullName = firstError ? firstError.message : "Full name is required";
-			}
+		const fullNameResult = fullNameSchema.safeParse(fullName);
+		if (!fullNameResult.success) {
+			const firstError = fullNameResult.error.issues[0];
+			errors.fullName = firstError ? firstError.message : "Full name is required";
 		}
 
-		// If changing password, validate password fields
-		if (newPassword || currentPassword) {
-			if (!currentPassword) {
-				errors.currentPassword = "Current password is required";
-			}
-
-			if (!newPassword) {
-				errors.newPassword = "New password is required";
-			} else {
-				const passwordResult = passwordSchema.safeParse(newPassword);
-				if (!passwordResult.success) {
-					const firstError = passwordResult.error.issues[0];
-					errors.newPassword = firstError ? firstError.message : "Invalid password";
-				}
-			}
-		}
-
-		return Object.keys(errors).length === 0;
+		return !errors.fullName;
 	}
 
-	async function handleUpdateAccount(event: Event) {
+	function validatePasswordForm(): boolean {
+		errors.currentPassword = undefined;
+		errors.newPassword = undefined;
+
+		if (!currentPassword) {
+			errors.currentPassword = "Current password is required";
+		} else {
+			const currentPasswordResult = passwordSchema.safeParse(currentPassword);
+			if (!currentPasswordResult.success) {
+				const firstError = currentPasswordResult.error.issues[0];
+				errors.currentPassword = firstError ? firstError.message : "Invalid current password";
+			}
+		}
+
+		if (!newPassword) {
+			errors.newPassword = "New password is required";
+		} else {
+			const passwordResult = passwordSchema.safeParse(newPassword);
+			if (!passwordResult.success) {
+				const firstError = passwordResult.error.issues[0];
+				errors.newPassword = firstError ? firstError.message : "Invalid password";
+			}
+		}
+
+		return !errors.currentPassword && !errors.newPassword;
+	}
+
+	async function handleUpdateProfile(event: Event) {
 		event.preventDefault();
 
-		if (!validateUpdateForm()) return;
+		if (!validateProfileForm()) return;
 
-		updateLoading = true;
+		if (fullName.trim() === auth.user?.fullName) {
+			errorStore.showInfo("No changes to save");
+			return;
+		}
+
+		updateProfileLoading = true;
 
 		try {
-			const updateData: { fullName?: string; password?: string } = {};
+			await authStore.updateUser({ fullName: fullName.trim() });
+		} catch (err) {
+			errorStore.handleUnknownError(err, {
+				source: "account_page",
+				action: "update_profile"
+			});
+		} finally {
+			updateProfileLoading = false;
+		}
+	}
 
-			if (fullName.trim() !== auth.user?.fullName) {
-				updateData.fullName = fullName.trim();
-			}
+	async function handleChangePassword(event: Event) {
+		event.preventDefault();
 
-			if (newPassword) {
-				updateData.password = newPassword;
-			}
+		if (!validatePasswordForm()) return;
 
-			if (Object.keys(updateData).length === 0) {
-				errorStore.showInfo("No changes to save");
-				return;
-			}
+		changePasswordLoading = true;
 
-			const result = await authStore.updateUser(updateData);
+		try {
+			const result = await authStore.changePassword({
+				currentPassword,
+				newPassword
+			});
 
 			if (result.success) {
 				currentPassword = "";
 				newPassword = "";
 				showPassword = false;
-				// Success message is handled by the auth store
 			}
-			// Errors are handled by the auth store
 		} catch (err) {
 			errorStore.handleUnknownError(err, {
 				source: "account_page",
-				action: "update_account"
+				action: "change_password"
 			});
 		} finally {
-			updateLoading = false;
+			changePasswordLoading = false;
 		}
 	}
 
@@ -117,11 +135,10 @@
 
 		try {
 			const result = await authStore.deleteAccount();
-			// Success and errors are handled by the auth store
+
 			if (!result.success) {
 				deleteLoading = false;
 			}
-			// If successful, the store will redirect to home
 		} catch (err) {
 			errorStore.handleUnknownError(err, {
 				source: "account_page",
@@ -160,147 +177,144 @@
 
 	<!-- Account Form -->
 	<div class="mb-12 rounded-xl border border-slate-600/60 bg-slate-700/40 p-8 backdrop-blur-lg">
+		<!-- Profile Information Section -->
 		<form
-			onsubmit={handleUpdateAccount}
-			class="space-y-8"
+			onsubmit={handleUpdateProfile}
+			class="mb-8"
 		>
-			<!-- Profile Information Section -->
-			<div>
-				<h2 class="text-heading-3 text-bright mb-2 font-semibold">Profile Information</h2>
-				<!-- Full Name -->
+			<h2 class="text-heading-3 text-bright mb-4 font-semibold">Profile Information</h2>
+			<!-- Full Name -->
+			<div class="mb-4">
+				<label
+					for="fullName"
+					class="text-form-label"
+				>
+					Full Name
+				</label>
+				<input
+					id="fullName"
+					type="text"
+					bind:value={fullName}
+					required
+					class="text-form-input mt-1 w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+					disabled={updateProfileLoading}
+				/>
+				{#if errors.fullName}
+					<p class="text-error mt-1">{errors.fullName}</p>
+				{/if}
+			</div>
+
+			<!-- Submit Button for Profile -->
+			<button
+				type="submit"
+				disabled={updateProfileLoading || fullName.trim() === auth.user?.fullName}
+				class="text-button text-button-color transform cursor-pointer rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-4 py-2 font-semibold shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:outline-none focus:ring-2 focus:ring-slate-400/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+			>
+				{#if updateProfileLoading}
+					<span class="flex items-center justify-center">
+						<Loading />
+						Saving...
+					</span>
+				{:else}
+					Save Profile
+				{/if}
+			</button>
+		</form>
+
+		<!-- Divider -->
+		<hr class="mb-8 border-slate-600/40" />
+
+		<!-- Change Password Section -->
+		<form onsubmit={handleChangePassword}>
+			<h2 class="text-heading-3 text-bright mb-4 font-semibold">Change Password</h2>
+
+			<div class="mb-4 space-y-4">
+				<!-- Current Password -->
 				<div>
 					<label
-						for="fullName"
+						for="currentPassword"
 						class="text-form-label"
 					>
-						Full Name
+						Current Password
 					</label>
-					<input
-						id="fullName"
-						type="text"
-						bind:value={fullName}
-						required
-						class="text-form-input mt-1 w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
-						disabled={updateLoading}
-					/>
-					{#if errors.fullName}
-						<p class="text-error mt-1">{errors.fullName}</p>
+					<div class="relative mt-1">
+						<input
+							id="currentPassword"
+							type={showPassword ? "text" : "password"}
+							bind:value={currentPassword}
+							class="text-form-input w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 pr-12 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+							disabled={changePasswordLoading}
+						/>
+						<button
+							type="button"
+							onclick={() => (showPassword = !showPassword)}
+							class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-slate-400 hover:text-slate-300 focus:outline-none"
+							disabled={changePasswordLoading}
+							tabindex="-1"
+						>
+							{#if showPassword}
+								<EyeOff class="h-5 w-5" />
+							{:else}
+								<Eye class="h-5 w-5" />
+							{/if}
+						</button>
+					</div>
+					{#if errors.currentPassword}
+						<p class="text-error mt-1">{errors.currentPassword}</p>
 					{/if}
 				</div>
 
-				<!-- Submit Button for Profile -->
-				<button
-					type="submit"
-					disabled={updateLoading}
-					class="text-button text-button-color mt-4 transform cursor-pointer rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-4 py-2 font-semibold shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:outline-none focus:ring-2 focus:ring-slate-400/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
-				>
-					{#if updateLoading}
-						<span class="flex items-center justify-center">
-							<Loading />
-							Saving...
-						</span>
-					{:else}
-						Save
+				<!-- New Password -->
+				<div>
+					<label
+						for="newPassword"
+						class="text-form-label"
+					>
+						New Password
+					</label>
+					<div class="relative mt-1">
+						<input
+							id="newPassword"
+							type={showPassword ? "text" : "password"}
+							bind:value={newPassword}
+							class="text-form-input w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 pr-12 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+							disabled={changePasswordLoading}
+						/>
+						<button
+							type="button"
+							onclick={() => (showPassword = !showPassword)}
+							class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-slate-400 hover:text-slate-300 focus:outline-none"
+							disabled={changePasswordLoading}
+							tabindex="-1"
+						>
+							{#if showPassword}
+								<EyeOff class="h-5 w-5" />
+							{:else}
+								<Eye class="h-5 w-5" />
+							{/if}
+						</button>
+					</div>
+					{#if errors.newPassword}
+						<p class="text-error mt-1">{errors.newPassword}</p>
 					{/if}
-				</button>
-			</div>
-
-			<!-- Divider -->
-			<hr class="border-slate-600/40" />
-
-			<!-- Change Password Section -->
-			<div>
-				<h2 class="text-heading-3 text-bright mb-2 font-semibold">Change Password</h2>
-
-				<div class="space-y-4">
-					<!-- Current Password -->
-					<div>
-						<label
-							for="currentPassword"
-							class="text-form-label"
-						>
-							Current Password
-						</label>
-						<div class="relative mt-1">
-							<input
-								id="currentPassword"
-								type={showPassword ? "text" : "password"}
-								bind:value={currentPassword}
-								class="text-form-input w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 pr-12 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
-								disabled={updateLoading}
-							/>
-							<button
-								type="button"
-								onclick={() => (showPassword = !showPassword)}
-								class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-slate-400 hover:text-slate-300 focus:outline-none"
-								disabled={updateLoading}
-								tabindex="-1"
-							>
-								{#if showPassword}
-									<EyeOff class="h-5 w-5" />
-								{:else}
-									<Eye class="h-5 w-5" />
-								{/if}
-							</button>
-						</div>
-						{#if errors.currentPassword}
-							<p class="text-error mt-1">{errors.currentPassword}</p>
-						{/if}
-					</div>
-
-					<!-- New Password -->
-					<div>
-						<label
-							for="newPassword"
-							class="text-form-label"
-						>
-							New Password
-						</label>
-						<div class="relative mt-1">
-							<input
-								id="newPassword"
-								type={showPassword ? "text" : "password"}
-								bind:value={newPassword}
-								minlength="12"
-								class="text-form-input w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 pr-12 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
-								disabled={updateLoading}
-							/>
-							<button
-								type="button"
-								onclick={() => (showPassword = !showPassword)}
-								class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-slate-400 hover:text-slate-300 focus:outline-none"
-								disabled={updateLoading}
-								tabindex="-1"
-							>
-								{#if showPassword}
-									<EyeOff class="h-5 w-5" />
-								{:else}
-									<Eye class="h-5 w-5" />
-								{/if}
-							</button>
-						</div>
-						{#if errors.newPassword}
-							<p class="text-error mt-1">{errors.newPassword}</p>
-						{/if}
-					</div>
 				</div>
-
-				<!-- Submit Button for Password -->
-				<button
-					type="submit"
-					disabled={updateLoading || !currentPassword || !newPassword}
-					class="text-button text-button-color mt-4 transform cursor-pointer rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-4 py-2 font-semibold shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:outline-none focus:ring-2 focus:ring-slate-400/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
-				>
-					{#if updateLoading}
-						<span class="flex items-center justify-center">
-							<Loading />
-							Updating...
-						</span>
-					{:else}
-						Change Password
-					{/if}
-				</button>
 			</div>
+
+			<!-- Submit Button for Password -->
+			<button
+				type="submit"
+				disabled={changePasswordLoading || !currentPassword || !newPassword}
+				class="text-button text-button-color transform cursor-pointer rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-4 py-2 font-semibold shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:outline-none focus:ring-2 focus:ring-slate-400/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+			>
+				{#if changePasswordLoading}
+					<span class="flex items-center justify-center">
+						<Loading />
+						Updating...
+					</span>
+				{:else}
+					Change Password
+				{/if}
+			</button>
 		</form>
 	</div>
 

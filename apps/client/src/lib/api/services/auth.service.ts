@@ -40,11 +40,19 @@ export class AuthService extends Service {
 		});
 	}
 
-	public async update(
-		values: Pick<Partial<RegisterRequest>, "fullName" | "password">,
+	public async updateUser(
+		values: Pick<Partial<RegisterRequest>, "fullName">,
 		options?: RequestInit
 	): Promise<ApiResponse<RegisterResponse>> {
-		return await this.request<RegisterResponse>("auth", {
+		return await this.request<RegisterResponse>("auth/user", {
+			method: "PATCH",
+			body: JSON.stringify(values),
+			...options
+		});
+	}
+
+	public async changePassword(values: ChangePasswordRequest, options?: RequestInit): Promise<ApiResponse> {
+		return await this.request("auth/password", {
 			method: "PATCH",
 			body: JSON.stringify(values),
 			...options
@@ -120,6 +128,11 @@ export interface LoginResponse {
 export interface AuthStatusResponse {
 	user: { id: number; fullName: string; email: string };
 	isAuthenticated: boolean;
+}
+
+export interface ChangePasswordRequest {
+	currentPassword: string;
+	newPassword: string;
 }
 
 export interface CreateApiKeyRequest {

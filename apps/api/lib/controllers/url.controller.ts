@@ -2,6 +2,7 @@ import { CustomCodeSchema, ShortenedUrlSchema, UrlSchema } from "~/schemas/url.s
 
 import { ApiTags } from "~/plugins";
 import { App } from "~/types/fastify";
+import { IdSchema } from "~/schemas/base.schema";
 import { createResponseSchema } from "~/schemas/api-response.schema";
 import z from "zod";
 
@@ -14,7 +15,7 @@ export const UrlController = (app: App) => {
 				description: "Shorten a given URL with an optional custom code",
 				tags: [ApiTags.URL],
 				body: z.object({
-					url: z.string(),
+					url: UrlSchema,
 					customCode: CustomCodeSchema.optional().or(z.literal(""))
 				}),
 				response: createResponseSchema(
@@ -117,7 +118,7 @@ export const UrlController = (app: App) => {
 				description: "Update the original URL of a custom URL by its ID",
 				tags: [ApiTags.URL],
 				params: z.object({
-					id: z.string().pipe(z.coerce.number())
+					id: IdSchema
 				}),
 				body: z.object({
 					originalUrl: UrlSchema
@@ -156,7 +157,7 @@ export const UrlController = (app: App) => {
 				description: "Delete a URL (shortened or custom) by its ID",
 				tags: [ApiTags.URL],
 				params: z.object({
-					id: z.string().pipe(z.coerce.number())
+					id: IdSchema
 				}),
 				body: z.object({
 					shortenedUrl: ShortenedUrlSchema

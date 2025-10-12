@@ -49,7 +49,13 @@ export class InvalidShortenedUrlDomain extends UrlError {
 	}
 }
 
-export class InvalidCustomCode extends UrlError {
+export class InvalidCustomCodeLength extends UrlError {
+	constructor(cause?: unknown) {
+		super("Custom code must be between 1 and 50 characters long.", 400, cause);
+	}
+}
+
+export class InvalidCustomCodeFormat extends UrlError {
 	constructor(cause?: unknown) {
 		super("Custom code can only contain letters, numbers, underscores, and hyphens.", 400, cause);
 	}

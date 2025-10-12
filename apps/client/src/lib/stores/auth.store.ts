@@ -155,19 +155,19 @@ function createAuthStore() {
 			}
 		},
 
-		async updateUser(values: { fullName?: string; password?: string }) {
+		async updateUser(values: { fullName: string }) {
 			update((state) => ({ ...state, loading: true }));
 
 			try {
-				const response = await api.auth.update(values);
+				const response = await api.auth.updateUser(values);
 
 				if (response.success && response.data) {
 					update((state) => ({
 						...state,
-						user: response.data,
+						user: response.data as User,
 						loading: false
 					}));
-					errorStore.showSuccess("Account updated successfully");
+					errorStore.showSuccess("Profile updated successfully");
 					return { success: true };
 				} else {
 					update((state) => ({ ...state, loading: false }));
@@ -182,6 +182,34 @@ function createAuthStore() {
 				errorStore.handleNetworkError(err, {
 					source: "auth.updateUser",
 					action: "update_user_profile"
+				});
+				return { success: false, error: "Network error" };
+			}
+		},
+
+		async changePassword(values: { currentPassword: string; newPassword: string }) {
+			update((state) => ({ ...state, loading: true }));
+
+			try {
+				const response = await api.auth.changePassword(values);
+
+				if (response.success) {
+					update((state) => ({ ...state, loading: false }));
+					errorStore.showSuccess("Password changed successfully");
+					return { success: true };
+				} else {
+					update((state) => ({ ...state, loading: false }));
+					errorStore.handleApiError(response, {
+						source: "auth.changePassword",
+						action: "change_user_password"
+					});
+					return { success: false, error: response.error?.message || "Password change failed" };
+				}
+			} catch (err) {
+				update((state) => ({ ...state, loading: false }));
+				errorStore.handleNetworkError(err, {
+					source: "auth.changePassword",
+					action: "change_user_password"
 				});
 				return { success: false, error: "Network error" };
 			}

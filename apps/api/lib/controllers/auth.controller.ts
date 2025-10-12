@@ -1,6 +1,8 @@
+import { ApiKeyNameSchema, EmailSchema, FullNameSchema, PasswordSchema } from "~/schemas/auth.schema";
+
 import { App } from "~/types/fastify";
 import { CacheType } from "~/services/cache.service";
-import { PasswordSchema } from "~/schemas/auth.schema";
+import { IdSchema } from "~/schemas/base.schema";
 import { TokenType } from "~/helpers";
 import { createResponseSchema } from "~/schemas/api-response.schema";
 import z from "zod";
@@ -16,8 +18,8 @@ export const AuthController = (app: App) => {
 				hide: true,
 				description: "Register a new user",
 				body: z.object({
-					fullName: z.string(),
-					email: z.email(),
+					fullName: FullNameSchema,
+					email: EmailSchema,
 					password: PasswordSchema
 				}),
 				response: createResponseSchema(
@@ -56,7 +58,7 @@ export const AuthController = (app: App) => {
 				hide: true,
 				description: "Login to your account",
 				body: z.object({
-					email: z.email(),
+					email: EmailSchema,
 					password: PasswordSchema
 				}),
 				response: createResponseSchema(
@@ -194,40 +196,59 @@ export const AuthController = (app: App) => {
 	);
 
 	app.patch(
-		"/auth",
+		"/auth/user",
 		{
 			onRequest: [app.authenticateSession],
 			schema: {
 				hide: true,
 				description: "Update the current user's details",
 				body: z.object({
-					fullName: z.string().optional(),
-					password: PasswordSchema.optional()
+					fullName: FullNameSchema
 				}),
 				response: createResponseSchema(
 					z.object({
 						id: z.number(),
-						fullName: z.string(),
-						email: z.email()
+						email: z.email(),
+						fullName: z.string()
 					})
 				)
 			}
 		},
 		async (request, reply) => {
-			const { fullName, password } = request.body;
+			const { fullName } = request.body;
 
-			const user = await app.services.auth.updateUser(request.user.id, {
-				fullName,
-				password
-			});
+			const user = await app.services.auth.updateUser(request.user.id, { fullName });
 
 			return reply.code(200).send({
 				success: true,
 				data: {
-					id: user.id,
-					fullName: user.fullName,
-					email: user.email
+					...user
 				}
+			});
+		}
+	);
+
+	app.patch(
+		"/auth/password",
+		{
+			onRequest: [app.authenticateSession],
+			schema: {
+				hide: true,
+				description: "Update the current user's password",
+				body: z.object({
+					currentPassword: PasswordSchema,
+					newPassword: PasswordSchema
+				}),
+				response: createResponseSchema()
+			}
+		},
+		async (request, reply) => {
+			const { currentPassword, newPassword } = request.body;
+
+			await app.services.auth.changePassword(request.user.id, currentPassword, newPassword);
+
+			return reply.code(200).send({
+				success: true
 			});
 		}
 	);
@@ -311,7 +332,7 @@ export const AuthController = (app: App) => {
 				hide: true,
 				description: "Create a new API key for the current user",
 				body: z.object({
-					name: z.string()
+					name: ApiKeyNameSchema
 				}),
 				response: createResponseSchema(
 					z.object({
@@ -345,10 +366,10 @@ export const AuthController = (app: App) => {
 				hide: true,
 				description: "Update an existing API key of the current user",
 				params: z.object({
-					id: z.string().pipe(z.coerce.number())
+					id: IdSchema
 				}),
 				body: z.object({
-					name: z.string()
+					name: ApiKeyNameSchema
 				}),
 				response: createResponseSchema(
 					z.object({
@@ -382,7 +403,7 @@ export const AuthController = (app: App) => {
 				hide: true,
 				description: "Delete an existing API key of the current user",
 				params: z.object({
-					id: z.string().pipe(z.coerce.number())
+					id: IdSchema
 				}),
 				response: createResponseSchema()
 			}
