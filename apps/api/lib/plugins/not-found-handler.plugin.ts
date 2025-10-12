@@ -5,7 +5,7 @@ export const notFound = fastifyPlugin((app: App) => {
 	app.setNotFoundHandler(
 		{
 			preHandler: app.rateLimit({
-				max: 4,
+				max: 23,
 				timeWindow: 1000 * 60
 			})
 		},

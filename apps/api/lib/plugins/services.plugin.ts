@@ -7,7 +7,6 @@ import { UrlService } from "~/services/url.service";
 import fastifyPlugin from "fastify-plugin";
 
 export const services = fastifyPlugin(async (app: App) => {
-	// TODO: Revise all the repository methods for the need of userId
 	const authRepository = new AuthRepository(app.db);
 	const authService = new AuthService(app, authRepository);
 

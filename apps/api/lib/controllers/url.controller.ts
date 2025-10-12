@@ -5,7 +5,6 @@ import { App } from "~/types/fastify";
 import { createResponseSchema } from "~/schemas/api-response.schema";
 import z from "zod";
 
-// TODO: update all endpoints to return the ids and other info about url
 export const UrlController = (app: App) => {
 	app.post(
 		"/url/shorten",

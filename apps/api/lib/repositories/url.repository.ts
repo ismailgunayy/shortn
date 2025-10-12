@@ -10,15 +10,6 @@ export class UrlRepository {
 		return await this.db.insertInto("shortn.urls").values(values).returning(["id"]).executeTakeFirstOrThrow();
 	}
 
-	async updateUrl(id: number, userId: number, values: Updateable<ShortnUrls>) {
-		return await this.db
-			.updateTable("shortn.urls")
-			.set(values)
-			.where("id", "=", id)
-			.where("userId", "=", userId)
-			.executeTakeFirstOrThrow();
-	}
-
 	async deleteUrl(id: number, userId: number) {
 		return await this.db.deleteFrom("shortn.urls").where("id", "=", id).where("userId", "=", userId).execute();
 	}
@@ -27,7 +18,7 @@ export class UrlRepository {
 		return await this.db.selectFrom("shortn.urls").selectAll().where("id", "=", id).executeTakeFirst();
 	}
 
-	async findUrlByUrl(url: string, userId: number) {
+	async findUrlByUrl(url: ShortnUrls["url"], userId: number) {
 		return await this.db
 			.selectFrom("shortn.urls")
 			.selectAll()
@@ -69,7 +60,7 @@ export class UrlRepository {
 			.executeTakeFirst();
 	}
 
-	async findCustomUrlByCustomCode(customCode: string) {
+	async findCustomUrlByCustomCode(customCode: ShortnCustomUrls["customCode"]) {
 		return await this.db
 			.selectFrom("shortn.customUrls")
 			.select("url")

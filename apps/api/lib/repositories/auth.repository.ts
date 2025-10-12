@@ -58,11 +58,11 @@ export class AuthRepository {
 			.executeTakeFirst();
 	}
 
-	async findApiKeyByHash(keyHash: string) {
+	async findApiKeyByHash(keyHash: ShortnApiKeys["keyHash"]) {
 		return await this.db.selectFrom("shortn.apiKeys").selectAll().where("keyHash", "=", keyHash).executeTakeFirst();
 	}
 
-	async findApiKeyByName(userId: number, name: string) {
+	async findApiKeyByName(userId: number, name: ShortnApiKeys["name"]) {
 		return await this.db
 			.selectFrom("shortn.apiKeys")
 			.selectAll()
