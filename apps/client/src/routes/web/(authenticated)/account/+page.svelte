@@ -232,7 +232,7 @@
 							<button
 								type="button"
 								onclick={() => (showPassword = !showPassword)}
-								class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 focus:outline-none"
+								class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-slate-400 hover:text-slate-300 focus:outline-none"
 								disabled={updateLoading}
 								tabindex="-1"
 							>
@@ -268,7 +268,7 @@
 							<button
 								type="button"
 								onclick={() => (showPassword = !showPassword)}
-								class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 focus:outline-none"
+								class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-slate-400 hover:text-slate-300 focus:outline-none"
 								disabled={updateLoading}
 								tabindex="-1"
 							>
