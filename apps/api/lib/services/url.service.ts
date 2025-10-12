@@ -147,6 +147,7 @@ export class UrlService {
 		}
 
 		const updatedUrl = await this.urlRepository.updateCustomUrl(id, userId, { url: originalUrl });
+		await this.app.services.cache.set(CacheType.CUSTOM_URL, updatedUrl.customCode, originalUrl);
 
 		return {
 			id: updatedUrl.id,
