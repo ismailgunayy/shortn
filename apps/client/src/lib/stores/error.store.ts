@@ -10,7 +10,7 @@ import { derived, writable } from "svelte/store";
 
 import { ErrorSeverity } from "$lib/types/error.types";
 import { browser } from "$app/environment";
-import toast from "svelte-french-toast";
+import toast, { type ToastOptions } from "svelte-french-toast";
 
 interface ErrorState {
 	errors: AppError[];
@@ -110,13 +110,13 @@ function createErrorStore() {
 			const message = getErrorDisplayMessage(error);
 			const duration = getToastDuration(error.severity);
 
-			const toastOptions = {
+			const toastOptions: ToastOptions = {
 				duration,
-				position: "top-right" as const,
+				position: "bottom-right",
 				style: this.getToastStyle(error.severity),
 				ariaProps: {
-					role: "alert" as const,
-					"aria-live": "assertive" as const
+					role: "alert",
+					"aria-live": "assertive"
 				}
 			};
 
@@ -205,7 +205,7 @@ function createErrorStore() {
 
 			toast.success(message, {
 				duration: 4000,
-				position: "top-right",
+				position: "bottom-right",
 				style: `
 					border-radius: 12px;
 					backdrop-filter: blur(16px);
@@ -231,7 +231,7 @@ function createErrorStore() {
 
 			toast(message, {
 				duration: 3000,
-				position: "top-right",
+				position: "bottom-right",
 				icon: "ℹ️",
 				style: `
 					border-radius: 12px;

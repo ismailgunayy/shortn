@@ -223,7 +223,9 @@ function createAuthStore() {
 				await api.auth.logout();
 			} finally {
 				set(unauthenticatedState);
-				goto("/");
+				await goto("/", {
+					invalidateAll: true
+				});
 			}
 		},
 
