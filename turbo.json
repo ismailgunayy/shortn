@@ -1,7 +1,7 @@
 {
 	"$schema": "https://turborepo.com/schema.json",
 	"ui": "tui",
-	"globalEnv": ["DATABASE_URL"],
+	"globalEnv": ["DATABASE_URL", "CLIENT_URL"],
 	"tasks": {
 		"build": {
 			"dependsOn": ["clean", "^build"],
