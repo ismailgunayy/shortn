@@ -1,10 +1,11 @@
 import type { LayoutServerLoad } from "./$types";
-import { requireAuth } from "$lib/utils/auth.server";
+import { checkAuthStatus } from "$lib/utils/check-auth.server";
+import { redirect } from "@sveltejs/kit";
 
 export const load: LayoutServerLoad = async ({ cookies }) => {
-	const user = await requireAuth(cookies);
+	const user = await checkAuthStatus(cookies);
 
-	return {
-		user
-	};
+	if (!user) {
+		throw redirect(302, "/web/login");
+	}
 };
