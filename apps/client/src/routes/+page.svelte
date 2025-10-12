@@ -2,26 +2,24 @@
 	import CheckMark from "$lib/icons/check-mark.svelte";
 	import Copy from "$lib/icons/copy.svelte";
 	import Loading from "$lib/icons/loading.svelte";
-	import Lock from "$lib/icons/lock.svelte";
 	import UpgradeModal from "$lib/components/modals/upgrade.svelte";
 	import { config } from "$lib/common/config";
 	import { shortenUrl } from "$lib/utils/shorten-url";
 	import { authStore } from "$lib/stores/auth.store";
 	import { errorStore } from "$lib/stores/error.store";
-	import { fade } from "svelte/transition";
 
+	let isAuthenticated = $state($authStore.isAuthenticated && !$authStore.loading);
 	let url = $state("");
 	let customCode = $state("");
 	let shortenedUrl = $state("");
 	let loading = $state(false);
 	let copied = $state(false);
-	let useCustomCode = $state(false);
 	let showUpgradeModal = $state(false);
 
-	async function shorten(event: Event) {
+	async function handleSubmit(event: Event) {
 		event.preventDefault();
 
-		if (useCustomCode && customCode.trim() && !$authStore.isAuthenticated) {
+		if (customCode.trim() && !isAuthenticated) {
 			showUpgradeModal = true;
 			return;
 		}
@@ -57,14 +55,6 @@
 		}
 	}
 
-	function handleCustomCodeToggle(useCustom: boolean) {
-		if (useCustom && !$authStore.isAuthenticated) {
-			showUpgradeModal = true;
-			return;
-		}
-		useCustomCode = useCustom;
-	}
-
 	async function copyToClipboard() {
 		try {
 			await navigator.clipboard.writeText(shortenedUrl.replace(/^(https?:\/\/)/, ""));
@@ -84,7 +74,6 @@
 		shortenedUrl = "";
 		loading = false;
 		copied = false;
-		useCustomCode = false;
 	}
 </script>
 
@@ -118,48 +107,9 @@
 			{#if !shortenedUrl}
 				<!-- URL Input Form -->
 				<form
-					onsubmit={shorten}
+					onsubmit={handleSubmit}
 					class="space-y-4 sm:space-y-6"
 				>
-					<!-- URL Type Selection -->
-					<div>
-						<div class="text-form-label mb-1">URL Type</div>
-						<div
-							class="mb-4 mt-1 flex rounded-xl border border-slate-600/60 bg-slate-700/40 p-1 backdrop-blur-lg"
-							role="group"
-							aria-label="URL Type Selection"
-						>
-							<button
-								type="button"
-								onclick={() => handleCustomCodeToggle(false)}
-								class={`text-button-small flex-1 cursor-pointer rounded-lg px-4 py-2 transition-all duration-200 ${
-									!useCustomCode ? "text-bright bg-slate-600/60 shadow-sm" : "text-muted hover:text-tertiary"
-								}`}
-								disabled={loading}
-							>
-								Generated
-							</button>
-							<button
-								type="button"
-								onclick={() => handleCustomCodeToggle(true)}
-								class={`text-button-small relative flex-1 cursor-pointer rounded-lg px-4 py-2 transition-all duration-200 ${
-									useCustomCode ? "text-bright bg-slate-600/60 shadow-sm" : "text-muted hover:text-tertiary"
-								}`}
-								disabled={loading}
-							>
-								<span>Custom</span>
-								{#if !$authStore.isAuthenticated && !$authStore.loading}
-									<div
-										transition:fade
-										class="absolute right-2 top-1/2 -translate-y-1/2"
-									>
-										<Lock />
-									</div>
-								{/if}
-							</button>
-						</div>
-					</div>
-
 					<!--  URL Input -->
 					<div>
 						<label
@@ -182,36 +132,39 @@
 						/>
 					</div>
 					<!-- Custom Code Input -->
-					{#if useCustomCode}
-						<div>
-							<label
-								for="customCode"
-								class="text-form-label"
-							>
-								Custom short code
-							</label>
-							<div
-								class="mt-1 flex items-center rounded-xl border border-slate-600/60 bg-slate-800/40 backdrop-blur-lg transition-all duration-200 focus-within:border-slate-500/80 focus-within:ring-2 focus-within:ring-slate-400/20"
-							>
-								<span class="text-form-input text-muted py-2.5 pl-4 sm:py-3">{config.HTTP.CLIENT_HOST}/c/</span>
-								<input
-									id="customCode"
-									type="text"
-									bind:value={customCode}
-									placeholder={$authStore.isAuthenticated ? "custom-code" : "Register to use custom codes"}
-									class="text-form-input flex-1 border-none bg-transparent py-2.5 pl-0.5 pr-4 placeholder-slate-500 outline-none focus:ring-0 sm:py-3"
-									disabled={loading || !$authStore.isAuthenticated}
-									pattern="[a-zA-Z0-9_-]+"
-									title="Only letters, numbers, hyphens, and underscores allowed"
-									onclick={() => !$authStore.isAuthenticated && (showUpgradeModal = true)}
-								/>
-							</div>
+					<div>
+						<label
+							for="customCode"
+							class="text-form-label"
+						>
+							Custom code (Optional)
+						</label>
+						<div
+							class="mt-1 flex items-center rounded-xl border border-slate-600/60 bg-slate-800/40 backdrop-blur-lg transition-all duration-200 focus-within:border-slate-500/80 focus-within:ring-2 focus-within:ring-slate-400/20"
+						>
+							<span class="text-form-input text-muted py-2.5 pl-4 sm:py-3">{config.HTTP.CLIENT_HOST}/c/</span>
+							<input
+								id="customCode"
+								type="text"
+								bind:value={customCode}
+								placeholder="custom-code"
+								class="text-form-input flex-1 border-none bg-transparent py-2.5 pl-0.5 pr-4 placeholder-slate-500 outline-none focus:ring-0 sm:py-3"
+								disabled={loading}
+								onclick={() => {
+									if (!isAuthenticated) {
+										showUpgradeModal = true;
+									}
+								}}
+								readonly={!isAuthenticated}
+								pattern="[a-zA-Z0-9_-]+"
+								title="Only letters, numbers, hyphens, and underscores allowed"
+							/>
 						</div>
-					{/if}
+					</div>
 
 					<button
 						type="submit"
-						disabled={loading || !url.trim() || (useCustomCode && !$authStore.isAuthenticated)}
+						disabled={loading || !url.trim()}
 						class="text-button text-button-color w-full transform cursor-pointer rounded-xl bg-gradient-to-r
 							   from-slate-400/80 to-slate-600/80 px-6 py-2.5 font-semibold
 							   shadow-lg backdrop-blur-lg transition-all duration-200
@@ -226,14 +179,7 @@
 								Please wait
 							</span>
 						{:else}
-							<span class="flex items-center justify-center gap-2">
-								{#if useCustomCode && !$authStore.isAuthenticated && !$authStore.loading}
-									<Lock />
-									Register for Custom URLs
-								{:else}
-									{useCustomCode ? "Create Custom URL" : "Generate Shortened URL"}
-								{/if}
-							</span>
+							<span class="flex items-center justify-center gap-2"> Create </span>
 						{/if}
 					</button>
 				</form>
