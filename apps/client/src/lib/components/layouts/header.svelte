@@ -50,7 +50,7 @@
 				href={config.HTTP.DOCS_URL}
 				class="text-button-small text-secondary hover:text-bright leading-6"
 				target="_blank"
-				>Docs
+				>Developers
 			</a>
 		</div>
 
