@@ -8,13 +8,13 @@
 	import { authStore } from "$lib/stores/auth.store";
 	import { errorStore } from "$lib/stores/error.store";
 
-	let isAuthenticated = $state($authStore.isAuthenticated && !$authStore.loading);
 	let url = $state("");
 	let customCode = $state("");
 	let shortenedUrl = $state("");
 	let loading = $state(false);
 	let copied = $state(false);
 	let showUpgradeModal = $state(false);
+	let isAuthenticated = $derived(() => $authStore.isAuthenticated && !$authStore.loading);
 
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
@@ -156,7 +156,7 @@
 									}
 								}}
 								readonly={!isAuthenticated}
-								pattern="[a-zA-Z0-9_-]+"
+								pattern="[a-zA-Z0-9_\-]+"
 								title="Only letters, numbers, hyphens, and underscores allowed"
 							/>
 						</div>
