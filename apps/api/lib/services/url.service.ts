@@ -11,6 +11,9 @@ import { CacheType } from "./cache.service";
 import { URLSegment } from "~/helpers";
 import { UrlRepository } from "~/repositories/url.repository";
 
+const GENERATED_URL_EXPIRY = 60 * 60 * 24; // 1 day
+const CUSTOM_URL_EXPIRY = 60 * 60 * 24 * 7; // 7 days
+
 export class UrlService {
 	constructor(
 		private readonly app: App,
@@ -34,7 +37,14 @@ export class UrlService {
 			userId
 		});
 
-		return this.app.helpers.url.buildUrl(customCode, URLSegment.Custom);
+		this.app.services.cache.set(CacheType.CUSTOM_URL, customCode, originalUrl, {
+			expiration: {
+				type: "EX",
+				value: CUSTOM_URL_EXPIRY
+			}
+		});
+
+		return this.app.helpers.url.buildUrl(customCode, URLSegment.CUSTOM);
 	}
 
 	private async createGeneratedUrl(originalUrl: string, userId: number) {
@@ -47,6 +57,14 @@ export class UrlService {
 		const { id } = await this.urlRepository.insertUrl({ url: originalUrl, userId });
 
 		const shortCode = this.app.helpers.url.encodeId(id);
+
+		this.app.services.cache.set(CacheType.GENERATED_URL, shortCode, originalUrl, {
+			expiration: {
+				type: "EX",
+				value: GENERATED_URL_EXPIRY
+			}
+		});
+
 		return this.app.helpers.url.buildUrl(shortCode);
 	}
 
@@ -55,42 +73,33 @@ export class UrlService {
 			? await this.createCustomUrl(originalUrl, userId, userEmail, customCode)
 			: await this.createGeneratedUrl(originalUrl, userId);
 
-		this.app.services.cache.set(CacheType.URL, shortenedUrl, originalUrl, {
-			expiration: {
-				type: "EX",
-				value: 60 * 60 * 24 // 1 day
-			}
-		});
-
 		return shortenedUrl;
 	}
 
-	// TODO: Invalidate cache when URL is updated
 	public async getOriginalUrl(shortenedUrl: string) {
-		const cachedUrl = await this.app.services.cache.get(CacheType.URL, shortenedUrl);
-		if (cachedUrl) {
-			return cachedUrl;
-		}
+		const { shortCode, isCustom } = this.app.helpers.url.parseShortenedUrl(shortenedUrl);
 
-		const shortCode = shortenedUrl.replace(this.app.config.HTTP.CLIENT_URL + "/", "");
-		if (!shortCode) {
-			throw new InvalidShortenedUrl();
-		}
+		if (isCustom) {
+			const customCode = shortCode;
 
-		let originalUrl;
+			const cachedUrl = await this.app.services.cache.get(CacheType.CUSTOM_URL, customCode);
+			if (cachedUrl) {
+				return cachedUrl;
+			}
 
-		if (this.app.helpers.url.isCustomUrl(shortenedUrl)) {
-			const customCode = shortCode.replace(`${URLSegment.Custom}/`, "");
 			const existingCustom = await this.urlRepository.findCustomUrlByCustomCode(customCode);
 
 			if (!existingCustom) {
 				throw new InvalidShortenedUrl();
 			}
 
-			originalUrl = existingCustom.url;
-
 			return existingCustom.url;
 		} else {
+			const cachedUrl = await this.app.services.cache.get(CacheType.GENERATED_URL, shortCode);
+			if (cachedUrl) {
+				return cachedUrl;
+			}
+
 			const id = this.app.helpers.url.decodeId(shortCode);
 			const existingUrl = await this.urlRepository.findUrlById(id);
 
@@ -98,17 +107,8 @@ export class UrlService {
 				throw new InvalidShortenedUrl();
 			}
 
-			originalUrl = existingUrl.url;
+			return existingUrl.url;
 		}
-
-		this.app.services.cache.set(CacheType.URL, shortenedUrl, originalUrl, {
-			expiration: {
-				type: "EX",
-				value: 60 * 60 * 24 // 1 day
-			}
-		});
-
-		return originalUrl;
 	}
 
 	public async getUrlsOfUser(userId: number) {
@@ -128,7 +128,7 @@ export class UrlService {
 		customUrls = customUrls.map((url) => ({
 			id: url.id,
 			originalUrl: url.url,
-			shortenedUrl: this.app.helpers.url.buildUrl(url.customCode, URLSegment.Custom),
+			shortenedUrl: this.app.helpers.url.buildUrl(url.customCode, URLSegment.CUSTOM),
 			customCode: url.customCode,
 			createdAt: url.createdAt
 		}));
@@ -151,20 +151,24 @@ export class UrlService {
 		return {
 			id: updatedUrl.id,
 			originalUrl: updatedUrl.url,
-			shortenedUrl: this.app.helpers.url.buildUrl(updatedUrl.customCode, URLSegment.Custom),
+			shortenedUrl: this.app.helpers.url.buildUrl(updatedUrl.customCode, URLSegment.CUSTOM),
 			customCode: updatedUrl.customCode,
 			createdAt: updatedUrl.createdAt
 		};
 	}
 
 	public async deleteUrl(id: number, userId: number, shortenedUrl: string) {
-		if (this.app.helpers.url.isCustomUrl(shortenedUrl)) {
+		const { shortCode, isCustom } = this.app.helpers.url.parseShortenedUrl(shortenedUrl);
+
+		if (isCustom) {
+			const customCode = shortCode;
+
 			await this.deleteCustomUrl(id, userId);
+			await this.app.services.cache.del(CacheType.CUSTOM_URL, customCode);
 		} else {
 			await this.deleteGeneratedUrl(id, userId);
+			await this.app.services.cache.del(CacheType.GENERATED_URL, shortCode);
 		}
-
-		this.app.services.cache.del(CacheType.URL, shortenedUrl);
 	}
 
 	private async deleteGeneratedUrl(id: number, userId: number) {

@@ -5,7 +5,8 @@ import { App } from "~/types/fastify";
 
 export enum CacheType {
 	REFRESH = "refresh",
-	URL = "url"
+	GENERATED_URL = "generated_url",
+	CUSTOM_URL = "custom_url"
 }
 
 export class CacheService {

@@ -1,9 +1,10 @@
 import { App } from "~/types/fastify";
+import { InvalidShortenedUrl } from "~/errors";
 
 const BASE = 62;
 const BASE62_ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 export enum URLSegment {
-	Custom = "c"
+	CUSTOM = "c"
 }
 
 export class UrlHelper {
@@ -43,15 +44,35 @@ export class UrlHelper {
 	};
 
 	public buildUrl(shortCode: string, segment?: URLSegment) {
-		if (segment === URLSegment.Custom) {
-			return `${this.app.config.HTTP.CLIENT_URL}/${URLSegment.Custom}/${shortCode}`;
+		if (segment === URLSegment.CUSTOM) {
+			return `${this.app.config.HTTP.CLIENT_URL}/${URLSegment.CUSTOM}/${shortCode}`;
 		}
 
 		return `${this.app.config.HTTP.CLIENT_URL}/${shortCode}`;
 	}
 
+	public parseShortenedUrl(shortenedUrl: string) {
+		let path,
+			isCustom = false;
+
+		path = shortenedUrl.replace(this.app.config.HTTP.CLIENT_URL + "/", "");
+
+		if (!path) {
+			throw new InvalidShortenedUrl();
+		}
+
+		if (path.startsWith(`${URLSegment.CUSTOM}/`)) {
+			isCustom = true;
+			path = path.replace(`${URLSegment.CUSTOM}/`, "");
+		}
+
+		return {
+			isCustom,
+			shortCode: path
+		};
+	}
+
 	public isCustomUrl(shortenedUrl: string) {
-		const shortCode = shortenedUrl.replace(this.app.config.HTTP.CLIENT_URL + "/", "");
-		return shortCode.startsWith(`${URLSegment.Custom}/`);
+		return new URL(shortenedUrl).pathname.includes(`/${URLSegment.CUSTOM}`);
 	}
 }
