@@ -1,4 +1,10 @@
-import { CustomCodeAlreadyInUse, CustomUrlNotFound, InvalidShortenedUrl, UrlNotFound } from "~/errors";
+import {
+	CannotCreateCustomUrlWithServiceAccount,
+	CustomCodeAlreadyInUse,
+	CustomUrlNotFound,
+	InvalidShortenedUrl,
+	UrlNotFound
+} from "~/errors";
 
 import { App } from "~/types/fastify";
 import { CacheType } from "./cache.service";
@@ -11,7 +17,11 @@ export class UrlService {
 		private readonly urlRepository: UrlRepository
 	) {}
 
-	private async createCustomUrl(originalUrl: string, userId: number, customCode: string) {
+	private async createCustomUrl(originalUrl: string, userId: number, userEmail: string, customCode: string) {
+		if (userEmail === this.app.config.AUTH.SERVICE_ACCOUNT_EMAIL) {
+			throw new CannotCreateCustomUrlWithServiceAccount();
+		}
+
 		const existingCustom = await this.urlRepository.findCustomUrlByCustomCode(customCode);
 
 		if (existingCustom) {
@@ -40,9 +50,9 @@ export class UrlService {
 		return this.app.helpers.url.buildUrl(shortCode);
 	}
 
-	public async shortenUrl(originalUrl: string, userId: number, customCode?: string) {
+	public async shortenUrl(originalUrl: string, userId: number, userEmail: string, customCode?: string) {
 		const shortenedUrl = customCode
-			? await this.createCustomUrl(originalUrl, userId, customCode)
+			? await this.createCustomUrl(originalUrl, userId, userEmail, customCode)
 			: await this.createGeneratedUrl(originalUrl, userId);
 
 		this.app.services.cache.set(CacheType.URL, shortenedUrl, originalUrl, {

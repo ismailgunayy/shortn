@@ -54,3 +54,9 @@ export class InvalidCustomCode extends UrlError {
 		super("Custom code can only contain letters, numbers, underscores, and hyphens.", 400, cause);
 	}
 }
+
+export class CannotCreateCustomUrlWithServiceAccount extends UrlError {
+	constructor(cause?: unknown) {
+		super("Custom URLs cannot be created without authentication.", 403, cause);
+	}
+}

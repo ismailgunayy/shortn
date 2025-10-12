@@ -127,7 +127,7 @@ export const AuthController = (app: App) => {
 			}
 		},
 		async (request, reply) => {
-			const user = await app.services.auth.status(request.user.id);
+			const user = await app.services.auth.me(request.user.id);
 
 			return reply.code(200).send({
 				success: true,

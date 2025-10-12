@@ -22,13 +22,13 @@ export const auth = fastifyPlugin(async (app: App) => {
 		if (request.cookies[TokenType.ACCESS]) {
 			const decoded = app.helpers.auth.authenticateAccessToken(request);
 
-			user = await app.services.auth.status(decoded.id);
+			user = await app.services.auth.me(decoded.id);
 			user = { ...user, authenticatedWith: AuthMethod.ACCESS_TOKEN };
 		} else if (request.headers.authorization) {
 			const apiKey = request.headers.authorization.split(" ")[1];
 			const { userId } = await app.services.auth.verifyApiKey(apiKey);
 
-			user = await app.services.auth.status(userId);
+			user = await app.services.auth.me(userId);
 			user = { ...user, authenticatedWith: AuthMethod.API_KEY };
 		} else {
 			throw new Unauthorized();
@@ -44,7 +44,7 @@ export const auth = fastifyPlugin(async (app: App) => {
 	app.decorate("authenticateSession", async (request: FastifyRequest) => {
 		if (request.cookies[TokenType.ACCESS]) {
 			const decoded = app.helpers.auth.authenticateAccessToken(request);
-			const user = await app.services.auth.status(decoded.id);
+			const user = await app.services.auth.me(decoded.id);
 
 			request.user = { ...user, authenticatedWith: AuthMethod.ACCESS_TOKEN };
 		} else {

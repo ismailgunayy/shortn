@@ -84,7 +84,7 @@ export class AuthService {
 		};
 	}
 
-	public async status(id: number) {
+	public async me(id: number) {
 		const user = await this.authRepository.findUser(id);
 
 		if (!user) {
