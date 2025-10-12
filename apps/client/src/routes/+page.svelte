@@ -165,12 +165,12 @@
 					<button
 						type="submit"
 						disabled={loading || !url.trim()}
-						class="text-button text-button-color w-full transform cursor-pointer rounded-xl bg-gradient-to-r
+						class="text-button text-button-color w-full transform rounded-xl bg-gradient-to-r
 							   from-slate-400/80 to-slate-600/80 px-6 py-2.5 font-semibold
 							   shadow-lg backdrop-blur-lg transition-all duration-200
 							   hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30
 							   focus:outline-none focus:ring-2 focus:ring-slate-400/20 active:scale-[0.98]
-							   disabled:cursor-not-allowed disabled:opacity-50
+							   disabled:opacity-50
 							   sm:py-3"
 					>
 						{#if loading}
@@ -196,7 +196,7 @@
 							</code>
 							<button
 								onclick={copyToClipboard}
-								class="text-button-small duration-230 text-secondary hover:text-bright flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-slate-600/60 bg-slate-700/40 px-4 py-2 font-medium
+								class="text-button-small duration-230 text-secondary hover:text-bright flex items-center justify-center gap-2 rounded-lg border border-slate-600/60 bg-slate-700/40 px-4 py-2 font-medium
 									   backdrop-blur-lg transition-all hover:bg-slate-600/40"
 								title="Copy to clipboard"
 							>
@@ -226,7 +226,7 @@
 						</a>
 						<button
 							onclick={reset}
-							class="text-button duration-230 text-secondary hover:text-bright flex-1 transform cursor-pointer rounded-xl border border-slate-600/60 bg-gradient-to-r from-slate-600/40
+							class="text-button duration-230 text-secondary hover:text-bright flex-1 transform rounded-xl border border-slate-600/60 bg-gradient-to-r from-slate-600/40
 								   to-slate-700 px-4 py-2.5 font-semibold backdrop-blur-lg transition-all
 								   hover:scale-[1.02] hover:bg-slate-600/40 active:scale-[0.98] sm:px-6 sm:py-3"
 						>

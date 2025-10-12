@@ -128,7 +128,7 @@
 				<div class="flex space-x-1 rounded-lg border border-slate-600/60 bg-slate-700/40 p-1 backdrop-blur-lg">
 					<button
 						onclick={() => (activeTab = "urls")}
-						class={`text-button-small flex-1 cursor-pointer rounded-md px-3 py-2 font-medium transition-all duration-200 ${
+						class={`text-button-small flex-1 rounded-md px-3 py-2 font-medium transition-all duration-200 ${
 							activeTab === "urls"
 								? "text-bright bg-slate-600/60 shadow-sm"
 								: "text-secondary hover:text-bright hover:bg-slate-600/40"
@@ -138,7 +138,7 @@
 					</button>
 					<button
 						onclick={() => (activeTab = "apikeys")}
-						class={`text-button-small flex-1 cursor-pointer rounded-md px-3 py-2 font-medium transition-all duration-200 ${
+						class={`text-button-small flex-1 rounded-md px-3 py-2 font-medium transition-all duration-200 ${
 							activeTab === "apikeys"
 								? "text-bright bg-slate-600/60 shadow-sm"
 								: "text-secondary hover:text-bright hover:bg-slate-600/40"

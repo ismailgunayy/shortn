@@ -208,7 +208,7 @@
 			<button
 				type="submit"
 				disabled={updateProfileLoading || fullName.trim() === auth.user?.fullName}
-				class="text-button text-button-color transform cursor-pointer rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-4 py-2 font-semibold shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:outline-none focus:ring-2 focus:ring-slate-400/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+				class="text-button text-button-color transform rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-4 py-2 font-semibold shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:outline-none focus:ring-2 focus:ring-slate-400/20 active:scale-[0.98] disabled:opacity-50"
 			>
 				{#if updateProfileLoading}
 					<span class="flex items-center justify-center">
@@ -248,7 +248,7 @@
 						<button
 							type="button"
 							onclick={() => (showPassword = !showPassword)}
-							class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-slate-400 hover:text-slate-300 focus:outline-none"
+							class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 focus:outline-none"
 							disabled={changePasswordLoading}
 							tabindex="-1"
 						>
@@ -283,7 +283,7 @@
 						<button
 							type="button"
 							onclick={() => (showPassword = !showPassword)}
-							class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-slate-400 hover:text-slate-300 focus:outline-none"
+							class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 focus:outline-none"
 							disabled={changePasswordLoading}
 							tabindex="-1"
 						>
@@ -304,7 +304,7 @@
 			<button
 				type="submit"
 				disabled={changePasswordLoading || !currentPassword || !newPassword}
-				class="text-button text-button-color transform cursor-pointer rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-4 py-2 font-semibold shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:outline-none focus:ring-2 focus:ring-slate-400/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+				class="text-button text-button-color transform rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-4 py-2 font-semibold shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:outline-none focus:ring-2 focus:ring-slate-400/20 active:scale-[0.98] disabled:opacity-50"
 			>
 				{#if changePasswordLoading}
 					<span class="flex items-center justify-center">
@@ -360,7 +360,7 @@
 					<button
 						onclick={handleDeleteAccount}
 						disabled={deleteLoading || deleteConfirmText !== "DELETE"}
-						class="text-button flex-1 rounded-xl bg-red-600/80 px-6 py-2.5 font-semibold text-white transition-all duration-200 hover:bg-red-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400/20 disabled:cursor-not-allowed disabled:opacity-50"
+						class="text-button flex-1 rounded-xl bg-red-600/80 px-6 py-2.5 font-semibold text-white transition-all duration-200 hover:bg-red-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400/20 disabled:opacity-50"
 					>
 						{#if deleteLoading}
 							<span class="flex items-center justify-center">

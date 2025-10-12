@@ -63,7 +63,7 @@
 				>
 					<button
 						onclick={toggleDropdown}
-						class="text-button-small text-secondary hover:text-bright rounded-lgpx-3 flex cursor-pointer items-center gap-2 py-2 font-medium backdrop-blur-lg transition-all sm:px-4 sm:py-2"
+						class="text-button-small text-secondary hover:text-bright rounded-lgpx-3 flex items-center gap-2 py-2 font-medium backdrop-blur-lg transition-all sm:px-4 sm:py-2"
 					>
 						<span>{auth.user.fullName}</span>
 						<ChevronDown class="h-4 w-4 transition-transform duration-200 {dropdownOpen ? 'rotate-180' : ''}" />

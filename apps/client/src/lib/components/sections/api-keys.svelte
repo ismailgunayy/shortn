@@ -172,7 +172,7 @@
 				<button
 					onclick={createApiKey}
 					disabled={creatingApiKey || !newApiKeyName.trim()}
-					class="text-button-small text-button-color flex cursor-pointer items-center gap-2 rounded-lg bg-slate-600/60 py-2 pl-3 pr-4 transition-all hover:bg-slate-600/80 disabled:cursor-not-allowed disabled:opacity-50"
+					class="text-button-small text-button-color flex items-center gap-2 rounded-lg bg-slate-600/60 py-2 pl-3 pr-4 transition-all hover:bg-slate-600/80 disabled:opacity-50"
 				>
 					{#if creatingApiKey}
 						<Loading class="h-4 w-4" />
@@ -219,7 +219,7 @@
 											<button
 												onclick={updateApiKey}
 												disabled={updatingApiKey || !editApiKeyName.trim()}
-												class="text-caption text-success cursor-pointer rounded bg-emerald-800/60 px-2 py-1 hover:bg-emerald-800/80 disabled:opacity-50"
+												class="text-caption text-success rounded bg-emerald-800/60 px-2 py-1 hover:bg-emerald-800/80 disabled:opacity-50"
 											>
 												{#if updatingApiKey}
 													<Loading class="h-3 w-3" />
@@ -229,7 +229,7 @@
 											</button>
 											<button
 												onclick={cancelEditingApiKey}
-												class="text-caption text-secondary cursor-pointer rounded bg-slate-600/60 px-2 py-1 hover:bg-slate-600/80"
+												class="text-caption text-secondary rounded bg-slate-600/60 px-2 py-1 hover:bg-slate-600/80"
 											>
 												Cancel
 											</button>
@@ -259,14 +259,14 @@
 										<div class="flex gap-1">
 											<button
 												onclick={() => startEditingApiKey(apiKey)}
-												class="text-caption text-tertiary hover:text-secondary cursor-pointer rounded px-2 py-1 hover:bg-slate-600/40"
+												class="text-caption text-tertiary hover:text-secondary rounded px-2 py-1 hover:bg-slate-600/40"
 												title="Edit API key name"
 											>
 												<Edit class="h-4 w-4" />
 											</button>
 											<button
 												onclick={() => deleteApiKey(apiKey.id, apiKey.name)}
-												class="text-caption text-error cursor-pointer rounded px-2 py-1 hover:bg-red-900/20 hover:text-red-300"
+												class="text-caption text-error rounded px-2 py-1 hover:bg-red-900/20 hover:text-red-300"
 												title="Delete API key"
 											>
 												<Delete class="h-4 w-4" />
@@ -300,7 +300,7 @@
 										<button
 											onclick={updateApiKey}
 											disabled={updatingApiKey || !editApiKeyName.trim()}
-											class="text-caption text-success cursor-pointer rounded bg-emerald-800/60 px-2 py-1 hover:bg-emerald-800/80 disabled:opacity-50"
+											class="text-caption text-success rounded bg-emerald-800/60 px-2 py-1 hover:bg-emerald-800/80 disabled:opacity-50"
 										>
 											{#if updatingApiKey}
 												<Loading class="h-3 w-3" />
@@ -310,7 +310,7 @@
 										</button>
 										<button
 											onclick={cancelEditingApiKey}
-											class="text-caption text-secondary cursor-pointer rounded bg-slate-600/60 px-2 py-1 hover:bg-slate-600/80"
+											class="text-caption text-secondary rounded bg-slate-600/60 px-2 py-1 hover:bg-slate-600/80"
 										>
 											Cancel
 										</button>
@@ -336,14 +336,14 @@
 									<div class="flex gap-2">
 										<button
 											onclick={() => startEditingApiKey(apiKey)}
-											class="text-caption text-tertiary hover:text-secondary cursor-pointer rounded px-2 py-1 hover:bg-slate-600/40"
+											class="text-caption text-tertiary hover:text-secondary rounded px-2 py-1 hover:bg-slate-600/40"
 											title="Edit API key name"
 										>
 											<Edit class="h-4 w-4" />
 										</button>
 										<button
 											onclick={() => deleteApiKey(apiKey.id, apiKey.name)}
-											class="text-caption text-error cursor-pointer rounded px-2 py-1 hover:bg-red-900/20 hover:text-red-300"
+											class="text-caption text-error rounded px-2 py-1 hover:bg-red-900/20 hover:text-red-300"
 											title="Delete API key"
 										>
 											<Delete class="h-4 w-4" />
@@ -392,7 +392,7 @@
 						</code>
 						<button
 							onclick={() => copyToClipboard(newApiKeyResult!.key, "modal-api-key")}
-							class="text-button-small text-secondary hover:text-bright cursor-pointer rounded bg-slate-600/60 px-3 py-2 hover:bg-slate-600/80"
+							class="text-button-small text-secondary hover:text-bright rounded bg-slate-600/60 px-3 py-2 hover:bg-slate-600/80"
 							title="Copy to clipboard"
 						>
 							{#if copiedId === "modal-api-key"}
@@ -414,7 +414,7 @@
 					newApiKeyResult = null;
 					newApiKeyName = "";
 				}}
-				class="text-button text-button-color mt-6 w-full cursor-pointer rounded-lg bg-slate-600/60 px-4 py-2.5 hover:bg-slate-600/80"
+				class="text-button text-button-color mt-6 w-full rounded-lg bg-slate-600/60 px-4 py-2.5 hover:bg-slate-600/80"
 			>
 				Done
 			</button>
