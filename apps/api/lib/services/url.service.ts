@@ -55,6 +55,7 @@ export class UrlService {
 		return shortenedUrl;
 	}
 
+	// TODO: Invalidate cache when URL is updated
 	public async getOriginalUrl(shortenedUrl: string) {
 		const cachedUrl = await this.app.services.cache.get(CacheType.URL, shortenedUrl);
 		if (cachedUrl) {

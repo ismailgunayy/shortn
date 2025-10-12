@@ -100,6 +100,8 @@ export class AuthService {
 		};
 	}
 
+	// TODO: Separate update password and update profile methods
+	// TODO: Check current password before allowing update
 	public async updateUser(id: number, values: Pick<Partial<ShortnUsers>, "fullName" | "password">) {
 		const { fullName, password } = values;
 
