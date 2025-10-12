@@ -128,30 +128,6 @@ export function unknownErrorToAppError(error: unknown, context?: Partial<ErrorCo
 }
 
 /**
- * Check if an error is a validation error with field details
- */
-export function isValidationError(error: ApiErrorResponse): boolean {
-	return Boolean(error.error.details && error.error.details.length > 0);
-}
-
-/**
- * Extract validation field errors from API response
- */
-export function extractValidationErrors(error: ApiErrorResponse): Record<string, string> {
-	if (!isValidationError(error)) {
-		return {};
-	}
-
-	const fieldErrors: Record<string, string> = {};
-
-	error.error.details?.forEach((detail) => {
-		fieldErrors[detail.field] = detail.message;
-	});
-
-	return fieldErrors;
-}
-
-/**
  * Get user-friendly error message with context
  */
 export function getErrorDisplayMessage(error: AppError): string {

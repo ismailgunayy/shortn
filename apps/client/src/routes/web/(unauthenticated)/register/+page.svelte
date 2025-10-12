@@ -39,10 +39,7 @@
 			return;
 		}
 
-		const result = await authStore.register(formData);
-
-		// Errors are now handled by the auth store using errorStore
-		// No need to display form errors here as they'll show as toasts
+		await authStore.register(formData);
 	}
 </script>
 

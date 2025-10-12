@@ -4,8 +4,6 @@
 	import EyeOff from "$lib/icons/eye-off.svelte";
 	import { loginSchema, type LoginForm } from "$lib/schemas/auth.schema";
 	import { authStore } from "$lib/stores/auth.store";
-	import { errorStore } from "$lib/stores/error.store";
-	import { extractValidationErrors } from "$lib/utils/error-handler";
 
 	let formData = $state<LoginForm>({
 		email: "",
@@ -40,10 +38,7 @@
 			return;
 		}
 
-		const result = await authStore.login(formData);
-
-		// Errors are now handled by the auth store using errorStore
-		// No need to display form errors here as they'll show as toasts
+		await authStore.login(formData);
 	}
 </script>
 
