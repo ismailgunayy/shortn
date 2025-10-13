@@ -151,11 +151,11 @@
 								class="text-form-input flex-1 border-none bg-transparent py-2.5 pl-0.5 pr-4 placeholder-slate-500 outline-none focus:ring-0 sm:py-3"
 								disabled={loading}
 								onclick={() => {
-									if (!isAuthenticated) {
+									if (!isAuthenticated()) {
 										showUpgradeModal = true;
 									}
 								}}
-								readonly={!isAuthenticated}
+								readonly={!isAuthenticated()}
 								pattern="[a-zA-Z0-9_\-]+"
 								title="Only letters, numbers, hyphens, and underscores allowed"
 							/>
