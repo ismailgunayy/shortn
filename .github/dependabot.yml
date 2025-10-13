@@ -56,7 +56,7 @@ updates:
 
   - package-ecosystem: npm
     directories:
-      - /packages/*
+      - /shared/*
     schedule:
       interval: weekly
       day: saturday
@@ -69,7 +69,7 @@ updates:
           - minor
           - patch
     commit-message:
-      prefix: "deps(packages):"
+      prefix: "deps(shared):"
     assignees:
       - ismailgunayy
 

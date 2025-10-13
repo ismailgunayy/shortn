@@ -28,7 +28,7 @@ jobs:
               - 'apps/client/**'
             shared:
               - '.github/workflows/**'
-              - 'packages/**'
+              - 'shared/**'
               - 'package.json'
               - 'yarn.lock'
               - 'turbo.json'

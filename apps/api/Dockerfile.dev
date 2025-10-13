@@ -6,8 +6,8 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 COPY turbo.json ./
 
-# Copy workspace packages
-COPY packages/ packages/
+# Copy shared packages
+COPY shared/ shared/
 
 # Copy API package.json first for better caching
 COPY apps/api/package.json apps/api/

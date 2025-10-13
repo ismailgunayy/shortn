@@ -6,7 +6,7 @@ This is a **TurboRepo monorepo** with a URL shortener service featuring:
 
 - **Backend**: Fastify API (`apps/api/`) with PostgreSQL + Redis
 - **Frontend**: SvelteKit 5 client (`apps/client/`)
-- **Shared**: TypeScript configs and ESLint configs in `packages/`
+- **Shared**: TypeScript configs and ESLint configs in `shared/`
 
 ## Key Development Patterns
 

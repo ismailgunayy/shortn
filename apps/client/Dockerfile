@@ -9,8 +9,8 @@ WORKDIR /app
 # Copy root package files for workspace
 COPY package.json yarn.lock turbo.json ./
 
-# Copy workspace packages
-COPY packages/ packages/
+# Copy shared packages
+COPY shared/ shared/
 
 # Copy client package.json
 COPY apps/client/package.json apps/client/
@@ -24,7 +24,7 @@ WORKDIR /app
 
 # Copy dependencies
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/packages ./packages
+COPY --from=deps /app/shared ./shared
 
 # Copy client source code
 COPY apps/client/ apps/client/
@@ -66,7 +66,7 @@ RUN adduser --system --uid 1001 clientuser
 
 # Copy root workspace files
 COPY package.json yarn.lock turbo.json ./
-COPY packages/ packages/
+COPY shared/ shared/
 
 # Copy client package.json
 COPY apps/client/package.json apps/client/
