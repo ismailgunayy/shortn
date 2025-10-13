@@ -7,7 +7,7 @@ updates:
       - packages/*
     schedule:
       interval: daily
-      time: "00:33"
+      time: "00:58"
     groups:
       all:
         patterns:
@@ -16,7 +16,17 @@ updates:
           - minor
           - patch
     commit-message:
-      include: scope
       prefix: "deps:"
+    assignees:
+      - ismailgunayy
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: saturday
+      time: "09:00"
+    commit-message:
+      prefix: "ci:"
     assignees:
       - ismailgunayy
