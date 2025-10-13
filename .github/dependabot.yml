@@ -1,13 +1,11 @@
 version: 2
 updates:
   - package-ecosystem: npm
-    directories:
-      - /
-      - apps/*
-      - packages/*
+    directory: /
     schedule:
-      interval: daily
-      time: "00:58"
+      interval: weekly
+      day: saturday
+      time: "09:00"
     groups:
       all:
         patterns:
@@ -16,7 +14,62 @@ updates:
           - minor
           - patch
     commit-message:
-      prefix: "deps:"
+      prefix: "deps(root):"
+    assignees:
+      - ismailgunayy
+
+  - package-ecosystem: npm
+    directory: /apps/api
+    schedule:
+      interval: weekly
+      day: saturday
+      time: "09:00"
+    groups:
+      all:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+    commit-message:
+      prefix: "deps(api):"
+    assignees:
+      - ismailgunayy
+
+  - package-ecosystem: npm
+    directory: /apps/client
+    schedule:
+      interval: weekly
+      day: saturday
+      time: "09:00"
+    groups:
+      all:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+    commit-message:
+      prefix: "deps(client):"
+    assignees:
+      - ismailgunayy
+
+  - package-ecosystem: npm
+    directories:
+      - /packages/*
+    schedule:
+      interval: weekly
+      day: saturday
+      time: "09:00"
+    groups:
+      all:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+    commit-message:
+      prefix: "deps(packages):"
     assignees:
       - ismailgunayy
 
@@ -27,6 +80,18 @@ updates:
       day: saturday
       time: "09:00"
     commit-message:
-      prefix: "ci:"
+      prefix: "ci(github-actions):"
+    assignees:
+      - ismailgunayy
+
+  - package-ecosystem: docker
+    directories:
+      - apps/*
+    schedule:
+      interval: weekly
+      day: saturday
+      time: "09:00"
+    commit-message:
+      prefix: "ci(docker):"
     assignees:
       - ismailgunayy
