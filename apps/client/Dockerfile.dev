@@ -1,5 +1,5 @@
 # Development Dockerfile for Client (SvelteKit)
-FROM node:24.0.2-alpine
+FROM node:24.10.0-alpine
 
 # Install dependencies
 RUN apk add --no-cache libc6-compat
