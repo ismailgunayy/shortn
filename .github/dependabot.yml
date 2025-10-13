@@ -1,0 +1,22 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directories:
+      - /
+      - apps/*
+      - packages/*
+    schedule:
+      interval: daily
+      time: "00:33"
+    groups:
+      all:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+    commit-message:
+      include: scope
+      prefix: "deps:"
+    assignees:
+      - ismailgunayy
