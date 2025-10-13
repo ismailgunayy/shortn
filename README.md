@@ -22,6 +22,8 @@ A non-innovative URL Shortener
 
 - **📈 Analytics**: View click statistics for your URLs
 
+> Also, see the [TODOS.md](TODOS.md)
+
 ## Architecture
 
 #### Backend
