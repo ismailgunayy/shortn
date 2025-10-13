@@ -8,10 +8,6 @@ permissions:
   contents: read
   pull-requests: read
 
-concurrency:
-  group: deployment
-  cancel-in-progress: false
-
 jobs:
   changes:
     name: detect-changes
@@ -103,7 +99,7 @@ jobs:
     if: needs.changes.outputs.api == 'true' || needs.changes.outputs.shared == 'true'
     needs: [setup, check-types, lint, changes]
     env:
-      RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - name: Setup node
@@ -127,7 +123,7 @@ jobs:
     if: needs.changes.outputs.client == 'true' || needs.changes.outputs.shared == 'true'
     needs: [setup, check-types, lint, changes]
     env:
-      RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - name: Setup node
