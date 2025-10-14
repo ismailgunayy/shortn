@@ -1,8 +1,11 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"extends": ["config:recommended"],
 	"assignees": ["ismailgunayy"],
 	"commitMessagePrefix": "deps:",
-	"extends": ["config:recommended"],
+	"prHourlyLimit": 5,
+	"rangeStrategy": "bump",
+	"schedule": ["before 6am on saturday"],
 	"packageRules": [
 		{
 			"dependencyDashboardApproval": true,
@@ -13,21 +16,25 @@
 			"matchUpdateTypes": ["minor", "patch"]
 		},
 		{
+			"groupName": "Fastify ecosystem",
+			"groupSlug": "fastify",
+			"matchPackagePatterns": ["fastify"]
+		},
+		{
+			"groupName": "Svelte ecosystem",
+			"groupSlug": "svelte",
+			"matchPackagePatterns": ["svelte"]
+		},
+		{
+			"groupName": "ESLint ecosystem",
+			"groupSlug": "eslint",
+			"matchPackagePatterns": ["eslint"]
+		},
+		{
 			"automerge": true,
 			"description": "Auto-merge patch updates for stable packages",
 			"matchPackagePatterns": ["^@types/"],
 			"matchUpdateTypes": ["patch"]
-		},
-		{
-			"groupName": "Fastify ecosystem",
-			"matchPackagePatterns": ["^@fastify/"]
-		},
-		{
-			"groupName": "Svelte ecosystem",
-			"matchPackagePatterns": ["^@sveltejs/", "svelte"]
 		}
-	],
-	"prHourlyLimit": 5,
-	"rangeStrategy": "bump",
-	"schedule": ["before 6am on saturday"]
+	]
 }
