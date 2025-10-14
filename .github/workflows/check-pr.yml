@@ -31,6 +31,7 @@ jobs:
             client:
               - 'apps/client/**'
             shared:
+              - '.github/workflows/check-pr.yml'
               - 'packages/**'
               - 'package.json'
               - 'yarn.lock'
