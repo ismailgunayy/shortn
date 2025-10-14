@@ -8,6 +8,11 @@
 	"schedule": ["before 6am on saturday"],
 	"packageRules": [
 		{
+			"groupName": "all patches",
+			"groupSlug": "patches",
+			"matchUpdateTypes": ["patch"]
+		},
+		{
 			"dependencyDashboardApproval": true,
 			"matchUpdateTypes": ["major"]
 		},
@@ -31,10 +36,6 @@
 			"description": "Auto-merge patch updates for stable packages",
 			"matchPackagePatterns": ["^@types/"],
 			"matchUpdateTypes": ["patch"]
-		},
-		{
-			"groupName": "all non-major dependencies",
-			"matchUpdateTypes": ["minor", "patch"]
 		}
 	]
 }
