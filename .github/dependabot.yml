@@ -20,6 +20,8 @@ updates:
 
   - package-ecosystem: npm
     directory: /apps/api
+    ignore:
+      - dependency-name: "@repo/*"
     schedule:
       interval: weekly
       day: saturday
@@ -38,6 +40,8 @@ updates:
 
   - package-ecosystem: npm
     directory: /apps/client
+    ignore:
+      - dependency-name: "@repo/*"
     schedule:
       interval: weekly
       day: saturday
@@ -57,6 +61,8 @@ updates:
   - package-ecosystem: npm
     directories:
       - /shared/*
+    ignore:
+      - dependency-name: "@repo/*"
     schedule:
       interval: weekly
       day: saturday
