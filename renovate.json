@@ -8,6 +8,15 @@
 	"prHourlyLimit": 5,
 	"rangeStrategy": "bump",
 	"schedule": ["before 6am on saturday"],
+	"docker-compose": {
+		"commitMessagePrefix": "docker:"
+	},
+	"dockerfile": {
+		"commitMessagePrefix": "docker:"
+	},
+	"github-actions": {
+		"commitMessagePrefix": "ci:"
+	},
 	"packageRules": [
 		{
 			"groupName": "Fastify ecosystem",
@@ -39,8 +48,5 @@
 			"dependencyDashboardApproval": true,
 			"matchUpdateTypes": ["major"]
 		}
-	],
-	"github-actions": {
-		"commitMessagePrefix": "ci:"
-	}
+	]
 }
