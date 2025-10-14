@@ -14,17 +14,17 @@
 		{
 			"groupName": "Fastify ecosystem",
 			"groupSlug": "fastify",
-			"matchPackagePatterns": ["fastify"]
+			"matchPackagePatterns": ["*fastify*"]
 		},
 		{
 			"groupName": "Svelte ecosystem",
 			"groupSlug": "svelte",
-			"matchPackagePatterns": ["svelte"]
+			"matchPackagePatterns": ["*svelte*"]
 		},
 		{
 			"groupName": "ESLint ecosystem",
 			"groupSlug": "eslint",
-			"matchPackagePatterns": ["eslint"]
+			"matchPackagePatterns": ["*eslint*"]
 		},
 		{
 			"automerge": true,
