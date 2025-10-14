@@ -42,7 +42,10 @@
 		{
 			"groupName": "all patches",
 			"groupSlug": "patches",
-			"matchUpdateTypes": ["patch"]
+			"matchUpdateTypes": ["patch"],
+			"automerge": true,
+			"automergeStrategy": "squash",
+			"automergeType": "pr"
 		},
 		{
 			"dependencyDashboardApproval": true,
