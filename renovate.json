@@ -10,15 +10,6 @@
 	"schedule": ["before 6am on saturday"],
 	"packageRules": [
 		{
-			"groupName": "all patches",
-			"groupSlug": "patches",
-			"matchUpdateTypes": ["patch"]
-		},
-		{
-			"dependencyDashboardApproval": true,
-			"matchUpdateTypes": ["major"]
-		},
-		{
 			"groupName": "Fastify ecosystem",
 			"groupSlug": "fastify",
 			"matchPackagePatterns": ["*fastify*"]
@@ -38,6 +29,18 @@
 			"description": "Auto-merge patch updates for stable packages",
 			"matchPackagePatterns": ["^@types/"],
 			"matchUpdateTypes": ["patch"]
+		},
+		{
+			"groupName": "all patches",
+			"groupSlug": "patches",
+			"matchUpdateTypes": ["patch"]
+		},
+		{
+			"dependencyDashboardApproval": true,
+			"matchUpdateTypes": ["major"]
 		}
-	]
+	],
+	"github-actions": {
+		"commitMessagePrefix": "ci:"
+	}
 }
