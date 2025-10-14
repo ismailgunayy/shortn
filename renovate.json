@@ -12,10 +12,6 @@
 			"matchUpdateTypes": ["major"]
 		},
 		{
-			"groupName": "all non-major dependencies",
-			"matchUpdateTypes": ["minor", "patch"]
-		},
-		{
 			"groupName": "Fastify ecosystem",
 			"groupSlug": "fastify",
 			"matchPackagePatterns": ["fastify"]
@@ -35,6 +31,10 @@
 			"description": "Auto-merge patch updates for stable packages",
 			"matchPackagePatterns": ["^@types/"],
 			"matchUpdateTypes": ["patch"]
+		},
+		{
+			"groupName": "all non-major dependencies",
+			"matchUpdateTypes": ["minor", "patch"]
 		}
 	]
 }
