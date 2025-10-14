@@ -1,6 +1,33 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ]
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"assignees": ["ismailgunayy"],
+	"commitMessagePrefix": "deps:",
+	"extends": ["config:recommended"],
+	"packageRules": [
+		{
+			"dependencyDashboardApproval": true,
+			"matchUpdateTypes": ["major"]
+		},
+		{
+			"groupName": "all non-major dependencies",
+			"matchUpdateTypes": ["minor", "patch"]
+		},
+		{
+			"automerge": true,
+			"description": "Auto-merge patch updates for stable packages",
+			"matchPackagePatterns": ["^@types/"],
+			"matchUpdateTypes": ["patch"]
+		},
+		{
+			"groupName": "Fastify ecosystem",
+			"matchPackagePatterns": ["^@fastify/"]
+		},
+		{
+			"groupName": "Svelte ecosystem",
+			"matchPackagePatterns": ["^@sveltejs/", "svelte"]
+		}
+	],
+	"prHourlyLimit": 5,
+	"rangeStrategy": "bump",
+	"schedule": ["before 6am on saturday"]
 }
