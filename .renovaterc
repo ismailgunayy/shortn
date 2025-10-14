@@ -45,6 +45,7 @@
 		},
 		{
 			"automerge": true,
+			"autoApprove": true,
 			"matchPackageNames": ["@types/**"],
 			"matchUpdateTypes": ["patch"]
 		}
