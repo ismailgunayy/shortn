@@ -1,24 +1,6 @@
 version: 2
 updates:
   - package-ecosystem: npm
-    directory: /
-    schedule:
-      interval: weekly
-      day: saturday
-      time: "09:00"
-    groups:
-      all:
-        patterns:
-          - "*"
-        update-types:
-          - minor
-          - patch
-    commit-message:
-      prefix: "deps(root):"
-    assignees:
-      - ismailgunayy
-
-  - package-ecosystem: npm
     directory: /apps/api
     ignore:
       - dependency-name: "@repo/*"
@@ -76,6 +58,24 @@ updates:
           - patch
     commit-message:
       prefix: "deps(shared):"
+    assignees:
+      - ismailgunayy
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: saturday
+      time: "09:00"
+    groups:
+      all:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+    commit-message:
+      prefix: "deps(root):"
     assignees:
       - ismailgunayy
 
