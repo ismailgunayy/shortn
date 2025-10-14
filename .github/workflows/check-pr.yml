@@ -45,7 +45,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Setup node
-        uses: actions/setup-node@v4.4.0
+        uses: actions/setup-node@v5.0.0
         with:
           node-version-file: ".nvmrc"
       - name: Cache node_modules
@@ -65,7 +65,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Setup node
-        uses: actions/setup-node@v4.4.0
+        uses: actions/setup-node@v5.0.0
         with:
           node-version-file: ".nvmrc"
       - name: Restore cache
@@ -83,7 +83,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Setup node
-        uses: actions/setup-node@v4.4.0
+        uses: actions/setup-node@v5.0.0
         with:
           node-version-file: ".nvmrc"
       - name: Restore cache
@@ -104,7 +104,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Setup node
-        uses: actions/setup-node@v4.4.0
+        uses: actions/setup-node@v5.0.0
         with:
           node-version-file: ".nvmrc"
       - name: Restore cache
@@ -128,7 +128,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Setup node
-        uses: actions/setup-node@v4.4.0
+        uses: actions/setup-node@v5.0.0
         with:
           node-version-file: ".nvmrc"
       - name: Restore cache
