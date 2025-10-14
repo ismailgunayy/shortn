@@ -2,6 +2,8 @@
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
 	"extends": ["config:recommended"],
 	"assignees": ["ismailgunayy"],
+	"automergeStrategy": "squash",
+	"automergeType": "pr",
 	"commitMessageExtra": "from {{currentVersion}} to {{newVersion}}",
 	"commitMessagePrefix": "deps:",
 	"labels": ["dependencies"],
@@ -18,34 +20,32 @@
 		"commitMessagePrefix": "ci:"
 	},
 	"packageRules": [
-		{
-			"groupName": "Fastify ecosystem",
-			"groupSlug": "fastify",
-			"matchPackageNames": ["fastify{/,}**", "@fastify{/,}**"]
-		},
-		{
-			"groupName": "Svelte ecosystem",
-			"groupSlug": "svelte",
-			"matchPackageNames": ["svelte{/,}**", "@sveltejs{/,}**"]
-		},
-		{
-			"groupName": "ESLint ecosystem",
-			"groupSlug": "eslint",
-			"matchPackageNames": ["eslint{/,}**", "@eslint{/,}**"]
-		},
+		// {
+		// 	"groupName": "Fastify ecosystem",
+		// 	"groupSlug": "fastify",
+		// 	"matchPackageNames": ["fastify{/,}**", "@fastify{/,}**"],
+		//   "matchUpdateTypes": ["minor"]
+		// },
+		// {
+		// 	"groupName": "Svelte ecosystem",
+		// 	"groupSlug": "svelte",
+		// 	"matchPackageNames": ["svelte{/,}**", "@sveltejs{/,}**"]
+		// },
+		// {
+		// 	"groupName": "ESLint ecosystem",
+		// 	"groupSlug": "eslint",
+		// 	"matchPackageNames": ["eslint{/,}**", "@eslint{/,}**"]
+		// },
 		{
 			"automerge": true,
-			"description": "Auto-merge patch updates for stable packages",
-			"matchPackageNames": ["@types/**"],
+			"groupName": "all patches",
+			"groupSlug": "patches",
 			"matchUpdateTypes": ["patch"]
 		},
 		{
-			"groupName": "all patches",
-			"groupSlug": "patches",
-			"matchUpdateTypes": ["patch"],
 			"automerge": true,
-			"automergeStrategy": "squash",
-			"automergeType": "pr"
+			"matchPackageNames": ["@types/**"],
+			"matchUpdateTypes": ["patch"]
 		},
 		{
 			"dependencyDashboardApproval": true,
