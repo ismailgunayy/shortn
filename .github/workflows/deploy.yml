@@ -48,7 +48,7 @@ jobs:
         with:
           node-version-file: ".nvmrc"
       - name: Cache node_modules
-        uses: actions/cache@v4.2.3
+        uses: actions/cache@v4.3.0
         id: yarn-cache
         with:
           path: "**/node_modules"
@@ -68,7 +68,7 @@ jobs:
         with:
           node-version-file: ".nvmrc"
       - name: Restore cache
-        uses: actions/cache@v4.2.3
+        uses: actions/cache@v4.3.0
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-yarn-${{ github.run_id }}-${{ hashFiles('**/yarn.lock') }}
@@ -86,7 +86,7 @@ jobs:
         with:
           node-version-file: ".nvmrc"
       - name: Restore cache
-        uses: actions/cache@v4.2.3
+        uses: actions/cache@v4.3.0
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-yarn-${{ github.run_id }}-${{ hashFiles('**/yarn.lock') }}
@@ -107,7 +107,7 @@ jobs:
         with:
           node-version-file: ".nvmrc"
       - name: Restore cache
-        uses: actions/cache@v4.2.3
+        uses: actions/cache@v4.3.0
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-yarn-${{ github.run_id }}-${{ hashFiles('**/yarn.lock') }}
@@ -146,7 +146,7 @@ jobs:
         with:
           node-version-file: ".nvmrc"
       - name: Restore cache
-        uses: actions/cache@v4.2.3
+        uses: actions/cache@v4.3.0
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-yarn-${{ github.run_id }}-${{ hashFiles('**/yarn.lock') }}
