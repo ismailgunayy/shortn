@@ -21,22 +21,22 @@
 		{
 			"groupName": "Fastify ecosystem",
 			"groupSlug": "fastify",
-			"matchPackageNames": ["*fastify*"]
+			"matchPackageNames": ["fastify{/,}**"]
 		},
 		{
 			"groupName": "Svelte ecosystem",
 			"groupSlug": "svelte",
-			"matchPackageNames": ["*svelte*"]
+			"matchPackageNames": ["svelte{/,}**"]
 		},
 		{
 			"groupName": "ESLint ecosystem",
 			"groupSlug": "eslint",
-			"matchPackageNames": ["*eslint*"]
+			"matchPackageNames": ["eslint{/,}**"]
 		},
 		{
 			"automerge": true,
 			"description": "Auto-merge patch updates for stable packages",
-			"matchPackageNames": ["^@types/"],
+			"matchPackageNames": ["@types/**"],
 			"matchUpdateTypes": ["patch"]
 		},
 		{
