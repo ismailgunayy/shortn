@@ -46,10 +46,6 @@
 			"automerge": true,
 			"matchPackageNames": ["@types/**"],
 			"matchUpdateTypes": ["patch"]
-		},
-		{
-			"dependencyDashboardApproval": true,
-			"matchUpdateTypes": ["major"]
 		}
 	]
 }
