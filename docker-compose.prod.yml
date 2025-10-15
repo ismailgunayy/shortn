@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:18.0-alpine
+    image: ghcr.io/railwayapp-templates/postgres-ssl:16
     container_name: shortn-prod-postgres
     env_file:
       - .env.local.prod
@@ -22,7 +22,7 @@ services:
     restart: unless-stopped
 
   redis:
-    image: redis:8.2-alpine
+    image: railwayapp/redis:8.2
     container_name: shortn-prod-redis
     command: redis-server --requirepass password
     env_file:
