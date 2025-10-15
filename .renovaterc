@@ -32,13 +32,16 @@
 		// 	"groupSlug": "svelte",
 		// 	"matchPackageNames": ["svelte{/,}**", "@sveltejs{/,}**"]
 		// },
-		// {
-		// 	"groupName": "ESLint ecosystem",
-		// 	"groupSlug": "eslint",
-		// 	"matchPackageNames": ["eslint{/,}**", "@eslint{/,}**"]
-		// },
 		{
 			"automerge": true,
+			"autoApprove": true,
+			"groupName": "ESLint ecosystem",
+			"groupSlug": "eslint",
+			"matchPackageNames": ["eslint{/,}**", "@eslint{/,}**"]
+		},
+		{
+			"automerge": true,
+			"autoApprove": true,
 			"groupName": "all patches",
 			"groupSlug": "patches",
 			"matchUpdateTypes": ["patch"]
