@@ -1842,10 +1842,10 @@ fastify-zod-openapi@^5.5.0:
     fastify-plugin "^5.0.0"
     zod-openapi "^5.4.0"
 
-fastify@^5.5.0:
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/fastify/-/fastify-5.5.0.tgz#a1cf7bbfad7e4021f042e6f78942d3c3dd511a5d"
-  integrity sha512-ZWSWlzj3K/DcULCnCjEiC2zn2FBPdlZsSA/pnPa/dbUfLvxkD/Nqmb0XXMXLrWkeM4uQPUvjdJpwtXmTfriXqw==
+fastify@^5.6.1:
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/fastify/-/fastify-5.6.1.tgz#551248a047758ed82741aea15ac4396875d73687"
+  integrity sha512-WjjlOciBF0K8pDUPZoGPhqhKrQJ02I8DKaDIfO51EL0kbSMwQFl85cRwhOvmSDWoukNOdTo27gLN549pLCcH7Q==
   dependencies:
     "@fastify/ajv-compiler" "^4.0.0"
     "@fastify/error" "^4.0.0"
@@ -3275,10 +3275,10 @@ svelte-writable-derived@^3.1.0:
   resolved "https://registry.yarnpkg.com/svelte-writable-derived/-/svelte-writable-derived-3.1.1.tgz#03222b32f8a66ea503e95b3cce8b94bec0810044"
   integrity sha512-w4LR6/bYZEuCs7SGr+M54oipk/UQKtiMadyOhW0PTwAtJ/Ai12QS77sLngEcfBx2q4H8ZBQucc9ktSA5sUGZWw==
 
-svelte@^5.0.0:
-  version "5.38.1"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-5.38.1.tgz#a430009b208337a8c7cba8c99283d2439bec4a08"
-  integrity sha512-fO6CLDfJYWHgfo6lQwkQU2vhCiHc2MBl6s3vEhK+sSZru17YL4R5s1v14ndRpqKAIkq8nCz6MTk1yZbESZWeyQ==
+svelte@^5.39.11:
+  version "5.40.0"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-5.40.0.tgz#1609e5aa80718f294265caedc35e1ecad43dbf80"
+  integrity sha512-EdA6LIo1vZVQOvlGfM18lhYM1k5Dkk/e93IlpzK4OVM6c11sUMHPgCtGFKmdy1WT4XqbpAvicq9JH5MTNoGaKw==
   dependencies:
     "@jridgewell/remapping" "^2.3.4"
     "@jridgewell/sourcemap-codec" "^1.5.0"

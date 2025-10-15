@@ -15,7 +15,7 @@
 	"dependencies": {
 		"@sveltejs/adapter-auto": "^6.1.1",
 		"@sveltejs/kit": "^2.22.0",
-		"svelte": "^5.0.0",
+		"svelte": "^5.39.11",
 		"svelte-french-toast": "^1.2.0",
 		"zod": "^4.1.12"
 	},
