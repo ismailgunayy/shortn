@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: ghcr.io/railwayapp-templates/postgres-ssl:16
+    image: ghcr.io/railwayapp-templates/postgres-ssl:17
     container_name: shortn-prod-postgres
     env_file:
       - .env.local.prod
