@@ -18,7 +18,7 @@
 	"singleAttributePerLine": true,
 	"singleQuote": false,
 	"tabWidth": 2,
-	"tailwindStylesheet": "./src/app.css",
+	"tailwindStylesheet": "apps/client/src/app.css",
 	"trailingComma": "none",
 	"useTabs": true
 }
