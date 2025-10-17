@@ -5,7 +5,6 @@ import { default as fastifySwaggerUi } from "@fastify/swagger-ui";
 import { fastifyZodOpenApiTransformers } from "fastify-zod-openapi";
 
 export enum ApiTags {
-	HEALTH = "Health",
 	URL = "URL"
 }
 
@@ -33,10 +32,6 @@ export const docs = fastifyPlugin(async (app: App) => {
 				}
 			],
 			tags: [
-				{
-					name: ApiTags.HEALTH,
-					description: "Health check"
-				},
 				{
 					name: ApiTags.URL,
 					description: "URL management endpoints"
