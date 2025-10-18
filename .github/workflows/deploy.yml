@@ -30,6 +30,7 @@ jobs:
             client:
               - 'apps/client/**'
             shared:
+              - '.github/workflows/deploy.yml'
               - 'packages/**'
               - 'package.json'
               - 'yarn.lock'
