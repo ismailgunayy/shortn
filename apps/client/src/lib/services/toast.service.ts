@@ -4,9 +4,8 @@ import toast, { type ToastOptions } from "svelte-french-toast";
 export type ToastType = "success" | "error" | "info" | "warning";
 
 class ToastService {
-	private readonly defaultDuration: number = 4000;
+	private readonly defaultDuration: number = 4230;
 	private readonly defaultPosition: ToastOptions["position"] = "bottom-right";
-	private isDisabled: boolean = false;
 
 	public success(message: string, options?: ToastOptions): void {
 		this.show(message, "success", options);
@@ -24,30 +23,17 @@ class ToastService {
 		this.show(message, "warning", options);
 	}
 
-	public lock() {
-		this.isDisabled = true;
-	}
-
-	public unlock() {
-		this.isDisabled = false;
-	}
-
 	private show(message: string, type: ToastType, options?: ToastOptions): void {
-		if (!browser || this.isDisabled) return;
-
-		const { duration = this.defaultDuration, icon, position = this.defaultPosition } = options || {};
+		if (!browser) return;
 
 		const style = this.getToastStyle(type);
 		const toastOptions: ToastOptions = {
-			duration,
-			position,
+			duration: this.defaultDuration,
+			...options,
+			position: this.defaultPosition,
 			style,
 			ariaProps: this.getAriaProps(type)
 		};
-
-		if (icon) {
-			toastOptions.icon = icon;
-		}
 
 		switch (type) {
 			case "success":
@@ -57,17 +43,11 @@ class ToastService {
 				toast.error(message, toastOptions);
 				break;
 			case "warning":
-				toast(message, {
-					...toastOptions,
-					icon: icon || "⚠️"
-				});
+				toast(message, toastOptions);
 				break;
 			case "info":
 			default:
-				toast(message, {
-					...toastOptions,
-					icon: icon || "ℹ️"
-				});
+				toast(message, toastOptions);
 				break;
 		}
 	}

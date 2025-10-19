@@ -9,6 +9,8 @@ export interface ServiceConfig {
 	apiKey?: string;
 }
 
+const TIMEOUT_DURATION = 10000; // 10 seconds
+
 class TokenRefreshManager {
 	private refreshPromise: Promise<boolean> | null = null;
 
@@ -38,10 +40,6 @@ class TokenRefreshManager {
 				authStore.clear();
 
 				toastService.error("Session expired. Please log in again.");
-				toastService.lock();
-				setTimeout(() => {
-					toastService.unlock();
-				}, 1000);
 
 				goto(resolve("/web/login"));
 			}
@@ -61,6 +59,10 @@ export abstract class Service {
 	public async request<T>(endpoint: string, options: RequestInit): Promise<ApiResponse<T>> {
 		authStore.loading();
 
+		const abortController = new AbortController();
+		const timeoutId = setTimeout(() => abortController.abort(), TIMEOUT_DURATION);
+		options.signal = abortController.signal;
+
 		try {
 			const response = await this.makeRequest<T>(endpoint, options);
 
@@ -79,13 +81,14 @@ export abstract class Service {
 
 			return response.api;
 		} catch {
-			toastService.error("Network error occurred.");
+			toastService.error("Network error occurred.", { id: "network-error" });
 
 			return {
 				success: false,
 				error: { message: "Network error" }
 			};
 		} finally {
+			clearTimeout(timeoutId);
 			authStore.loaded();
 		}
 	}

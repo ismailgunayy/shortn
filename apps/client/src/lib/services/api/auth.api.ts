@@ -122,10 +122,6 @@ export class AuthService extends Service {
 			...options
 		});
 
-		if (response.error) {
-			toastService.error("Failed to fetch API keys.");
-		}
-
 		return response;
 	}
 
