@@ -70,7 +70,6 @@
 			});
 			editingUrl = null;
 			editOriginalUrl = "";
-			toastService.success("Custom URL updated successfully.");
 		}
 
 		updatingUrl = false;
