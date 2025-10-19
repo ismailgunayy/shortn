@@ -1,5 +1,6 @@
-import { Service, type ApiResponse, type ServiceConfig } from "./service";
+import { Service, type ApiResponse, type ServiceConfig } from "./base.api";
 import { config } from "$lib/common/config";
+import { toastService } from "$lib/services/toast.service";
 
 export class UrlService extends Service {
 	constructor(config?: ServiceConfig) {
@@ -20,11 +21,17 @@ export class UrlService extends Service {
 			body.customCode = values.customCode.trim();
 		}
 
-		return await this.request<ShortenUrlResponse>("url/shorten", {
+		const response = await this.request<ShortenUrlResponse>("url/shorten", {
 			method: "POST",
 			body: JSON.stringify(body),
 			...options
 		});
+
+		if (response.error) {
+			toastService.error("Failed to shorten URL.");
+		}
+
+		return response;
 	}
 
 	public async getOriginal(
@@ -49,19 +56,35 @@ export class UrlService extends Service {
 		values: UpdateCustomUrlRequest,
 		options?: RequestInit
 	): Promise<ApiResponse<UpdateCustomUrlResponse>> {
-		return await this.request<UpdateCustomUrlResponse>(`url/${values.id}`, {
+		const response = await this.request<UpdateCustomUrlResponse>(`url/${values.id}`, {
 			method: "POST",
 			body: JSON.stringify(values),
 			...options
 		});
+
+		if (response.success && response.data) {
+			toastService.success("Custom URL updated successfully.");
+		} else {
+			toastService.error("Failed to update Custom URL.");
+		}
+
+		return response;
 	}
 
 	public async deleteUrl(id: number, values: DeleteUrlRequest, options?: RequestInit): Promise<ApiResponse> {
-		return await this.request(`url/${id}`, {
+		const response = await this.request(`url/${id}`, {
 			method: "DELETE",
 			body: JSON.stringify(values),
 			...options
 		});
+
+		if (response.success) {
+			toastService.success("URL deleted successfully.");
+		} else {
+			toastService.error("Failed to delete URL.");
+		}
+
+		return response;
 	}
 }
 

@@ -1,20 +1,17 @@
 <script lang="ts">
 	import { onMount } from "svelte";
-	import { api } from "$lib/api/api.client";
-	import { errorStore } from "$lib/stores/error.store";
-	import Loading from "$lib/icons/loading.svelte";
-	import UrlsSection from "$lib/components/sections/urls.svelte";
-	import ApiKeysSection from "$lib/components/sections/api-keys.svelte";
-	import type { UrlItem, CustomUrlItem } from "$lib/api/services/url.service";
-	import type { ApiKey } from "$lib/api/services/auth.service";
+	import Loading from "$lib/icons/loading.icon.svelte";
+	import UrlsSection from "$lib/components/sections/urls.section.svelte";
+	import ApiKeysSection from "$lib/components/sections/api-keys.section.svelte";
+	import type { CustomUrlItem, UrlItem } from "$lib/services/api/url.api";
+	import type { ApiKey } from "$lib/services/api/auth.api";
+	import { clientApi } from "$lib/services/api/api.client";
 
-	// State
 	let urls: UrlItem[] = $state([]);
 	let customUrls: CustomUrlItem[] = $state([]);
 	let apiKeys: ApiKey[] = $state([]);
 	let loading = $state(true);
 
-	// Tab state
 	let activeTab: "urls" | "apikeys" = $state("urls");
 
 	onMount(async () => {
@@ -24,41 +21,21 @@
 	async function loadData() {
 		loading = true;
 
-		try {
-			const [urlsResponse, apiKeysResponse] = await Promise.all([api.url.getUserUrls(), api.auth.getApiKeys()]);
+		const [urlsResponse, apiKeysResponse] = await Promise.all([
+			clientApi.url.getUserUrls(),
+			clientApi.auth.getApiKeys()
+		]);
 
-			if (urlsResponse.error) {
-				errorStore.handleApiError(urlsResponse, {
-					source: "dashboard",
-					action: "load_user_urls"
-				});
-				return;
-			}
-
-			if (apiKeysResponse.error) {
-				errorStore.handleApiError(apiKeysResponse, {
-					source: "dashboard",
-					action: "load_api_keys"
-				});
-				return;
-			}
-
-			if (urlsResponse.data) {
-				urls = urlsResponse.data.urls;
-				customUrls = urlsResponse.data.customUrls;
-			}
-
-			if (apiKeysResponse.data) {
-				apiKeys = apiKeysResponse.data.apiKeys;
-			}
-		} catch (err) {
-			errorStore.handleNetworkError(err, {
-				source: "dashboard",
-				action: "load_dashboard_data"
-			});
-		} finally {
-			loading = false;
+		if (urlsResponse.data) {
+			urls = urlsResponse.data.urls;
+			customUrls = urlsResponse.data.customUrls;
 		}
+
+		if (apiKeysResponse.data) {
+			apiKeys = apiKeysResponse.data.apiKeys;
+		}
+
+		loading = false;
 	}
 
 	function handleUrlDeleted(id: number, isCustom: boolean) {

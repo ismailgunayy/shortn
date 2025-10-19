@@ -18,7 +18,6 @@ const disconnectDB = async (app: App) => {
 			break;
 		}
 
-		app.log.debug(`Waiting for ${activeConnections} active database connections...`);
 		await new Promise((resolve) => setTimeout(resolve, checkInterval));
 		waitTime += checkInterval;
 	}
@@ -44,12 +43,6 @@ export const db = fastifyPlugin((app: App) => {
 
 	app.addHook("onClose", async (app) => {
 		await disconnectDB(app);
-	});
-
-	app.addHook("onError", (_req, _reply, error, done) => {
-		app.log.error(error, "DB connection error occurred");
-
-		done();
 	});
 
 	app.log.info("Database connection established");

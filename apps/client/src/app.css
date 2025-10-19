@@ -1,6 +1,4 @@
 @import "tailwindcss";
-@plugin '@tailwindcss/forms';
-@plugin '@tailwindcss/typography';
 
 button {
 	@apply cursor-pointer;
@@ -10,7 +8,6 @@ button {
 	}
 }
 
-/* Custom Text Color Classes */
 .text-primary {
 	@apply bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent;
 }

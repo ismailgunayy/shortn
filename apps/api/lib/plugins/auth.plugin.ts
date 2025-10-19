@@ -1,7 +1,7 @@
-import { AuthMethod, TokenType } from "~/helpers";
+import { App, User } from "~/types/fastify";
 
-import { App } from "~/types/fastify";
 import { FastifyRequest } from "fastify";
+import { TokenType } from "~/helpers";
 import { Unauthorized } from "~/errors/auth.error";
 import fastifyCookie from "@fastify/cookie";
 import fastifyJwt from "@fastify/jwt";
@@ -17,19 +17,19 @@ export const auth = fastifyPlugin(async (app: App) => {
 	});
 
 	app.decorate("authenticate", async (request, _reply) => {
-		let user;
+		let user: User;
 
 		if (request.cookies[TokenType.ACCESS]) {
 			const decoded = app.helpers.auth.authenticateAccessToken(request);
 
-			user = await app.services.auth.me(decoded.id);
-			user = { ...user, authenticatedWith: AuthMethod.ACCESS_TOKEN };
+			const userData = await app.services.auth.me(decoded.id);
+			user = { ...userData, authenticatedWith: "accessToken" };
 		} else if (request.headers.authorization) {
 			const apiKey = request.headers.authorization.split(" ")[1];
 			const { userId } = await app.services.auth.verifyApiKey(apiKey);
 
-			user = await app.services.auth.me(userId);
-			user = { ...user, authenticatedWith: AuthMethod.API_KEY };
+			const userData = await app.services.auth.me(userId);
+			user = { ...userData, authenticatedWith: "apiKey" };
 		} else {
 			throw new Unauthorized();
 		}
@@ -46,7 +46,7 @@ export const auth = fastifyPlugin(async (app: App) => {
 			const decoded = app.helpers.auth.authenticateAccessToken(request);
 			const user = await app.services.auth.me(decoded.id);
 
-			request.user = { ...user, authenticatedWith: AuthMethod.ACCESS_TOKEN };
+			request.user = { ...user, authenticatedWith: "accessToken" };
 		} else {
 			throw new Unauthorized();
 		}

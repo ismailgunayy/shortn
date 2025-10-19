@@ -1,5 +1,4 @@
 import { App } from "~/types/fastify";
-import { AuthMethod } from "~/helpers";
 import fastifyPlugin from "fastify-plugin";
 import fastifyRateLimit from "@fastify/rate-limit";
 
@@ -17,10 +16,10 @@ export const rateLimit = fastifyPlugin(async (app: App) => {
 			}
 
 			switch (request.user?.authenticatedWith) {
-				case AuthMethod.API_KEY:
+				case "apiKey":
 					return 5000;
 
-				case AuthMethod.ACCESS_TOKEN:
+				case "accessToken":
 					return 1000;
 
 				default:

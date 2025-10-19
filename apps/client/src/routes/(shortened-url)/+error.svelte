@@ -1,6 +1,7 @@
 <script lang="ts">
+	import { resolve } from "$app/paths";
 	import { page } from "$app/state";
-	import Error from "$lib/icons/error.svelte";
+	import Error from "$lib/icons/error.icon.svelte";
 </script>
 
 <svelte:head>
@@ -41,8 +42,8 @@
 
 		<div class="mt-4 sm:mt-6">
 			<a
-				href="/"
-				class="text-md text-button-color inline-flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-slate-600 to-slate-700 px-4 py-3 font-medium backdrop-blur-lg transition-all hover:scale-[1.02] hover:from-slate-500 hover:to-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+				href={resolve("/")}
+				class="text-md text-button-color inline-flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-slate-600 to-slate-700 px-4 py-3 font-medium backdrop-blur-lg transition-all hover:scale-[1.02] hover:from-slate-500 hover:to-slate-600 focus:ring-2 focus:ring-slate-400/20 focus:outline-none"
 			>
 				Shorten your own URL
 			</a>

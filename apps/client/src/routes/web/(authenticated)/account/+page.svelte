@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { authStore } from "$lib/stores/auth.store";
-	import { errorStore } from "$lib/stores/error.store";
 	import { fullNameSchema, passwordSchema } from "$lib/schemas/auth.schema";
-	import Loading from "$lib/icons/loading.svelte";
-	import Delete from "$lib/icons/delete.svelte";
-	import Eye from "$lib/icons/eye.svelte";
-	import EyeOff from "$lib/icons/eye-off.svelte";
+	import Loading from "$lib/icons/loading.icon.svelte";
+	import Delete from "$lib/icons/delete.icon.svelte";
+	import Eye from "$lib/icons/eye.icon.svelte";
+	import EyeOff from "$lib/icons/eye-off.icon.svelte";
+	import { clientApi } from "$lib/services/api/api.client";
 
 	let fullName = $state("");
 	let currentPassword = $state("");
@@ -25,12 +25,12 @@
 	let showDeleteConfirm = $state(false);
 	let deleteConfirmText = $state("");
 
-	const auth = $derived($authStore);
+	const authState = $derived($authStore);
 
 	// Initialize form with current user data
 	$effect(() => {
-		if (auth.user) {
-			fullName = auth.user.fullName;
+		if (authState.user) {
+			fullName = authState.user.fullName;
 		}
 	});
 
@@ -78,23 +78,11 @@
 
 		if (!validateProfileForm()) return;
 
-		if (fullName.trim() === auth.user?.fullName) {
-			errorStore.showInfo("No changes to save");
-			return;
-		}
-
 		updateProfileLoading = true;
 
-		try {
-			await authStore.updateUser({ fullName: fullName.trim() });
-		} catch (err) {
-			errorStore.handleUnknownError(err, {
-				source: "account_page",
-				action: "update_profile"
-			});
-		} finally {
-			updateProfileLoading = false;
-		}
+		await clientApi.auth.updateUser({ fullName: fullName.trim() });
+
+		updateProfileLoading = false;
 	}
 
 	async function handleChangePassword(event: Event) {
@@ -104,48 +92,30 @@
 
 		changePasswordLoading = true;
 
-		try {
-			const result = await authStore.changePassword({
-				currentPassword,
-				newPassword
-			});
+		const result = await clientApi.auth.changePassword({
+			currentPassword,
+			newPassword
+		});
 
-			if (result.success) {
-				currentPassword = "";
-				newPassword = "";
-				showPassword = false;
-			}
-		} catch (err) {
-			errorStore.handleUnknownError(err, {
-				source: "account_page",
-				action: "change_password"
-			});
-		} finally {
-			changePasswordLoading = false;
+		if (result.success) {
+			currentPassword = "";
+			newPassword = "";
+			showPassword = false;
 		}
+
+		changePasswordLoading = false;
 	}
 
 	async function handleDeleteAccount() {
-		if (deleteConfirmText !== "DELETE") {
-			errorStore.showInfo("Please type 'DELETE' to confirm");
-			return;
-		}
-
 		deleteLoading = true;
 
-		try {
-			const result = await authStore.deleteAccount();
+		const result = await clientApi.auth.deleteAccount();
 
-			if (!result.success) {
-				deleteLoading = false;
-			}
-		} catch (err) {
-			errorStore.handleUnknownError(err, {
-				source: "account_page",
-				action: "delete_account"
-			});
+		if (!result.success) {
 			deleteLoading = false;
 		}
+
+		deleteLoading = false;
 	}
 
 	function cancelDelete() {
@@ -196,7 +166,7 @@
 					type="text"
 					bind:value={fullName}
 					required
-					class="text-form-input mt-1 w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+					class="text-form-input mt-1 w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:ring-2 focus:ring-slate-400/20 focus:outline-none"
 					disabled={updateProfileLoading}
 				/>
 				{#if errors.fullName}
@@ -207,8 +177,8 @@
 			<!-- Submit Button for Profile -->
 			<button
 				type="submit"
-				disabled={updateProfileLoading || fullName.trim() === auth.user?.fullName}
-				class="text-button text-button-color transform rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-4 py-2 font-semibold shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:outline-none focus:ring-2 focus:ring-slate-400/20 active:scale-[0.98] disabled:opacity-50"
+				disabled={updateProfileLoading || fullName.trim() === authState.user?.fullName}
+				class="text-button text-button-color transform rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-4 py-2 font-semibold shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:ring-2 focus:ring-slate-400/20 focus:outline-none active:scale-[0.98] disabled:opacity-50"
 			>
 				{#if updateProfileLoading}
 					<span class="flex items-center justify-center">
@@ -242,13 +212,13 @@
 							id="currentPassword"
 							type={showPassword ? "text" : "password"}
 							bind:value={currentPassword}
-							class="text-form-input w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 pr-12 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+							class="text-form-input w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 pr-12 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:ring-2 focus:ring-slate-400/20 focus:outline-none"
 							disabled={changePasswordLoading}
 						/>
 						<button
 							type="button"
 							onclick={() => (showPassword = !showPassword)}
-							class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 focus:outline-none"
+							class="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 hover:text-slate-300 focus:outline-none"
 							disabled={changePasswordLoading}
 							tabindex="-1"
 						>
@@ -277,13 +247,13 @@
 							id="newPassword"
 							type={showPassword ? "text" : "password"}
 							bind:value={newPassword}
-							class="text-form-input w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 pr-12 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+							class="text-form-input w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 pr-12 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:ring-2 focus:ring-slate-400/20 focus:outline-none"
 							disabled={changePasswordLoading}
 						/>
 						<button
 							type="button"
 							onclick={() => (showPassword = !showPassword)}
-							class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 focus:outline-none"
+							class="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 hover:text-slate-300 focus:outline-none"
 							disabled={changePasswordLoading}
 							tabindex="-1"
 						>
@@ -304,7 +274,7 @@
 			<button
 				type="submit"
 				disabled={changePasswordLoading || !currentPassword || !newPassword}
-				class="text-button text-button-color transform rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-4 py-2 font-semibold shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:outline-none focus:ring-2 focus:ring-slate-400/20 active:scale-[0.98] disabled:opacity-50"
+				class="text-button text-button-color transform rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-4 py-2 font-semibold shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:ring-2 focus:ring-slate-400/20 focus:outline-none active:scale-[0.98] disabled:opacity-50"
 			>
 				{#if changePasswordLoading}
 					<span class="flex items-center justify-center">
@@ -333,7 +303,7 @@
 		{#if !showDeleteConfirm}
 			<button
 				onclick={() => (showDeleteConfirm = true)}
-				class="text-button rounded-xl bg-red-600/80 px-6 py-2.5 font-semibold text-white transition-all duration-200 hover:bg-red-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400/20"
+				class="text-button rounded-xl bg-red-600/80 px-6 py-2.5 font-semibold text-white transition-all duration-200 hover:bg-red-600 hover:shadow-lg focus:ring-2 focus:ring-red-400/20 focus:outline-none"
 			>
 				Delete Account
 			</button>
@@ -351,7 +321,7 @@
 						type="text"
 						bind:value={deleteConfirmText}
 						placeholder="DELETE"
-						class="text-form-input mt-1 w-full rounded-xl border border-red-600/60 bg-red-900/40 px-4 py-2.5 placeholder-red-400/60 backdrop-blur-lg transition-all duration-200 focus:border-red-500/80 focus:outline-none focus:ring-2 focus:ring-red-400/20"
+						class="text-form-input mt-1 w-full rounded-xl border border-red-600/60 bg-red-900/40 px-4 py-2.5 placeholder-red-400/60 backdrop-blur-lg transition-all duration-200 focus:border-red-500/80 focus:ring-2 focus:ring-red-400/20 focus:outline-none"
 						disabled={deleteLoading}
 					/>
 				</div>
@@ -360,7 +330,7 @@
 					<button
 						onclick={handleDeleteAccount}
 						disabled={deleteLoading || deleteConfirmText !== "DELETE"}
-						class="text-button flex-1 rounded-xl bg-red-600/80 px-6 py-2.5 font-semibold text-white transition-all duration-200 hover:bg-red-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400/20 disabled:opacity-50"
+						class="text-button flex-1 rounded-xl bg-red-600/80 px-6 py-2.5 font-semibold text-white transition-all duration-200 hover:bg-red-600 hover:shadow-lg focus:ring-2 focus:ring-red-400/20 focus:outline-none disabled:opacity-50"
 					>
 						{#if deleteLoading}
 							<span class="flex items-center justify-center">
@@ -374,7 +344,7 @@
 					<button
 						onclick={cancelDelete}
 						disabled={deleteLoading}
-						class="text-button text-secondary hover:text-bright rounded-xl border border-slate-600/60 bg-slate-700/40 px-6 py-2.5 font-medium backdrop-blur-lg transition-all hover:bg-slate-600/40 focus:outline-none focus:ring-2 focus:ring-slate-400/20 disabled:opacity-50"
+						class="text-button text-secondary hover:text-bright rounded-xl border border-slate-600/60 bg-slate-700/40 px-6 py-2.5 font-medium backdrop-blur-lg transition-all hover:bg-slate-600/40 focus:ring-2 focus:ring-slate-400/20 focus:outline-none disabled:opacity-50"
 					>
 						Cancel
 					</button>

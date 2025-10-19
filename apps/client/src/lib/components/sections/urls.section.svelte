@@ -1,13 +1,14 @@
 <script lang="ts">
-	import { api } from "$lib/api/api.client";
-	import { errorStore } from "$lib/stores/error.store";
-	import CheckMark from "$lib/icons/check-mark.svelte";
-	import Copy from "$lib/icons/copy.svelte";
-	import Edit from "$lib/icons/edit.svelte";
-	import Delete from "$lib/icons/delete.svelte";
-	import Loading from "$lib/icons/loading.svelte";
-	import { formatDate } from "$lib/utils/format-date";
-	import type { CustomUrlItem, UpdateCustomUrlRequest, UrlItem } from "$lib/api/services/url.service";
+	import { toastService } from "$lib/services/toast.service";
+	import CheckMark from "$lib/icons/check-mark.icon.svelte";
+	import Copy from "$lib/icons/copy.icon.svelte";
+	import Edit from "$lib/icons/edit.icon.svelte";
+	import Delete from "$lib/icons/delete.icon.svelte";
+	import Loading from "$lib/icons/loading.icon.svelte";
+	import { formatDate } from "$lib/utils/format-date.util";
+	import type { CustomUrlItem, UpdateCustomUrlRequest, UrlItem } from "$lib/services/api/url.api";
+	import { resolve } from "$app/paths";
+	import { clientApi } from "$lib/services/api/api.client";
 
 	interface Props {
 		urls: UrlItem[];
@@ -28,24 +29,10 @@
 		const confirmed = confirm("Are you sure you want to delete this URL?");
 		if (!confirmed) return;
 
-		try {
-			const response = await api.url.deleteUrl(id, { shortenedUrl });
+		const response = await clientApi.url.deleteUrl(id, { shortenedUrl });
 
-			if (response.error) {
-				errorStore.handleApiError(response, {
-					source: "urls_component",
-					action: "delete_url"
-				});
-				return;
-			}
-
+		if (response.success) {
 			onUrlDeleted(id, isCustom);
-			errorStore.showSuccess("URL deleted successfully!");
-		} catch (err) {
-			errorStore.handleNetworkError(err, {
-				source: "urls_component",
-				action: "delete_url"
-			});
 		}
 	}
 
@@ -58,11 +45,8 @@
 			copiedTimeout = setTimeout(() => {
 				copiedId = null;
 			}, 2000);
-		} catch (err) {
-			errorStore.handleUnknownError(err, {
-				source: "urls_component",
-				action: "copy_to_clipboard"
-			});
+		} catch {
+			toastService.error("Failed to copy to clipboard.");
 		}
 	}
 
@@ -71,40 +55,25 @@
 
 		updatingUrl = true;
 
-		try {
-			const response = await api.url.updateCustomUrl({
-				id: editingUrl.id,
-				originalUrl: editOriginalUrl.trim()
-			});
+		const response = await clientApi.url.updateCustomUrl({
+			id: editingUrl.id,
+			originalUrl: editOriginalUrl.trim()
+		});
 
-			if (response.error) {
-				errorStore.handleApiError(response, {
-					source: "urls_component",
-					action: "update_custom_url"
-				});
-				return;
-			}
-
-			if (response.data) {
-				onUrlUpdated({
-					id: response.data.id,
-					originalUrl: response.data.originalUrl,
-					shortenedUrl: response.data.shortenedUrl,
-					customCode: response.data.customCode,
-					createdAt: response.data.createdAt
-				});
-				editingUrl = null;
-				editOriginalUrl = "";
-				errorStore.showSuccess("Custom URL updated successfully!");
-			}
-		} catch (err) {
-			errorStore.handleNetworkError(err, {
-				source: "urls_component",
-				action: "update_custom_url"
+		if (response.data) {
+			onUrlUpdated({
+				id: response.data.id,
+				originalUrl: response.data.originalUrl,
+				shortenedUrl: response.data.shortenedUrl,
+				customCode: response.data.customCode,
+				createdAt: response.data.createdAt
 			});
-		} finally {
-			updatingUrl = false;
+			editingUrl = null;
+			editOriginalUrl = "";
+			toastService.success("Custom URL updated successfully.");
 		}
+
+		updatingUrl = false;
 	}
 
 	function startEditingUrl(url: CustomUrlItem) {
@@ -146,7 +115,7 @@
 											<div class="flex w-full items-center gap-2">
 												<input
 													bind:value={editOriginalUrl}
-													class="text-form-input w-min flex-1 rounded-xl border border-slate-600/60 bg-slate-800/40 px-3 py-2 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+													class="text-form-input w-min flex-1 rounded-xl border border-slate-600/60 bg-slate-800/40 px-3 py-2 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:ring-2 focus:ring-slate-400/20 focus:outline-none"
 													placeholder="Original Url"
 													onkeydown={(e) => e.key === "Enter" && updateCustomUrl()}
 												/>
@@ -241,7 +210,7 @@
 									<div class="flex items-center gap-2">
 										<input
 											bind:value={editOriginalUrl}
-											class="text-form-input flex-1 rounded-xl border border-slate-600/60 bg-slate-800/40 px-3 py-2 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+											class="text-form-input flex-1 rounded-xl border border-slate-600/60 bg-slate-800/40 px-3 py-2 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:ring-2 focus:ring-slate-400/20 focus:outline-none"
 											placeholder="Original Url"
 											onkeydown={(e) => e.key === "Enter" && updateCustomUrl()}
 										/>
@@ -456,7 +425,7 @@
 			<p class="text-body text-secondary mb-2">No URLs yet</p>
 			<p class="text-body-small text-muted">Start by creating your first short URL!</p>
 			<a
-				href="/"
+				href={resolve("/")}
 				class="text-button-small text-button-color mt-4 inline-block rounded-lg bg-slate-600/60 px-4 py-2 hover:bg-slate-600/80"
 			>
 				Create URL

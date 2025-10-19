@@ -1,12 +1,13 @@
 <script lang="ts">
-	import CheckMark from "$lib/icons/check-mark.svelte";
-	import Copy from "$lib/icons/copy.svelte";
-	import Loading from "$lib/icons/loading.svelte";
-	import UpgradeModal from "$lib/components/modals/upgrade.svelte";
+	import CheckMark from "$lib/icons/check-mark.icon.svelte";
+	import Copy from "$lib/icons/copy.icon.svelte";
+	import Loading from "$lib/icons/loading.icon.svelte";
+	import UpgradeModal from "$lib/components/modals/upgrade.modal.svelte";
 	import { config } from "$lib/common/config";
-	import { shortenUrl } from "$lib/utils/shorten-url";
+	import { shortenUrl } from "$lib/utils/shorten-url.util";
 	import { authStore } from "$lib/stores/auth.store";
-	import { errorStore } from "$lib/stores/error.store";
+	import { toastService } from "$lib/services/toast.service";
+	import { clientApi } from "$lib/services/api/api.client";
 
 	let url = $state("");
 	let customCode = $state("");
@@ -14,45 +15,34 @@
 	let loading = $state(false);
 	let copied = $state(false);
 	let showUpgradeModal = $state(false);
-	let isAuthenticated = $derived(() => $authStore.isAuthenticated && !$authStore.loading);
+	let isAuthenticated = $derived(() => $authStore.user && !$authStore.loading);
 
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
 
-		if (customCode.trim() && !isAuthenticated) {
+		if (customCode.trim() && !isAuthenticated()) {
 			showUpgradeModal = true;
 			return;
 		}
 
 		loading = true;
 
-		try {
-			// Using the internal +server endpoint to avoid exposing the API key to the client
-			// The +server endpoint will call the backend API from the server side
-			const response = await shortenUrl(url.trim(), customCode.trim());
+		let response;
 
-			if (response.error) {
-				if (
-					response.error.message?.includes("authentication") ||
-					response.error.message?.includes("Custom URLs require")
-				) {
-					showUpgradeModal = true;
-					return;
-				}
-				return;
-			}
-
-			if (response.data?.url) {
-				shortenedUrl = response.data.url;
-			}
-		} catch (err) {
-			errorStore.handleUnknownError(err, {
-				source: "main_page",
-				action: "shorten_url"
-			});
-		} finally {
-			loading = false;
+		// If the user is not authenticated, meaning the URL will be shortened via service account,
+		// Using the server-side /api/shorten endpoint to avoid exposing the API key to the client
+		// The endpoint will call the backend API from server side
+		if (isAuthenticated()) {
+			response = await clientApi.url.shorten({ url: url.trim(), customCode: customCode.trim() });
+		} else {
+			response = await shortenUrl(url.trim());
 		}
+
+		if (response.data?.url) {
+			shortenedUrl = response.data.url;
+		}
+
+		loading = false;
 	}
 
 	async function copyToClipboard() {
@@ -60,11 +50,8 @@
 			await navigator.clipboard.writeText(shortenedUrl.replace(/^(https?:\/\/)/, ""));
 			copied = true;
 			setTimeout(() => (copied = false), 2300);
-		} catch (err) {
-			errorStore.handleUnknownError(err, {
-				source: "main_page",
-				action: "copy_to_clipboard"
-			});
+		} catch {
+			toastService.error("Failed to copy to clipboard.");
 		}
 	}
 
@@ -125,7 +112,7 @@
 							placeholder="https://example.com/very-long-url"
 							class="text-form-input mt-1 w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5
 									   placeholder-slate-500 backdrop-blur-lg transition-all
-									   duration-200 focus:border-slate-500/80 focus:outline-none focus:ring-2 focus:ring-slate-400/20
+									   duration-200 focus:border-slate-500/80 focus:ring-2 focus:ring-slate-400/20 focus:outline-none
 									   sm:py-3"
 							disabled={loading}
 							required
@@ -148,7 +135,7 @@
 								type="text"
 								bind:value={customCode}
 								placeholder="custom-code"
-								class="text-form-input flex-1 border-none bg-transparent py-2.5 pl-0.5 pr-4 placeholder-slate-500 outline-none focus:ring-0 sm:py-3"
+								class="text-form-input flex-1 border-none bg-transparent py-2.5 pr-4 pl-0.5 placeholder-slate-500 outline-none focus:ring-0 sm:py-3"
 								disabled={loading}
 								onclick={() => {
 									if (!isAuthenticated()) {
@@ -169,7 +156,7 @@
 							   from-slate-400/80 to-slate-600/80 px-6 py-2.5 font-semibold
 							   shadow-lg backdrop-blur-lg transition-all duration-200
 							   hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30
-							   focus:outline-none focus:ring-2 focus:ring-slate-400/20 active:scale-[0.98]
+							   focus:ring-2 focus:ring-slate-400/20 focus:outline-none active:scale-[0.98]
 							   disabled:opacity-50
 							   sm:py-3"
 					>
@@ -187,7 +174,7 @@
 				<!-- Result Display -->
 				<div class="space-y-4 text-center sm:space-y-6">
 					<div class="rounded-xl border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg sm:p-6">
-						<p class="text-body-small text-secondary mb-2">Your short URL:</p>
+						<p class="text-body text-secondary mb-2">Your short URL:</p>
 						<div class="flex flex-col gap-3 sm:flex-row sm:items-center">
 							<code
 								class="text-body text-bright flex-1 overflow-x-auto rounded-lg border border-slate-600/60 bg-slate-900/40 px-3 py-2 font-mono backdrop-blur-lg sm:px-4"
@@ -196,8 +183,8 @@
 							</code>
 							<button
 								onclick={copyToClipboard}
-								class="text-button-small duration-230 text-secondary hover:text-bright flex items-center justify-center gap-2 rounded-lg border border-slate-600/60 bg-slate-700/40 px-4 py-2 font-medium
-									   backdrop-blur-lg transition-all hover:bg-slate-600/40"
+								class="text-button-small text-secondary hover:text-bright flex items-center justify-center gap-2 rounded-lg border border-slate-600/60 bg-slate-700/40 px-4 py-2 font-medium backdrop-blur-lg
+									   transition-all duration-230 hover:bg-slate-600/40"
 								title="Copy to clipboard"
 							>
 								{#if copied}
@@ -216,9 +203,9 @@
 							href={shortenedUrl}
 							target="_blank"
 							rel="noopener noreferrer"
-							class="text-button duration-230 text-success flex-1 transform cursor-pointer rounded-xl
-								   bg-gradient-to-r from-emerald-800/80 to-emerald-700/80 px-4 py-2.5 text-center font-semibold shadow-lg
-								   backdrop-blur-lg transition-all hover:scale-[1.02] hover:from-emerald-800 hover:to-emerald-700
+							class="text-button text-success flex-1 transform cursor-pointer rounded-xl bg-gradient-to-r
+								   from-emerald-800/80 to-emerald-700/80 px-4 py-2.5 text-center font-semibold shadow-lg backdrop-blur-lg
+								   transition-all duration-230 hover:scale-[1.02] hover:from-emerald-800 hover:to-emerald-700
 								   hover:shadow-xl hover:shadow-slate-900/30 active:scale-[0.98]
 								   sm:px-6 sm:py-3"
 						>
@@ -226,8 +213,8 @@
 						</a>
 						<button
 							onclick={reset}
-							class="text-button duration-230 text-secondary hover:text-bright flex-1 transform rounded-xl border border-slate-600/60 bg-gradient-to-r from-slate-600/40
-								   to-slate-700 px-4 py-2.5 font-semibold backdrop-blur-lg transition-all
+							class="text-button text-secondary hover:text-bright flex-1 transform rounded-xl border border-slate-600/60 bg-gradient-to-r from-slate-600/40 to-slate-700
+								   px-4 py-2.5 font-semibold backdrop-blur-lg transition-all duration-230
 								   hover:scale-[1.02] hover:bg-slate-600/40 active:scale-[0.98] sm:px-6 sm:py-3"
 						>
 							Shorten Another

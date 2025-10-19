@@ -4,14 +4,14 @@
 	import favicon from "$lib/assets/favicon.svg";
 	import { Toaster } from "svelte-french-toast";
 
+	import Footer from "$lib/components/layouts/footer.layout.svelte";
+	import Header from "$lib/components/layouts/header.layout.svelte";
 	import { authStore } from "$lib/stores/auth.store";
-	import Footer from "$lib/components/layouts/footer.svelte";
-	import Header from "$lib/components/layouts/header.svelte";
 
-	let { children } = $props();
+	const { children } = $props();
 
-	onMount(() => {
-		authStore.checkStatus();
+	onMount(async () => {
+		authStore.setAuthenticatedFromTokens();
 	});
 </script>
 
@@ -25,7 +25,7 @@
 <div class="flex min-h-screen flex-col bg-gradient-to-br from-slate-900 via-slate-800/90 to-slate-900">
 	<Header />
 
-	<main class="flex-1 px-4 pb-16 pt-20">
+	<main class="flex-1 px-4 pt-20 pb-16">
 		{@render children?.()}
 	</main>
 

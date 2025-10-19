@@ -1,32 +1,31 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
-	import Link from "$lib/icons/link.svelte";
-	import Dashboard from "$lib/icons/dashboard.svelte";
-	import Key from "$lib/icons/key.svelte";
-	import Close from "$lib/icons/close.svelte";
+	import Link from "$lib/icons/link.icon.svelte";
+	import Dashboard from "$lib/icons/dashboard.icon.svelte";
+	import Key from "$lib/icons/key.icon.svelte";
+	import Close from "$lib/icons/close.icon.svelte";
+	import { resolve } from "$app/paths";
 
 	let { isOpen = $bindable(false) } = $props();
 
 	function handleRegister() {
-		goto("/web/register");
+		goto(resolve("/web/register"));
 	}
 
 	function handleLogin() {
-		goto("/web/login");
+		goto(resolve("/web/login"));
 	}
 
 	function handleClose() {
 		isOpen = false;
 	}
 
-	// Close modal when clicking outside
-	function handleBackdropClick(event: MouseEvent) {
+	function handleClickOutside(event: MouseEvent) {
 		if (event.target === event.currentTarget) {
 			handleClose();
 		}
 	}
 
-	// Close modal on Escape key
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key === "Escape") {
 			handleClose();
@@ -39,8 +38,8 @@
 {#if isOpen}
 	<!-- Modal backdrop -->
 	<div
-		class="backdrop-blur-xs fixed inset-0 z-50 flex items-center justify-center bg-slate-800/80 p-4"
-		onclick={handleBackdropClick}
+		class="fixed inset-0 z-50 flex items-center justify-center bg-slate-800/80 p-4 backdrop-blur-xs"
+		onclick={handleClickOutside}
 		onkeydown={handleKeydown}
 		role="dialog"
 		tabindex="-1"
@@ -54,7 +53,7 @@
 			<!-- Close button -->
 			<button
 				onclick={handleClose}
-				class="text-muted hover:text-bright absolute right-4 top-4 p-1 transition-colors"
+				class="text-muted hover:text-bright absolute top-4 right-4 p-1 transition-colors"
 				aria-label="Close modal"
 			>
 				<Close />
@@ -114,7 +113,7 @@
 			<div class="space-y-3">
 				<button
 					onclick={handleRegister}
-					class="text-button-color w-full transform rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-6 py-2.5 font-semibold shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:outline-none focus:ring-2 focus:ring-slate-400/20 active:scale-[0.98] sm:py-3"
+					class="text-button-color w-full transform rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-6 py-2.5 font-semibold shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:ring-2 focus:ring-slate-400/20 focus:outline-none active:scale-[0.98] sm:py-3"
 				>
 					Create an account
 				</button>

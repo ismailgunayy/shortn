@@ -1,7 +1,8 @@
 <script>
 	import { onMount } from "svelte";
 	import { goto } from "$app/navigation";
-	import Error from "$lib/icons/error.svelte";
+	import Error from "$lib/icons/error.icon.svelte";
+	import { resolve } from "$app/paths";
 
 	let countdown = $state(5);
 
@@ -10,7 +11,7 @@
 			countdown--;
 			if (countdown <= 0) {
 				clearInterval(interval);
-				goto("/");
+				goto(resolve("/"));
 			}
 		}, 1000);
 
@@ -57,11 +58,11 @@
 
 				<!-- Manual Navigation Button -->
 				<a
-					href="/"
-					class="text-button duration-230 text-button-color inline-flex transform cursor-pointer items-center justify-center rounded-xl
-						   bg-gradient-to-r from-slate-600 to-slate-700 px-6 py-3 font-medium shadow-lg shadow-slate-900/20
-						   backdrop-blur-lg transition-all hover:scale-[1.02] hover:from-slate-500 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30
-						   focus:outline-none focus:ring-2 focus:ring-slate-400/20 active:scale-[0.98]"
+					href={resolve("/")}
+					class="text-button text-button-color inline-flex transform cursor-pointer items-center justify-center rounded-xl bg-gradient-to-r
+						   from-slate-600 to-slate-700 px-6 py-3 font-medium shadow-lg shadow-slate-900/20 backdrop-blur-lg
+						   transition-all duration-230 hover:scale-[1.02] hover:from-slate-500 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30
+						   focus:ring-2 focus:ring-slate-400/20 focus:outline-none active:scale-[0.98]"
 				>
 					Go home now
 				</a>

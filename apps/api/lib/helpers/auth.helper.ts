@@ -17,19 +17,21 @@ import crypto from "crypto";
 const SALT_ROUNDS = 12;
 
 export enum TokenType {
-	ACCESS = "accessToken",
-	REFRESH = "refreshToken"
+	ACCESS = "shortn_access_token",
+	REFRESH = "shortn_refresh_token"
 }
 
-export enum AuthMethod {
-	ACCESS_TOKEN = "accessToken",
-	API_KEY = "apiKey"
-}
+export type AuthMethod = "accessToken" | "apiKey";
 
 export class AuthHelper {
+	private accessTokenExpiresIn: number;
+	private refreshTokenExpiresIn: number;
 	private defaultCookieOptions: CookieSerializeOptions;
 
 	constructor(private readonly app: App) {
+		this.accessTokenExpiresIn = this.app.config.AUTH.JWT.ACCESS_EXPIRES_IN_SECONDS + 300; // Add 5 minutes buffer
+		this.refreshTokenExpiresIn = this.app.config.AUTH.JWT.REFRESH_EXPIRES_IN_SECONDS + 300; // Add 5 minutes buffer
+
 		this.defaultCookieOptions = {
 			secure: this.app.config.IS_PRODUCTION,
 			sameSite: "lax",
@@ -44,11 +46,11 @@ export class AuthHelper {
 
 		if (name === TokenType.ACCESS) {
 			options = {
-				maxAge: this.app.config.AUTH.JWT.ACCESS_EXPIRES_IN_SECONDS
+				maxAge: this.accessTokenExpiresIn
 			};
 		} else if (name === TokenType.REFRESH) {
 			options = {
-				maxAge: this.app.config.AUTH.JWT.REFRESH_EXPIRES_IN_SECONDS
+				maxAge: this.refreshTokenExpiresIn
 			};
 		}
 
@@ -61,19 +63,16 @@ export class AuthHelper {
 	public clearTokenCookies(reply: FastifyReply) {
 		reply.clearCookie(TokenType.ACCESS, {
 			...this.defaultCookieOptions,
-			maxAge: this.app.config.AUTH.JWT.ACCESS_EXPIRES_IN_SECONDS
+			maxAge: this.accessTokenExpiresIn
 		});
 		reply.clearCookie(TokenType.REFRESH, {
 			...this.defaultCookieOptions,
-			maxAge: this.app.config.AUTH.JWT.REFRESH_EXPIRES_IN_SECONDS
+			maxAge: this.refreshTokenExpiresIn
 		});
 	}
 
 	public generateToken(payload: JWTPayload) {
-		const expiresIn =
-			payload.tokenType === TokenType.ACCESS
-				? this.app.config.AUTH.JWT.ACCESS_EXPIRES_IN_SECONDS
-				: this.app.config.AUTH.JWT.REFRESH_EXPIRES_IN_SECONDS;
+		const expiresIn = payload.tokenType === TokenType.ACCESS ? this.accessTokenExpiresIn : this.refreshTokenExpiresIn;
 
 		return this.app.jwt.sign(payload, { expiresIn });
 	}

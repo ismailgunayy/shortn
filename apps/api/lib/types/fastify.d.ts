@@ -1,21 +1,21 @@
-import { AuthHelper, UrlHelper } from "~/helpers";
-import { AuthMethod, AuthService, TokenType } from "~/services/auth.service";
+import { AuthHelper, type AuthMethod, type TokenType, UrlHelper } from "~/helpers";
+import { AuthService } from "~/services/auth.service";
 import { FastifyBaseLogger, FastifyInstance, RawServerDefault } from "fastify";
 import { IncomingMessage, ServerResponse } from "http";
 import { Kysely, Selectable } from "kysely";
 
 import { CacheService } from "~/services/cache.service";
 import { DB } from "./db";
+import { FastifyZodOpenApiTypeProvider } from "fastify-zod-openapi";
 import { TConfig } from "~/common/config";
 import { UrlService } from "~/services/url.service";
-import { FastifyZodOpenApiTypeProvider } from "fastify-zod-openapi";
 
 interface JWTPayload {
 	tokenType: TokenType;
 	id: number;
 }
 
-interface UserPayload extends Selectable<Omit<DB["shortn.users"], "password">> {
+export interface User extends Selectable<Omit<DB["shortn.users"], "password">> {
 	isServiceAccount?: boolean;
 	authenticatedWith: AuthMethod;
 }
@@ -23,7 +23,7 @@ interface UserPayload extends Selectable<Omit<DB["shortn.users"], "password">> {
 declare module "@fastify/jwt" {
 	interface FastifyJWT {
 		payload: JWTPayload;
-		user: UserPayload;
+		user: User;
 	}
 
 	interface JWT {

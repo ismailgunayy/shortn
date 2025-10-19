@@ -26,13 +26,13 @@ export class InvalidOrExpiredToken extends AuthError {
 
 export class AccessTokenNotFound extends AuthError {
 	constructor(cause?: unknown) {
-		super("Access token not found", 404, cause);
+		super("Access token not found", 401, cause);
 	}
 }
 
 export class RefreshTokenNotFound extends AuthError {
 	constructor(cause?: unknown) {
-		super("Refresh token not found", 404, cause);
+		super("Refresh token not found", 401, cause);
 	}
 }
 
@@ -68,7 +68,7 @@ export class InvalidApiKeyNameLength extends AuthError {
 
 export class ApiKeyNotFound extends AuthError {
 	constructor(cause?: unknown) {
-		super("API key not found", 404, cause);
+		super("API key not found", 401, cause);
 	}
 }
 

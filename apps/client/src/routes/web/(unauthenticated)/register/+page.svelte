@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { authStore } from "$lib/stores/auth.store";
 	import { registerSchema, type RegisterForm } from "$lib/schemas/auth.schema";
-	import Loading from "$lib/icons/loading.svelte";
-	import Eye from "$lib/icons/eye.svelte";
-	import EyeOff from "$lib/icons/eye-off.svelte";
+	import Loading from "$lib/icons/loading.icon.svelte";
+	import Eye from "$lib/icons/eye.icon.svelte";
+	import EyeOff from "$lib/icons/eye-off.icon.svelte";
+	import { clientApi } from "$lib/services/api/api.client";
+	import { resolve } from "$app/paths";
 
 	let formData = $state<RegisterForm>({
 		fullName: "",
@@ -39,7 +41,7 @@
 			return;
 		}
 
-		await authStore.register(formData);
+		await clientApi.auth.register(formData);
 	}
 </script>
 
@@ -83,7 +85,7 @@
 					type="text"
 					bind:value={formData.fullName}
 					placeholder="John Doe"
-					class="text-form-input w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-600/60 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+					class="text-form-input w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-600/60 focus:ring-2 focus:ring-slate-400/20 focus:outline-none"
 					disabled={authState.loading}
 					required
 				/>
@@ -105,7 +107,7 @@
 					type="text"
 					bind:value={formData.email}
 					placeholder="your@email.com"
-					class="text-form-input w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-600/60 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+					class="text-form-input w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-600/60 focus:ring-2 focus:ring-slate-400/20 focus:outline-none"
 					disabled={authState.loading}
 					required
 				/>
@@ -128,14 +130,14 @@
 						type={showPassword ? "text" : "password"}
 						bind:value={formData.password}
 						placeholder="At least 12 characters"
-						class="text-form-input w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 pr-12 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-600/60 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+						class="text-form-input w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5 pr-12 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-600/60 focus:ring-2 focus:ring-slate-400/20 focus:outline-none"
 						disabled={authState.loading}
 						required
 					/>
 					<button
 						type="button"
 						onclick={() => (showPassword = !showPassword)}
-						class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 focus:outline-none"
+						class="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 hover:text-slate-300 focus:outline-none"
 						disabled={authState.loading}
 					>
 						{#if showPassword}
@@ -154,7 +156,7 @@
 			<button
 				type="submit"
 				disabled={authState.loading || !formData.fullName.trim() || !formData.email.trim() || !formData.password.trim()}
-				class="text-button text-button-color w-full transform rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-6 py-2.5 font-semibold shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:outline-none focus:ring-2 focus:ring-slate-400/20 active:scale-[0.98] disabled:opacity-50"
+				class="text-button text-button-color w-full transform rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-6 py-2.5 font-semibold shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:ring-2 focus:ring-slate-400/20 focus:outline-none active:scale-[0.98] disabled:opacity-50"
 			>
 				{#if authState.loading}
 					<span class="flex items-center justify-center">
@@ -170,7 +172,7 @@
 			<p class="text-body-small text-muted mt-4 text-center">
 				Already have an account?
 				<a
-					href="/web/login"
+					href={resolve("/web/login")}
 					class="text-secondary hover:text-bright font-medium transition-colors"
 				>
 					Log in

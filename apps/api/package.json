@@ -27,7 +27,6 @@
 		"dotenv": "^17.2.3",
 		"fastify": "^5.6.1",
 		"fastify-plugin": "^5.1.0",
-		"fastify-type-provider-zod": "^6.0.0",
 		"fastify-zod-openapi": "^5.5.0",
 		"kysely": "^0.28.8",
 		"kysely-ctl": "^0.19.0",

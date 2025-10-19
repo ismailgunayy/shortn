@@ -1,16 +1,16 @@
 <script lang="ts">
-	import { api } from "$lib/api/api.client";
-	import { errorStore } from "$lib/stores/error.store";
-	import Loading from "$lib/icons/loading.svelte";
+	import Loading from "$lib/icons/loading.icon.svelte";
 
-	import Edit from "$lib/icons/edit.svelte";
-	import Delete from "$lib/icons/delete.svelte";
-	import CheckMark from "$lib/icons/check-mark.svelte";
-	import Key from "$lib/icons/key.svelte";
-	import Plus from "$lib/icons/plus.svelte";
-	import { formatDate } from "$lib/utils/format-date";
-	import type { ApiKey } from "$lib/api/services/auth.service";
-	import Copy from "$lib/icons/copy.svelte";
+	import Edit from "$lib/icons/edit.icon.svelte";
+	import Delete from "$lib/icons/delete.icon.svelte";
+	import CheckMark from "$lib/icons/check-mark.icon.svelte";
+	import Key from "$lib/icons/key.icon.svelte";
+	import Plus from "$lib/icons/plus.icon.svelte";
+	import { formatDate } from "$lib/utils/format-date.util";
+	import Copy from "$lib/icons/copy.icon.svelte";
+	import { toastService } from "$lib/services/toast.service";
+	import type { ApiKey } from "$lib/services/api/auth.api";
+	import { clientApi } from "$lib/services/api/api.client";
 
 	interface Props {
 		apiKeys: ApiKey[];
@@ -21,7 +21,7 @@
 
 	let newApiKeyName = $state("");
 	let creatingApiKey = $state(false);
-	let newApiKeyResult: { key: string; name: string; id: number } | null = $state(null);
+	let newApiKeyResult: { id: number; key: string; name: string } | null = $state(null);
 	let copiedId: string | null = $state(null);
 
 	let editingApiKey: { id: number; name: string } | null = $state(null);
@@ -29,43 +29,26 @@
 	let updatingApiKey = $state(false);
 
 	async function createApiKey() {
-		if (!newApiKeyName.trim()) return;
-
 		creatingApiKey = true;
 
-		try {
-			const response = await api.auth.createApiKey({ name: newApiKeyName.trim() });
+		const response = await clientApi.auth.createApiKey({ name: newApiKeyName.trim() });
 
-			if (response.error) {
-				errorStore.handleApiError(response, {
-					source: "api_keys_component",
-					action: "create_api_key"
-				});
-				return;
-			}
-
-			if (response.data) {
-				newApiKeyResult = response.data;
-				onApiKeysUpdated([
-					...apiKeys,
-					{
-						id: response.data.id,
-						name: response.data.name,
-						lastFour: response.data.lastFour,
-						createdAt: new Date().toString(),
-						lastUsedAt: new Date().toString()
-					}
-				]);
-				newApiKeyName = "";
-			}
-		} catch (err) {
-			errorStore.handleNetworkError(err, {
-				source: "api_keys_component",
-				action: "create_api_key"
-			});
-		} finally {
-			creatingApiKey = false;
+		if (response.data) {
+			newApiKeyResult = response.data;
+			onApiKeysUpdated([
+				...apiKeys,
+				{
+					id: response.data.id,
+					name: response.data.name,
+					lastFour: response.data.lastFour,
+					createdAt: new Date().toString(),
+					lastUsedAt: new Date().toString()
+				}
+			]);
+			newApiKeyName = "";
 		}
+
+		creatingApiKey = false;
 	}
 
 	async function updateApiKey() {
@@ -73,61 +56,31 @@
 
 		updatingApiKey = true;
 
-		try {
-			const response = await api.auth.updateApiKey(editingApiKey.id, {
-				name: editApiKeyName.trim()
-			});
+		const response = await clientApi.auth.updateApiKey(editingApiKey.id, {
+			name: editApiKeyName.trim()
+		});
 
-			if (response.error) {
-				errorStore.handleApiError(response, {
-					source: "api_keys_component",
-					action: "update_api_key"
-				});
-				return;
-			}
-
-			if (response.data) {
-				const updatedApiKeys = apiKeys.map((key) =>
-					key.id === editingApiKey!.id ? { ...key, name: response.data!.name } : key
-				);
-				onApiKeysUpdated(updatedApiKeys);
-				editingApiKey = null;
-				editApiKeyName = "";
-				errorStore.showSuccess("API key updated successfully!");
-			}
-		} catch (err) {
-			errorStore.handleNetworkError(err, {
-				source: "api_keys_component",
-				action: "update_api_key"
-			});
-		} finally {
-			updatingApiKey = false;
+		if (response.data) {
+			const updatedApiKeys = apiKeys.map((key) =>
+				key.id === editingApiKey?.id ? { ...key, name: response.data!.name } : key
+			);
+			onApiKeysUpdated(updatedApiKeys);
+			editingApiKey = null;
+			editApiKeyName = "";
 		}
+
+		updatingApiKey = false;
 	}
 
 	async function deleteApiKey(id: number, name: string) {
 		const confirmed = confirm(`Are you sure you want to delete the API key "${name}"?`);
 		if (!confirmed) return;
 
-		try {
-			const response = await api.auth.deleteApiKey(id);
+		const response = await clientApi.auth.deleteApiKey(id);
 
-			if (response.error) {
-				errorStore.handleApiError(response, {
-					source: "api_keys_component",
-					action: "delete_api_key"
-				});
-				return;
-			}
-
+		if (response.success) {
 			const updatedApiKeys = apiKeys.filter((key) => key.id !== id);
 			onApiKeysUpdated(updatedApiKeys);
-			errorStore.showSuccess("API key deleted successfully!");
-		} catch (err) {
-			errorStore.handleNetworkError(err, {
-				source: "api_keys_component",
-				action: "delete_api_key"
-			});
 		}
 	}
 
@@ -138,11 +91,8 @@
 			setTimeout(() => {
 				copiedId = null;
 			}, 2000);
-		} catch (err) {
-			errorStore.handleUnknownError(err, {
-				source: "api_keys_component",
-				action: "copy_to_clipboard"
-			});
+		} catch {
+			toastService.error("Failed to copy to clipboard.");
 		}
 	}
 
@@ -166,13 +116,13 @@
 				<input
 					bind:value={newApiKeyName}
 					placeholder="Key name..."
-					class="text-form-input rounded-lg border border-slate-600/60 bg-slate-800/40 px-3 py-2 text-sm placeholder-slate-500 transition-all focus:border-slate-500/80 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+					class="text-form-input rounded-lg border border-slate-600/60 bg-slate-800/40 px-3 py-2 text-sm placeholder-slate-500 transition-all focus:border-slate-500/80 focus:ring-2 focus:ring-slate-400/20 focus:outline-none"
 					onkeydown={(e) => e.key === "Enter" && createApiKey()}
 				/>
 				<button
 					onclick={createApiKey}
 					disabled={creatingApiKey || !newApiKeyName.trim()}
-					class="text-button-small text-button-color flex items-center gap-2 rounded-lg bg-slate-600/60 py-2 pl-3 pr-4 transition-all hover:bg-slate-600/80 disabled:opacity-50"
+					class="text-button-small text-button-color flex items-center gap-2 rounded-lg bg-slate-600/60 py-2 pr-4 pl-3 transition-all hover:bg-slate-600/80 disabled:opacity-50"
 				>
 					{#if creatingApiKey}
 						<Loading class="h-4 w-4" />
@@ -213,7 +163,7 @@
 										<div class="flex items-center gap-2">
 											<input
 												bind:value={editApiKeyName}
-												class="text-form-input flex-1 rounded-xl border border-slate-600/60 bg-slate-800/40 px-3 py-2 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+												class="text-form-input flex-1 rounded-xl border border-slate-600/60 bg-slate-800/40 px-3 py-2 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:ring-2 focus:ring-slate-400/20 focus:outline-none"
 												placeholder="API Key Name"
 											/>
 											<button
@@ -240,7 +190,7 @@
 								</td>
 								<td class="px-4 py-3">
 									<div class="flex items-center gap-2">
-										<span class="text-body-small text-bright whitespace-nowrap font-medium"
+										<span class="text-body-small text-bright font-medium whitespace-nowrap"
 											>********{apiKey.lastFour}</span
 										>
 										{#if copiedId === `api-key-${apiKey.id}`}
@@ -294,7 +244,7 @@
 									<div class="flex items-center gap-2">
 										<input
 											bind:value={editApiKeyName}
-											class="text-form-input flex-1 rounded-xl border border-slate-600/60 bg-slate-800/40 px-3 py-2 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+											class="text-form-input flex-1 rounded-xl border border-slate-600/60 bg-slate-800/40 px-3 py-2 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:ring-2 focus:ring-slate-400/20 focus:outline-none"
 											placeholder="API Key Name"
 										/>
 										<button
@@ -324,7 +274,7 @@
 											<span class="text-body-small text-bright font-medium">{apiKey.name}</span>
 										</div>
 										<div class="mb-2 flex items-center gap-2">
-											<span class="text-body-small text-bright whitespace-nowrap font-mono">****{apiKey.lastFour}</span>
+											<span class="text-body-small text-bright font-mono whitespace-nowrap">****{apiKey.lastFour}</span>
 										</div>
 										<div class="space-y-1">
 											<p class="text-caption text-muted">Created {formatDate(apiKey.createdAt)}</p>

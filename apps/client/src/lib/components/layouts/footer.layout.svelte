@@ -1,5 +1,5 @@
 <script>
-	import GitHub from "$lib/icons/github.svelte";
+	import GitHub from "$lib/icons/github.icon.svelte";
 </script>
 
 <footer class="mx-auto mb-2 flex w-full justify-center">

@@ -1,6 +1,6 @@
 import { error, redirect } from "@sveltejs/kit";
 
-import { serverApi } from "$lib/api/api.server";
+import { serverApi } from "$lib/services/api/api.server";
 
 export async function resolveAndRedirect(shortenedUrl: string) {
 	try {

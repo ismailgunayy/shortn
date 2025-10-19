@@ -1,6 +1,6 @@
-import type { ApiResponse } from "$lib/api/services/service";
-import type { ShortenUrlResponse } from "$lib/api/services/url.service";
-import { errorStore } from "$lib/stores/error.store";
+import type { ApiResponse } from "$lib/services/api/base.api";
+import type { ShortenUrlResponse } from "$lib/services/api/url.api";
+import { toastService } from "$lib/services/toast.service";
 
 export const shortenUrl = async (url: string, customCode?: string): Promise<ApiResponse<ShortenUrlResponse>> => {
 	try {
@@ -19,20 +19,13 @@ export const shortenUrl = async (url: string, customCode?: string): Promise<ApiR
 
 		const response = await fetched.json();
 
-		if (!response.success) {
-			errorStore.handleApiError(response, {
-				source: "shortenUrl",
-				action: "shorten_url",
-				statusCode: fetched.status
-			});
+		if (response.error) {
+			toastService.error(`Failed to shorten URL.`);
 		}
 
 		return response;
-	} catch (err) {
-		errorStore.handleNetworkError(err, {
-			source: "shortenUrl",
-			action: "shorten_url"
-		});
+	} catch {
+		toastService.error("Network error occurred.");
 
 		return {
 			success: false,

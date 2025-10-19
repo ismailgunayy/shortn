@@ -1,7 +1,6 @@
 import { AuthController, HealthController, UrlController } from "~/controllers";
 
 import { App } from "~/types/fastify";
-import { AuthMethod } from "~/helpers";
 import fastifyPlugin from "fastify-plugin";
 
 const restrictAuthEndpoints = (app: App) => {
@@ -10,7 +9,7 @@ const restrictAuthEndpoints = (app: App) => {
 			return done();
 		}
 
-		if (request.user && request.user.authenticatedWith === AuthMethod.ACCESS_TOKEN) {
+		if (request.user && request.user.authenticatedWith === "accessToken") {
 			return done();
 		}
 
@@ -31,7 +30,6 @@ const restrictAuthEndpoints = (app: App) => {
 
 export const router = fastifyPlugin((app: App) => {
 	app.register((app: App) => {
-		// General endpoints
 		app.register(HealthController);
 
 		app.register((app: App) => {

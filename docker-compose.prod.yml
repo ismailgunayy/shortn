@@ -22,13 +22,13 @@ services:
     restart: unless-stopped
 
   redis:
-    image: railwayapp/redis:8.2
+    image: redis:8.2-alpine
     container_name: shortn-prod-redis
     command: redis-server --requirepass password
     env_file:
       - .env.local.prod
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "-a", "password", "ping"]
       interval: 2s
       timeout: 3s
       retries: 5

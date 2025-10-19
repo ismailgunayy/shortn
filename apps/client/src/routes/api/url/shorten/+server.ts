@@ -1,6 +1,6 @@
 import type { RequestHandler } from "@sveltejs/kit";
-import { parseCookies } from "$lib/utils/parse-cookies.server";
-import { serverApi } from "$lib/api/api.server";
+import { parseCookies } from "$lib/utils/parse-cookies.util.server";
+import { serverApi } from "$lib/services/api/api.server";
 
 /**
  * This is a workaround to avoid exposing the API Key to the client.

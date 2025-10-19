@@ -1,5 +1,5 @@
-import { AuthService } from "./services/auth.service";
-import { UrlService } from "./services/url.service";
+import { AuthService } from "./auth.api";
+import { UrlService } from "./url.api";
 import { env } from "$env/dynamic/private";
 
 export const serverApi = {

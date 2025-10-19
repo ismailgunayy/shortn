@@ -8,8 +8,8 @@ import { createResponseSchema } from "~/schemas/api-response.schema";
 import z from "zod";
 
 export const AuthController = (app: App) => {
-	const accessTokenExpiry = app.config.AUTH.JWT.ACCESS_EXPIRES_IN_SECONDS;
-	const refreshTokenExpiry = app.config.AUTH.JWT.REFRESH_EXPIRES_IN_SECONDS;
+	const accessTokenExpiresIn = app.config.AUTH.JWT.ACCESS_EXPIRES_IN_SECONDS;
+	const refreshTokenExpiresIn = app.config.AUTH.JWT.REFRESH_EXPIRES_IN_SECONDS;
 
 	app.post(
 		"/auth/register",
@@ -63,9 +63,13 @@ export const AuthController = (app: App) => {
 				}),
 				response: createResponseSchema(
 					z.object({
-						accessToken: z.string(),
-						refreshToken: z.string(),
-						expiresIn: z.number()
+						accessTokenExpiresIn: z.number(),
+						refreshTokenExpiresIn: z.number(),
+						user: z.object({
+							id: z.number(),
+							fullName: z.string(),
+							email: z.email()
+						})
 					})
 				)
 			}
@@ -91,7 +95,7 @@ export const AuthController = (app: App) => {
 			await app.services.cache.set(CacheType.REFRESH, user.id.toString(), refreshToken, {
 				expiration: {
 					type: "EX",
-					value: refreshTokenExpiry
+					value: refreshTokenExpiresIn
 				}
 			});
 
@@ -101,16 +105,16 @@ export const AuthController = (app: App) => {
 			return reply.code(200).send({
 				success: true,
 				data: {
-					accessToken,
-					refreshToken,
-					expiresIn: accessTokenExpiry
+					accessTokenExpiresIn,
+					refreshTokenExpiresIn,
+					user
 				}
 			});
 		}
 	);
 
 	app.get(
-		"/auth",
+		"/auth/status",
 		{
 			onRequest: [app.authenticateSession],
 			schema: {
@@ -122,8 +126,7 @@ export const AuthController = (app: App) => {
 							id: z.number(),
 							fullName: z.string(),
 							email: z.email()
-						}),
-						isAuthenticated: z.boolean()
+						})
 					})
 				)
 			}
@@ -138,8 +141,7 @@ export const AuthController = (app: App) => {
 						id: user.id,
 						fullName: user.fullName,
 						email: user.email
-					},
-					isAuthenticated: true
+					}
 				}
 			});
 		}
@@ -153,9 +155,8 @@ export const AuthController = (app: App) => {
 				description: "Refresh the access and refresh tokens",
 				response: createResponseSchema(
 					z.object({
-						accessToken: z.string(),
-						refreshToken: z.string(),
-						expiresIn: z.number()
+						accessTokenExpiresIn: z.number(),
+						refreshTokenExpiresIn: z.number()
 					})
 				)
 			}
@@ -177,7 +178,7 @@ export const AuthController = (app: App) => {
 			await app.services.cache.set(CacheType.REFRESH, decoded.id.toString(), newRefreshToken, {
 				expiration: {
 					type: "EX",
-					value: refreshTokenExpiry
+					value: refreshTokenExpiresIn
 				}
 			});
 
@@ -187,9 +188,8 @@ export const AuthController = (app: App) => {
 			return reply.code(200).send({
 				success: true,
 				data: {
-					accessToken: newAccessToken,
-					refreshToken: newRefreshToken,
-					expiresIn: accessTokenExpiry
+					accessTokenExpiresIn,
+					refreshTokenExpiresIn
 				}
 			});
 		}
