@@ -7,7 +7,7 @@ export class UrlService extends Service {
 		super(config);
 	}
 
-	public async shorten(values: ShortenUrlRequest, options?: RequestInit): Promise<ApiResponse<ShortenUrlResponse>> {
+	public async shortenUrl(values: ShortenUrlRequest, options?: RequestInit): Promise<ApiResponse<ShortenUrlResponse>> {
 		if (!values.url.trim()) {
 			throw new Error("Please enter a URL");
 		}
@@ -34,19 +34,26 @@ export class UrlService extends Service {
 		return response;
 	}
 
-	public async getOriginal(
-		values: OriginalUrlRequest,
+	public async redirectUrl(
+		values: RedirectUrlRequest,
 		options?: RequestInit
-	): Promise<ApiResponse<OriginalUrlResponse>> {
-		return await this.request<OriginalUrlResponse>("url/original", {
+	): Promise<ApiResponse<RedirectUrlResponse>> {
+		return await this.request<RedirectUrlResponse>("url/redirect", {
 			method: "POST",
 			body: JSON.stringify(values),
 			...options
 		});
 	}
 
-	public async getUserUrls(options?: RequestInit): Promise<ApiResponse<GetUrlsResponse>> {
-		return await this.request<GetUrlsResponse>("url", {
+	public async getGeneratedUrls(options?: RequestInit): Promise<ApiResponse<GetGeneratedUrlsResponse>> {
+		return await this.request<GetGeneratedUrlsResponse>("url/generated", {
+			method: "GET",
+			...options
+		});
+	}
+
+	public async getCustomUrls(options?: RequestInit): Promise<ApiResponse<GetCustomUrlsResponse>> {
+		return await this.request<GetCustomUrlsResponse>("url/custom", {
 			method: "GET",
 			...options
 		});
@@ -97,11 +104,11 @@ export interface ShortenUrlResponse {
 	url: string;
 }
 
-export interface OriginalUrlRequest {
+export interface RedirectUrlRequest {
 	url: string;
 }
 
-export interface OriginalUrlResponse {
+export interface RedirectUrlResponse {
 	url: string;
 }
 
@@ -121,8 +128,11 @@ export interface CustomUrlItem {
 	createdAt: string;
 }
 
-export interface GetUrlsResponse {
+export interface GetGeneratedUrlsResponse {
 	urls: UrlItem[];
+}
+
+export interface GetCustomUrlsResponse {
 	customUrls: CustomUrlItem[];
 }
 

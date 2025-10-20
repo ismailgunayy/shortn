@@ -111,32 +111,28 @@ export class UrlService {
 		}
 	}
 
-	public async getUrlsOfUser(userId: number) {
-		let urls, customUrls;
+	public async getGeneratedUrlsOfUser(userId: number) {
+		const urls = await this.urlRepository.findAllUrlsByUserId(userId);
 
-		urls = await this.urlRepository.findAllUrlsByUserId(userId);
-		customUrls = await this.urlRepository.findAllCustomUrlsByUserId(userId);
-
-		urls = urls.map((url) => ({
+		return urls.map((url) => ({
 			id: url.id,
 			originalUrl: url.url,
 			shortenedUrl: this.app.helpers.url.buildUrl(this.app.helpers.url.encodeId(url.id)),
 			shortCode: this.app.helpers.url.encodeId(url.id),
 			createdAt: url.createdAt
 		}));
+	}
 
-		customUrls = customUrls.map((url) => ({
+	public async getCustomUrlsOfUser(userId: number) {
+		const customUrls = await this.urlRepository.findAllCustomUrlsByUserId(userId);
+
+		return customUrls.map((url) => ({
 			id: url.id,
 			originalUrl: url.url,
 			shortenedUrl: this.app.helpers.url.buildUrl(url.customCode, URLSegment.CUSTOM),
 			customCode: url.customCode,
 			createdAt: url.createdAt
 		}));
-
-		return {
-			urls,
-			customUrls
-		};
 	}
 
 	public async updateCustomUrl(id: number, userId: number, originalUrl: string) {

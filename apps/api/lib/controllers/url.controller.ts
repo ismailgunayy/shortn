@@ -39,7 +39,7 @@ export const UrlController = (app: App) => {
 	);
 
 	app.post(
-		"/url/original",
+		"/url/redirect",
 		{
 			onRequest: [app.authenticate],
 			schema: {
@@ -67,11 +67,11 @@ export const UrlController = (app: App) => {
 	);
 
 	app.get(
-		"/url",
+		"/url/generated",
 		{
 			onRequest: [app.authenticate],
 			schema: {
-				description: "Get all URLs (shortened and custom) of the current user",
+				description: "Get all generated URLs of the current user",
 				tags: [ApiTags.URL],
 				response: createResponseSchema(
 					z.object({
@@ -83,7 +83,32 @@ export const UrlController = (app: App) => {
 								shortCode: z.string(),
 								createdAt: z.date()
 							})
-						),
+						)
+					})
+				)
+			}
+		},
+		async (request, reply) => {
+			const urls = await app.services.url.getGeneratedUrlsOfUser(request.user.id);
+
+			return reply.code(200).send({
+				success: true,
+				data: {
+					urls
+				}
+			});
+		}
+	);
+
+	app.get(
+		"/url/custom",
+		{
+			onRequest: [app.authenticate],
+			schema: {
+				description: "Get all custom URLs of the current user",
+				tags: [ApiTags.URL],
+				response: createResponseSchema(
+					z.object({
 						customUrls: z.array(
 							z.object({
 								id: z.number(),
@@ -98,13 +123,12 @@ export const UrlController = (app: App) => {
 			}
 		},
 		async (request, reply) => {
-			const allUrls = await app.services.url.getUrlsOfUser(request.user.id);
+			const customUrls = await app.services.url.getCustomUrlsOfUser(request.user.id);
 
 			return reply.code(200).send({
 				success: true,
 				data: {
-					urls: allUrls.urls,
-					customUrls: allUrls.customUrls
+					customUrls
 				}
 			});
 		}

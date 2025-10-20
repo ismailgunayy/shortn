@@ -20,7 +20,7 @@ export const rateLimit = fastifyPlugin(async (app: App) => {
 					return 5000;
 
 				case "accessToken":
-					return 1000;
+					return 2500;
 
 				default:
 					return 1000;

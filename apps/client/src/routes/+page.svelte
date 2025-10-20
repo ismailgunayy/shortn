@@ -33,7 +33,7 @@
 		// Using the server-side /api/shorten endpoint to avoid exposing the API key to the client
 		// The endpoint will call the backend API from server side
 		if (isAuthenticated()) {
-			response = await clientApi.url.shorten({ url: url.trim(), customCode: customCode.trim() });
+			response = await clientApi.url.shortenUrl({ url: url.trim(), customCode: customCode.trim() });
 		} else {
 			response = await shortenUrl(url.trim());
 		}
@@ -47,7 +47,7 @@
 
 	async function copyToClipboard() {
 		try {
-			await navigator.clipboard.writeText(shortenedUrl.replace(/^(https?:\/\/)/, ""));
+			await navigator.clipboard.writeText(shortenedUrl);
 			copied = true;
 			setTimeout(() => (copied = false), 2300);
 		} catch {
@@ -65,7 +65,7 @@
 </script>
 
 <svelte:head>
-	<title>Shortn - URL Shortener</title>
+	<title>Shortn | URL Shortener</title>
 	<meta
 		name="description"
 		content="Shortn your URLs. Simple, fast."

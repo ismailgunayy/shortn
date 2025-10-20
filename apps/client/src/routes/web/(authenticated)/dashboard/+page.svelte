@@ -21,14 +21,18 @@
 	async function loadData() {
 		loading = true;
 
-		const [urlsResponse, apiKeysResponse] = await Promise.all([
-			clientApi.url.getUserUrls(),
+		const [generatedUrlsResponse, customUrlsResponse, apiKeysResponse] = await Promise.all([
+			clientApi.url.getGeneratedUrls(),
+			clientApi.url.getCustomUrls(),
 			clientApi.auth.getApiKeys()
 		]);
 
-		if (urlsResponse.data) {
-			urls = urlsResponse.data.urls;
-			customUrls = urlsResponse.data.customUrls;
+		if (generatedUrlsResponse.data) {
+			urls = generatedUrlsResponse.data.urls;
+		}
+
+		if (customUrlsResponse.data) {
+			customUrls = customUrlsResponse.data.customUrls;
 		}
 
 		if (apiKeysResponse.data) {
