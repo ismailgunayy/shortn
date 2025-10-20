@@ -1,7 +1,8 @@
 import { browser } from "$app/environment";
 
 export enum StorageType {
-	AUTH_USER = "shortn_session"
+	AUTH_USER = "shortn_session",
+	EASTER_EGG_COUNTER = "shortn_easter_egg_counter"
 }
 
 export class StorageService {

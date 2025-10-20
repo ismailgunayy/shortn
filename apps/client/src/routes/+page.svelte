@@ -8,6 +8,7 @@
 	import { authStore } from "$lib/stores/auth.store";
 	import { toastService } from "$lib/services/toast.service";
 	import { clientApi } from "$lib/services/api/api.client";
+	import { storageService, StorageType } from "$lib/services/storage.service";
 
 	let url = $state("");
 	let customCode = $state("");
@@ -19,13 +20,31 @@
 
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
+		url = url.trim();
+		customCode = customCode.trim();
 
-		if (customCode.trim() && !isAuthenticated()) {
+		if (customCode && !isAuthenticated()) {
 			showUpgradeModal = true;
 			return;
 		}
 
 		loading = true;
+
+		if (url.includes(config.HTTP.CLIENT_URL)) {
+			const easterEggCounter = storageService.get<number>(StorageType.EASTER_EGG_COUNTER) || 0;
+
+			const easterEggLevels = [
+				"Shortening Shortn with Shortn? That's meta!",
+				"Shortn-ception detected! Level 2!",
+				"You're really into this, huh? Level 3!",
+				"Level 4! Please stop!",
+				"Seriously, level 5?! That's enough Shortn-ception for today!"
+			];
+
+			const message = easterEggLevels[easterEggCounter] ?? "Wow, such a nerd! Please let me know you exist!";
+			toastService.info(message);
+			storageService.set(StorageType.EASTER_EGG_COUNTER, easterEggCounter + 1);
+		}
 
 		let response;
 
@@ -33,9 +52,9 @@
 		// Using the server-side /api/shorten endpoint to avoid exposing the API key to the client
 		// The endpoint will call the backend API from server side
 		if (isAuthenticated()) {
-			response = await clientApi.url.shortenUrl({ url: url.trim(), customCode: customCode.trim() });
+			response = await clientApi.url.shortenUrl({ url, customCode });
 		} else {
-			response = await shortenUrl(url.trim());
+			response = await shortenUrl(url);
 		}
 
 		if (response.data?.url) {
