@@ -2,7 +2,7 @@ import { error, redirect } from "@sveltejs/kit";
 
 import { serverApi } from "$lib/services/api/api.server";
 
-export async function resolveAndRedirect(shortenedUrl: string) {
+export async function redirectUrl(shortenedUrl: string) {
 	try {
 		const response = await serverApi.url.redirectUrl({ url: shortenedUrl });
 
