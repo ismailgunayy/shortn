@@ -23,7 +23,7 @@
 		"@repo/typescript-config": "0.0.1",
 		"@sveltejs/vite-plugin-svelte": "^6.2.1",
 		"@tailwindcss/vite": "^4.1.14",
-		"eslint": "^9.37.0",
+		"eslint": "^9.38.0",
 		"prettier-plugin-svelte": "^3.4.0",
 		"prettier-plugin-tailwindcss": "^0.7.1",
 		"svelte-check": "^4.3.3",
