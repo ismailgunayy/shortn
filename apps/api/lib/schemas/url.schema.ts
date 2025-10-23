@@ -7,6 +7,7 @@ import {
 	InvalidUrlProtocol,
 	UrlError
 } from "~/errors";
+import { ShortnCustomUrls, ShortnUrls } from "~/types/db";
 
 import { APP_CONFIG } from "~/common/config";
 import z from "zod";
@@ -54,3 +55,21 @@ export const CustomCodeSchema = z
 	.min(1, { error: new InvalidCustomCodeLength().message })
 	.max(50, { error: new InvalidCustomCodeLength().message })
 	.regex(/^[a-zA-Z0-9_-]+$/, { message: new InvalidCustomCodeFormat().message });
+
+export const urlSortFields: (keyof Pick<ShortnUrls, "url" | "createdAt">)[] = ["url", "createdAt"];
+export const UrlQuerySchema = z.object({
+	page: z.coerce.number().min(1).default(1),
+	limit: z.coerce.number().min(5).max(250).default(25),
+	sortBy: z.enum(urlSortFields).default("createdAt"),
+	sortOrder: z.enum(["asc", "desc"]).default("desc"),
+	search: z.string().min(3).optional()
+});
+
+const customUrlSortFields: (keyof Pick<ShortnCustomUrls, "url" | "createdAt" | "customCode">)[] = [
+	"url",
+	"customCode",
+	"createdAt"
+];
+export const CustomUrlQuerySchema = UrlQuerySchema.extend({
+	sortBy: z.enum(customUrlSortFields).default("createdAt")
+});

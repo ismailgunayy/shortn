@@ -1,24 +1,27 @@
+import { CustomUrlQuerySchema, UrlQuerySchema } from "~/schemas/url.schema";
 import { DB, ShortnCustomUrls, ShortnUrls } from "~/types/db";
 import { Insertable, Kysely, Updateable } from "kysely";
+
+import z from "zod";
 
 export class UrlRepository {
 	constructor(private db: Kysely<DB>) {}
 
 	// ------------------- URL ------------------- //
 
-	async insertUrl(values: Insertable<ShortnUrls>) {
+	async insertGeneratedUrl(values: Insertable<ShortnUrls>) {
 		return await this.db.insertInto("shortn.urls").values(values).returning(["id"]).executeTakeFirstOrThrow();
 	}
 
-	async deleteUrl(id: number, userId: number) {
+	async deleteGeneratedUrl(id: number, userId: number) {
 		return await this.db.deleteFrom("shortn.urls").where("id", "=", id).where("userId", "=", userId).execute();
 	}
 
-	async findUrlById(id: number) {
+	async findGeneratedUrlById(id: number) {
 		return await this.db.selectFrom("shortn.urls").selectAll().where("id", "=", id).executeTakeFirst();
 	}
 
-	async findUrlByUrl(url: ShortnUrls["url"], userId: number) {
+	async findGeneratedUrlByUrl(url: ShortnUrls["url"], userId: number) {
 		return await this.db
 			.selectFrom("shortn.urls")
 			.selectAll()
@@ -27,8 +30,37 @@ export class UrlRepository {
 			.executeTakeFirst();
 	}
 
-	async findAllUrlsByUserId(userId: number) {
-		return await this.db.selectFrom("shortn.urls").selectAll().where("userId", "=", userId).execute();
+	async findAllGeneratedUrlsByUserId(urlQuery: z.infer<typeof UrlQuerySchema>, userId: number) {
+		const { page, limit, sortBy, sortOrder, search } = urlQuery;
+
+		let query = this.db
+			.selectFrom("shortn.urls")
+			.selectAll()
+			.where("userId", "=", userId)
+			.limit(limit)
+			.offset((page - 1) * limit)
+			.orderBy(sortBy, sortOrder);
+
+		if (search) {
+			query = query.where("url", "ilike", `%${search}%`);
+		}
+
+		return await query.execute();
+	}
+
+	async countGeneratedUrlsByUserId(search: string | undefined, userId: number) {
+		let query = this.db
+			.selectFrom("shortn.urls")
+			.select(this.db.fn.count("id").as("count"))
+			.where("userId", "=", userId);
+
+		if (search) {
+			query = query.where("url", "ilike", `%${search}%`);
+		}
+
+		const result = await query.executeTakeFirst();
+
+		return result ? Number(result.count) : 0;
 	}
 
 	// ------------------- CUSTOM URL ------------------- //
@@ -68,7 +100,36 @@ export class UrlRepository {
 			.executeTakeFirst();
 	}
 
-	async findAllCustomUrlsByUserId(userId: number) {
-		return await this.db.selectFrom("shortn.customUrls").selectAll().where("userId", "=", userId).execute();
+	async findAllCustomUrlsByUserId(urlQuery: z.infer<typeof CustomUrlQuerySchema>, userId: number) {
+		const { page, limit, sortBy, sortOrder, search } = urlQuery;
+
+		let query = this.db
+			.selectFrom("shortn.customUrls")
+			.selectAll()
+			.where("userId", "=", userId)
+			.limit(limit)
+			.offset((page - 1) * limit)
+			.orderBy(sortBy, sortOrder);
+
+		if (search) {
+			query = query.where((eb) => eb.or([eb("url", "ilike", `%${search}%`), eb("customCode", "ilike", `%${search}%`)]));
+		}
+
+		return await query.execute();
+	}
+
+	async countCustomUrlsByUserId(search: string | undefined, userId: number) {
+		let query = this.db
+			.selectFrom("shortn.customUrls")
+			.select(this.db.fn.count("id").as("count"))
+			.where("userId", "=", userId);
+
+		if (search) {
+			query = query.where((eb) => eb.or([eb("url", "ilike", `%${search}%`), eb("customCode", "ilike", `%${search}%`)]));
+		}
+
+		const result = await query.executeTakeFirst();
+
+		return result ? Number(result.count) : 0;
 	}
 }

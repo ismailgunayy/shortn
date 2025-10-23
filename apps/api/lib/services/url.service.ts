@@ -5,11 +5,13 @@ import {
 	InvalidShortenedUrl,
 	UrlNotFound
 } from "~/errors";
+import { CustomUrlQuerySchema, UrlQuerySchema } from "~/schemas/url.schema";
 
 import { App } from "~/types/fastify";
 import { CacheType } from "./cache.service";
 import { URLSegment } from "~/helpers";
 import { UrlRepository } from "~/repositories/url.repository";
+import z from "zod";
 
 const GENERATED_URL_EXPIRY = 60 * 60 * 24; // 1 day
 const CUSTOM_URL_EXPIRY = 60 * 60 * 24 * 7; // 7 days
@@ -48,13 +50,13 @@ export class UrlService {
 	}
 
 	private async createGeneratedUrl(originalUrl: string, userId: number) {
-		const existingUrl = await this.urlRepository.findUrlByUrl(originalUrl, userId);
+		const existingUrl = await this.urlRepository.findGeneratedUrlByUrl(originalUrl, userId);
 
 		if (existingUrl) {
 			return this.app.helpers.url.buildUrl(this.app.helpers.url.encodeId(existingUrl.id));
 		}
 
-		const { id } = await this.urlRepository.insertUrl({ url: originalUrl, userId });
+		const { id } = await this.urlRepository.insertGeneratedUrl({ url: originalUrl, userId });
 
 		const shortCode = this.app.helpers.url.encodeId(id);
 
@@ -101,7 +103,7 @@ export class UrlService {
 			}
 
 			const id = this.app.helpers.url.decodeId(shortCode);
-			const existingUrl = await this.urlRepository.findUrlById(id);
+			const existingUrl = await this.urlRepository.findGeneratedUrlById(id);
 
 			if (!existingUrl) {
 				throw new InvalidShortenedUrl();
@@ -111,8 +113,8 @@ export class UrlService {
 		}
 	}
 
-	public async getGeneratedUrlsOfUser(userId: number) {
-		const urls = await this.urlRepository.findAllUrlsByUserId(userId);
+	public async getGeneratedUrlsOfUser(urlQuery: z.infer<typeof UrlQuerySchema>, userId: number) {
+		const urls = await this.urlRepository.findAllGeneratedUrlsByUserId(urlQuery, userId);
 
 		return urls.map((url) => ({
 			id: url.id,
@@ -123,8 +125,12 @@ export class UrlService {
 		}));
 	}
 
-	public async getCustomUrlsOfUser(userId: number) {
-		const customUrls = await this.urlRepository.findAllCustomUrlsByUserId(userId);
+	public async countGeneratedUrlsOfUser(search: string | undefined, userId: number) {
+		return await this.urlRepository.countGeneratedUrlsByUserId(search, userId);
+	}
+
+	public async getCustomUrlsOfUser(urlQuery: z.infer<typeof CustomUrlQuerySchema>, userId: number) {
+		const customUrls = await this.urlRepository.findAllCustomUrlsByUserId(urlQuery, userId);
 
 		return customUrls.map((url) => ({
 			id: url.id,
@@ -133,6 +139,10 @@ export class UrlService {
 			customCode: url.customCode,
 			createdAt: url.createdAt
 		}));
+	}
+
+	public async countCustomUrlsOfUser(search: string | undefined, userId: number) {
+		return await this.urlRepository.countCustomUrlsByUserId(search, userId);
 	}
 
 	public async updateCustomUrl(id: number, userId: number, originalUrl: string) {
@@ -169,13 +179,13 @@ export class UrlService {
 	}
 
 	private async deleteGeneratedUrl(id: number, userId: number) {
-		const url = await this.urlRepository.findUrlById(id);
+		const url = await this.urlRepository.findGeneratedUrlById(id);
 
 		if (!url || url.userId !== userId) {
 			throw new UrlNotFound();
 		}
 
-		await this.urlRepository.deleteUrl(id, userId);
+		await this.urlRepository.deleteGeneratedUrl(id, userId);
 	}
 
 	private async deleteCustomUrl(id: number, userId: number) {

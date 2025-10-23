@@ -1,8 +1,14 @@
-import { CustomCodeSchema, ShortenedUrlSchema, UrlSchema } from "~/schemas/url.schema";
+import {
+	CustomCodeSchema,
+	CustomUrlQuerySchema,
+	ShortenedUrlSchema,
+	UrlQuerySchema,
+	UrlSchema
+} from "~/schemas/url.schema";
+import { IdSchema, PaginationSchema } from "~/schemas/common.schema";
 
 import { ApiTags } from "~/plugins";
 import { App } from "~/types/fastify";
-import { IdSchema } from "~/schemas/base.schema";
 import { createResponseSchema } from "~/schemas/api-response.schema";
 import z from "zod";
 
@@ -73,6 +79,7 @@ export const UrlController = (app: App) => {
 			schema: {
 				description: "Get all generated URLs of the current user",
 				tags: [ApiTags.URL],
+				querystring: UrlQuerySchema,
 				response: createResponseSchema(
 					z.object({
 						urls: z.array(
@@ -83,18 +90,32 @@ export const UrlController = (app: App) => {
 								shortCode: z.string(),
 								createdAt: z.date()
 							})
-						)
+						),
+						pagination: PaginationSchema
 					})
 				)
 			}
 		},
 		async (request, reply) => {
-			const urls = await app.services.url.getGeneratedUrlsOfUser(request.user.id);
+			const urls = await app.services.url.getGeneratedUrlsOfUser(request.query, request.user.id);
+			const totalUrls = await app.services.url.countGeneratedUrlsOfUser(request.query.search, request.user.id);
+
+			const totalPages = Math.ceil(totalUrls / request.query.limit);
 
 			return reply.code(200).send({
 				success: true,
 				data: {
-					urls
+					urls,
+					pagination: {
+						page: request.query.page,
+						limit: request.query.limit,
+						total: totalUrls,
+						totalPages,
+						hasNext: request.query.page < totalPages,
+						hasPrev: request.query.page > 1,
+						sortBy: request.query.sortBy,
+						sortOrder: request.query.sortOrder
+					}
 				}
 			});
 		}
@@ -107,6 +128,7 @@ export const UrlController = (app: App) => {
 			schema: {
 				description: "Get all custom URLs of the current user",
 				tags: [ApiTags.URL],
+				querystring: CustomUrlQuerySchema,
 				response: createResponseSchema(
 					z.object({
 						customUrls: z.array(
@@ -117,18 +139,32 @@ export const UrlController = (app: App) => {
 								customCode: z.string(),
 								createdAt: z.date()
 							})
-						)
+						),
+						pagination: PaginationSchema
 					})
 				)
 			}
 		},
 		async (request, reply) => {
-			const customUrls = await app.services.url.getCustomUrlsOfUser(request.user.id);
+			const customUrls = await app.services.url.getCustomUrlsOfUser(request.query, request.user.id);
+			const totalUrls = await app.services.url.countCustomUrlsOfUser(request.query.search, request.user.id);
+
+			const totalPages = Math.ceil(totalUrls / request.query.limit);
 
 			return reply.code(200).send({
 				success: true,
 				data: {
-					customUrls
+					customUrls,
+					pagination: {
+						page: request.query.page,
+						limit: request.query.limit,
+						total: totalUrls,
+						totalPages,
+						hasNext: request.query.page < totalPages,
+						hasPrev: request.query.page > 1,
+						sortBy: request.query.sortBy,
+						sortOrder: request.query.sortOrder
+					}
 				}
 			});
 		}

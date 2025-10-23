@@ -2,7 +2,7 @@ import { ApiKeyNameSchema, EmailSchema, FullNameSchema, PasswordSchema } from "~
 
 import { App } from "~/types/fastify";
 import { CacheType } from "~/services/cache.service";
-import { IdSchema } from "~/schemas/base.schema";
+import { IdSchema } from "~/schemas/common.schema";
 import { TokenType } from "~/helpers";
 import { createResponseSchema } from "~/schemas/api-response.schema";
 import z from "zod";
