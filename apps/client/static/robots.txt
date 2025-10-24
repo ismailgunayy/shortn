@@ -1,3 +1,18 @@
-# allow crawling everything by default
+# Robots.txt for Shortn URL Shortener
+# Allow crawling for all search engines
+
 User-agent: *
-Disallow:
+Allow: /
+Allow: /web/login
+Allow: /web/register
+
+# Disallow sensitive areas
+Disallow: /web/dashboard
+Disallow: /web/account
+Disallow: /api/
+
+# Rate limiting for crawlers
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://shortn.top/sitemap.xml

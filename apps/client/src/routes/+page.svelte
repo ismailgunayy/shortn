@@ -9,7 +9,6 @@
 	import { toastService } from "$lib/services/toast.service";
 	import { clientApi } from "$lib/services/api/api.client";
 	import { storageService, StorageKind } from "$lib/services/storage.service";
-	import { onMount } from "svelte";
 
 	let url = $state("");
 	let customCode = $state("");
@@ -85,11 +84,63 @@
 </script>
 
 <svelte:head>
-	<title>Shortn | URL Shortener</title>
+	<title>Shortn - Free URL Shortener</title>
 	<meta
 		name="description"
-		content="Shortn your URLs. Simple, fast."
+		content="Free URL shortener service. Create short, shareable links instantly. Fast redirects, custom URLs, API access, and user accounts. Start shortening URLs for free!"
 	/>
+	<meta
+		name="keywords"
+		content="URL shortener, short links, link shortener, shorten URL, custom short URLs, free URL shortener, link management, API, fast redirects"
+	/>
+	<meta
+		name="author"
+		content="Shortn"
+	/>
+	<meta
+		name="robots"
+		content="index, follow"
+	/>
+	<link
+		rel="canonical"
+		href={config.HTTP.CLIENT_URL}
+	/>
+
+	<!-- JSON-LD Structured Data -->
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "WebApplication",
+			"name": "Shortn",
+			"url": "https://shortn.top",
+			"description": "Free URL shortener service. Create short, shareable links instantly. Fast redirects, custom URLs, API access, and user accounts.",
+			"applicationCategory": "UtilityApplication",
+			"operatingSystem": "Web",
+			"offers": {
+				"@type": "Offer",
+				"price": "0",
+				"priceCurrency": "USD"
+			},
+			"featureList": [
+				"Instant URL Shortening",
+				"Custom Short URLs",
+				"Fast Redirects",
+				"User Accounts",
+				"API Access",
+				"Link Management"
+			],
+			"screenshot": "https://shortn.top/og-image.png",
+			"author": {
+				"@type": "Organization",
+				"name": "Shortn"
+			},
+			"provider": {
+				"@type": "Organization",
+				"name": "Shortn",
+				"url": "https://shortn.top"
+			}
+		}
+	</script>
 </svelte:head>
 
 <div class="flex flex-col items-center justify-center px-4">

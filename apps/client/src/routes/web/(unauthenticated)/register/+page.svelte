@@ -6,6 +6,7 @@
 	import EyeOff from "$lib/icons/eye-off.icon.svelte";
 	import { clientApi } from "$lib/services/api/api.client";
 	import { resolve } from "$app/paths";
+	import { config } from "$lib/common/config";
 
 	let loading = $state(false);
 	let formData = $state<RegisterForm>({
@@ -46,10 +47,22 @@
 </script>
 
 <svelte:head>
-	<title>Shortn | Register</title>
+	<title>Register - Create Free Shortn Account | URL Shortener Signup</title>
 	<meta
 		name="description"
-		content="Create your Shortn account"
+		content="Create your free Shortn account to unlock custom URLs, analytics, API access, and advanced link management features. Sign up for free URL shortener service."
+	/>
+	<meta
+		name="keywords"
+		content="register, signup, create account, free URL shortener, custom URLs, API access, link analytics"
+	/>
+	<meta
+		name="robots"
+		content="index, follow"
+	/>
+	<link
+		rel="canonical"
+		href={`${config.HTTP.CLIENT_URL}/web/register`}
 	/>
 </svelte:head>
 

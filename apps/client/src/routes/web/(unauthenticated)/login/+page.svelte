@@ -6,6 +6,7 @@
 	import { authStore } from "$lib/stores/auth.store";
 	import { resolve } from "$app/paths";
 	import { clientApi } from "$lib/services/api/api.client";
+	import { config } from "$lib/common/config";
 
 	let loading = $state(false);
 	let formData = $state<LoginForm>({
@@ -45,10 +46,22 @@
 </script>
 
 <svelte:head>
-	<title>Shortn | Log In</title>
+	<title>Login - Shortn URL Shortener | Access Your Account</title>
 	<meta
 		name="description"
-		content="Log in to your Shortn account"
+		content="Log in to your Shortn account to access your dashboard, manage your shortened URLs, and view analytics. Secure login to your URL shortener account."
+	/>
+	<meta
+		name="keywords"
+		content="login, sign in, URL shortener account, dashboard access, link management"
+	/>
+	<meta
+		name="robots"
+		content="index, follow"
+	/>
+	<link
+		rel="canonical"
+		href={`${config.HTTP.CLIENT_URL}/web/login`}
 	/>
 </svelte:head>
 
