@@ -3,7 +3,7 @@ import { SetOptions, createClient } from "redis";
 
 import { App } from "~/types/fastify";
 
-export enum CacheType {
+export enum CacheKind {
 	REFRESH = "refresh",
 	GENERATED_URL = "generated_url",
 	CUSTOM_URL = "custom_url"
@@ -49,24 +49,24 @@ export class CacheService {
 		}
 	}
 
-	public async get(type: CacheType, key: string) {
-		return await this.executeOperation(async () => await this.client.get(this.generateKey(type, key)));
+	public async get(kind: CacheKind, key: string) {
+		return await this.executeOperation(async () => await this.client.get(this.generateKey(kind, key)));
 	}
 
-	public async set(type: CacheType, key: string, value: unknown, options?: SetOptions) {
+	public async set(kind: CacheKind, key: string, value: unknown, options?: SetOptions) {
 		return await this.executeOperation(async () => {
 			const strValue = typeof value === "object" ? JSON.stringify(value) : String(value);
 
-			return await this.client.set(this.generateKey(type, key), strValue, options);
+			return await this.client.set(this.generateKey(kind, key), strValue, options);
 		});
 	}
 
-	public async del(type: CacheType, key: string) {
-		return await this.executeOperation(async () => await this.client.del(this.generateKey(type, key)));
+	public async del(kind: CacheKind, key: string) {
+		return await this.executeOperation(async () => await this.client.del(this.generateKey(kind, key)));
 	}
 
-	private generateKey(type: CacheType, key: string) {
-		return `${type}:${key}`;
+	private generateKey(kind: CacheKind, key: string) {
+		return `${kind}:${key}`;
 	}
 
 	private async executeOperation<T>(operation: () => Promise<T>): Promise<T> {

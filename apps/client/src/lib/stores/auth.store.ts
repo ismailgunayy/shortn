@@ -1,6 +1,7 @@
-import { StorageType, storageService } from "$lib/services/storage.service";
+import { StorageKind, storageService } from "$lib/services/storage.service";
 
 import type { User } from "$lib/services/api/auth.api";
+import { cacheService } from "$lib/services/cache.service";
 import { writable } from "svelte/store";
 
 interface AuthState {
@@ -33,12 +34,12 @@ function createAuthStore() {
 		},
 
 		updateUser(user: User) {
-			storageService.set(StorageType.AUTH_USER, user);
+			storageService.set(StorageKind.AUTH_USER, user);
 			update((state) => ({ ...state, user, loading: false }));
 		},
 
 		setAuthenticatedFromTokens() {
-			const storedUser = storageService.get<User>(StorageType.AUTH_USER);
+			const storedUser = storageService.get<User>(StorageKind.AUTH_USER);
 			if (storedUser) {
 				this.updateUser(storedUser);
 			} else {
@@ -48,6 +49,7 @@ function createAuthStore() {
 
 		clear() {
 			storageService.clear();
+			cacheService.clear();
 			set(unauthenticatedState);
 		}
 	};

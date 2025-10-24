@@ -7,12 +7,12 @@
 	import { clientApi } from "$lib/services/api/api.client";
 	import { resolve } from "$app/paths";
 
+	let loading = $state(false);
 	let formData = $state<RegisterForm>({
 		fullName: "",
 		email: "",
 		password: ""
 	});
-
 	let showPassword = $state(false);
 	let errors = $state<Partial<Record<keyof RegisterForm, string>>>({});
 	let authState = $derived($authStore);
@@ -37,11 +37,11 @@
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
 
-		if (!validateForm()) {
-			return;
+		if (validateForm()) {
+			loading = true;
+			await clientApi.auth.register(formData);
+			loading = false;
 		}
-
-		await clientApi.auth.register(formData);
 	}
 </script>
 
@@ -158,7 +158,7 @@
 				disabled={authState.loading || !formData.fullName.trim() || !formData.email.trim() || !formData.password.trim()}
 				class="text-button text-button-color w-full transform rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-6 py-2.5 font-semibold shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:ring-2 focus:ring-slate-400/20 focus:outline-none active:scale-[0.98] disabled:opacity-50"
 			>
-				{#if authState.loading}
+				{#if loading}
 					<span class="flex items-center justify-center">
 						<Loading />
 						Creating Account...

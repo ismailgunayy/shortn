@@ -8,7 +8,7 @@
 	import { authStore } from "$lib/stores/auth.store";
 	import { toastService } from "$lib/services/toast.service";
 	import { clientApi } from "$lib/services/api/api.client";
-	import { storageService, StorageType } from "$lib/services/storage.service";
+	import { storageService, StorageKind } from "$lib/services/storage.service";
 
 	let url = $state("");
 	let customCode = $state("");
@@ -31,7 +31,7 @@
 		loading = true;
 
 		if (url.includes(config.HTTP.CLIENT_URL)) {
-			const easterEggCounter = storageService.get<number>(StorageType.EASTER_EGG_COUNTER) || 0;
+			const easterEggCounter = storageService.get<number>(StorageKind.EASTER_EGG_COUNTER) || 0;
 
 			const easterEggLevels = [
 				"Shortening Shortn with Shortn? That's meta!",
@@ -43,7 +43,7 @@
 
 			const message = easterEggLevels[easterEggCounter] ?? "Wow, such a nerd! Please let me know you exist!";
 			toastService.info(message);
-			storageService.set(StorageType.EASTER_EGG_COUNTER, easterEggCounter + 1);
+			storageService.set(StorageKind.EASTER_EGG_COUNTER, easterEggCounter + 1);
 		}
 
 		let response;

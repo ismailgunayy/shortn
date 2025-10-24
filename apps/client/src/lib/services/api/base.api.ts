@@ -1,3 +1,4 @@
+import { cacheService, type CacheKind } from "../cache.service";
 import { authStore } from "$lib/stores/auth.store";
 import { browser } from "$app/environment";
 import { config } from "$lib/common/config";
@@ -15,7 +16,10 @@ class TokenRefreshManager {
 	private refreshPromise: Promise<boolean> | null = null;
 
 	async refresh(
-		makeRequest: (endpoint: string, options: RequestInit) => Promise<{ api: ApiResponse<unknown>; fetched: Response }>
+		makeRequest: (
+			endpoint: string,
+			options: ApiRequestOptions
+		) => Promise<{ api: ApiResponse<unknown>; fetched: Response }>
 	): Promise<boolean> {
 		if (this.refreshPromise) {
 			return this.refreshPromise;
@@ -38,9 +42,7 @@ class TokenRefreshManager {
 
 			if (!success) {
 				authStore.clear();
-
 				toastService.error("Session expired. Please log in again.");
-
 				goto(resolve("/web/login"));
 			}
 
@@ -56,8 +58,17 @@ const tokenRefreshManager = new TokenRefreshManager();
 export abstract class Service {
 	constructor(protected serviceConfig?: ServiceConfig) {}
 
-	public async request<T>(endpoint: string, options: RequestInit): Promise<ApiResponse<T>> {
-		authStore.loading();
+	public async request<T>(endpoint: string, options: ApiRequestOptions = {}): Promise<ApiResponse<T>> {
+		if (options.caching) {
+			const cachedResponse = cacheService.get<T>(options.caching.kind);
+
+			if (cachedResponse) {
+				return {
+					success: true,
+					data: cachedResponse
+				};
+			}
+		}
 
 		const abortController = new AbortController();
 		const timeoutId = setTimeout(() => abortController.abort(), TIMEOUT_DURATION);
@@ -79,6 +90,10 @@ export abstract class Service {
 				};
 			}
 
+			if (response.api.success && options.caching) {
+				cacheService.set(options.caching.kind, response.api.data, options.caching.ttl);
+			}
+
 			return response.api;
 		} catch {
 			toastService.error("Network error occurred.", { id: "network-error" });
@@ -89,17 +104,21 @@ export abstract class Service {
 			};
 		} finally {
 			clearTimeout(timeoutId);
-			authStore.loaded();
 		}
 	}
 
-	private async makeRequest<T>(endpoint: string, options: RequestInit) {
-		const url = `${config.HTTP.API_BASE_URL}/${endpoint}`;
+	private async makeRequest<T>(endpoint: string, options: ApiRequestOptions) {
+		let url = `${config.HTTP.API_BASE_URL}/${endpoint}`;
+
+		if (options.query) {
+			url = this.buildQuery(url, options.query);
+		}
 
 		const headers: HeadersInit = {
-			...(options?.body && { "Content-Type": "application/json" }),
+			...(options.body && { "Content-Type": "application/json" }),
 			...(!browser && this.serviceConfig?.apiKey && { Authorization: `Token ${this.serviceConfig.apiKey}` }),
-			...options?.headers
+			...options.headers,
+			"Cache-Control": "max-age=3600" // 1 hour
 		};
 
 		const fetched = await fetch(url, {
@@ -115,14 +134,44 @@ export abstract class Service {
 			fetched
 		};
 	}
+
+	private buildQuery(endpoint: string, query: Record<string, unknown>): string {
+		const params = new URLSearchParams();
+
+		Object.entries(query).forEach(([key, value]) => {
+			if (value !== undefined && value !== null && value !== "") {
+				params.append(key, value.toString());
+			}
+		});
+
+		const queryString = params.toString();
+		if (queryString) {
+			endpoint += `?${queryString}`;
+		}
+
+		return endpoint;
+	}
+}
+
+export interface ApiRequestOptions {
+	body?: RequestInit["body"];
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	query?: Record<string, any>;
+	signal?: RequestInit["signal"];
+	headers?: RequestInit["headers"];
+	method?: RequestInit["method"];
+	caching?: {
+		kind: CacheKind;
+		ttl?: number; // milliseconds
+	};
 }
 
 // Good practice, but I don't have time to implement this now :/
-export interface ApiRequest<P = Record<string, unknown>, Q = Record<string, unknown>, B = Record<string, unknown>> {
-	params?: P;
-	query?: Q;
-	body?: B;
-}
+// export interface ApiRequest<P = Record<string, unknown>, Q = Record<string, unknown>, B = Record<string, unknown>> {
+// 	params?: P;
+// 	query?: Q;
+// 	body?: B;
+// }
 
 export interface ApiError {
 	message: string;

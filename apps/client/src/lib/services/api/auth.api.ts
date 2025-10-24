@@ -3,47 +3,44 @@ import { resolve } from "$app/paths";
 import { authStore } from "$lib/stores/auth.store";
 import { toastService } from "$lib/services/toast.service";
 import { Service, type ApiResponse, type ServiceConfig } from "./base.api";
+import { CacheKind, cacheService } from "../cache.service";
 
 export class AuthService extends Service {
 	constructor(config?: ServiceConfig) {
 		super(config);
 	}
 
-	public async register(values: RegisterRequest, options?: RequestInit): Promise<ApiResponse<RegisterResponse>> {
+	public async register(payload: RegisterPayload): Promise<ApiResponse<RegisterResponse>> {
 		const response = await this.request<RegisterResponse>("auth/register", {
 			method: "POST",
-			body: JSON.stringify(values),
-			...options
+			body: JSON.stringify(payload)
 		});
 
-		if (response.error) {
-			toastService.error(`Failed to register.`);
+		if (!response.success && response.error?.message) {
+			toastService.error(response.error?.message);
 		}
 
 		return response;
 	}
 
-	public async login(values: LoginRequest, options?: RequestInit): Promise<ApiResponse<LoginResponse>> {
+	public async login(payload: LoginPayload): Promise<ApiResponse<LoginResponse>> {
 		const response = await this.request<LoginResponse>("auth/login", {
 			method: "POST",
-			body: JSON.stringify(values),
-			...options
+			body: JSON.stringify(payload)
 		});
 
 		if (response.success && response.data) {
 			authStore.updateUser(response.data.user);
 			goto(resolve("/web/dashboard"));
-		} else {
-			toastService.error("Failed to login.");
+		} else if (response.error?.message) {
+			toastService.error(response.error?.message);
 		}
 
 		return response;
 	}
 
-	public async status(options?: RequestInit): Promise<ApiResponse<AuthStatusResponse>> {
-		const response = await this.request<AuthStatusResponse>("auth/status", {
-			...options
-		});
+	public async status(): Promise<ApiResponse<AuthStatusResponse>> {
+		const response = await this.request<AuthStatusResponse>("auth/status");
 
 		if (response.success && response.data?.user) {
 			authStore.updateUser(response.data.user);
@@ -54,10 +51,8 @@ export class AuthService extends Service {
 		return response;
 	}
 
-	public async logout(options?: RequestInit): Promise<ApiResponse> {
-		const response = await this.request("auth/logout", {
-			...options
-		});
+	public async logout(): Promise<ApiResponse> {
+		const response = await this.request("auth/logout");
 
 		authStore.clear();
 		goto(resolve("/"));
@@ -65,113 +60,102 @@ export class AuthService extends Service {
 		return response;
 	}
 
-	public async updateUser(
-		values: Pick<Partial<RegisterRequest>, "fullName">,
-		options?: RequestInit
-	): Promise<ApiResponse<RegisterResponse>> {
+	public async updateUser(payload: Pick<Partial<RegisterPayload>, "fullName">): Promise<ApiResponse<RegisterResponse>> {
 		const response = await this.request<RegisterResponse>("auth/user", {
 			method: "PATCH",
-			body: JSON.stringify(values),
-			...options
+			body: JSON.stringify(payload)
 		});
 
 		if (response.success && response.data) {
 			authStore.updateUser(response.data);
 			toastService.success("Profile updated successfully.");
-		} else {
-			toastService.error("Failed to update profile.");
+		} else if (response.error?.message) {
+			toastService.error(response.error?.message);
 		}
 
 		return response;
 	}
 
-	public async changePassword(values: ChangePasswordRequest, options?: RequestInit): Promise<ApiResponse> {
+	public async changePassword(payload: ChangePasswordPayload): Promise<ApiResponse> {
 		const response = await this.request("auth/password", {
 			method: "PATCH",
-			body: JSON.stringify(values),
-			...options
+			body: JSON.stringify(payload)
 		});
 
 		if (response.success) {
 			toastService.success("Password changed successfully.");
-		} else {
-			toastService.error("Failed to change password.");
+		} else if (response.error?.message) {
+			toastService.error(response.error?.message);
 		}
 
 		return response;
 	}
 
-	public async deleteAccount(options?: RequestInit): Promise<ApiResponse> {
+	public async deleteAccount(): Promise<ApiResponse> {
 		const response = await this.request("auth", {
-			method: "DELETE",
-			...options
+			method: "DELETE"
 		});
 
 		if (response.success) {
 			authStore.clear();
 			goto(resolve("/"));
-		} else {
-			toastService.error("Failed to delete account.");
+		} else if (response.error?.message) {
+			toastService.error(response.error?.message);
 		}
 
 		return response;
 	}
 
-	public async getApiKeys(options?: RequestInit): Promise<ApiResponse<GetApiKeysResponse>> {
+	public async getApiKeys(): Promise<ApiResponse<GetApiKeysResponse>> {
 		const response = await this.request<GetApiKeysResponse>("auth/api-keys", {
-			...options
+			caching: {
+				kind: CacheKind.API_KEYS
+			}
 		});
 
 		return response;
 	}
 
-	public async createApiKey(
-		values: CreateApiKeyRequest,
-		options?: RequestInit
-	): Promise<ApiResponse<CreateApiKeyResponse>> {
+	public async createApiKey(payload: CreateApiKeyPayload): Promise<ApiResponse<CreateApiKeyResponse>> {
 		const response = await this.request<CreateApiKeyResponse>("auth/api-keys", {
 			method: "POST",
-			body: JSON.stringify(values),
-			...options
+			body: JSON.stringify(payload)
 		});
 
-		if (response.error) {
-			toastService.error("Failed to create API key.");
+		if (!response.success && response.error?.message) {
+			cacheService.remove(CacheKind.API_KEYS);
+			toastService.error(response.error?.message);
 		}
 
 		return response;
 	}
 
-	public async updateApiKey(
-		id: number,
-		values: UpdateApiKeyRequest,
-		options?: RequestInit
-	): Promise<ApiResponse<UpdateApiKeyResponse>> {
+	public async updateApiKey(id: number, payload: UpdateApiKeyPayload): Promise<ApiResponse<UpdateApiKeyResponse>> {
 		const response = await this.request<UpdateApiKeyResponse>(`auth/api-keys/${id}`, {
 			method: "PATCH",
-			body: JSON.stringify(values),
-			...options
+			body: JSON.stringify(payload)
 		});
 
 		if (response.success) {
+			cacheService.remove(CacheKind.API_KEYS);
 			toastService.success("API key updated successfully.");
-		} else {
-			toastService.error("Failed to update API key.");
+		} else if (response.error?.message) {
+			toastService.error(response.error?.message);
 		}
 
 		return response;
 	}
 
-	public async deleteApiKey(id: number, options?: RequestInit): Promise<ApiResponse> {
+	public async deleteApiKey(id: number): Promise<ApiResponse> {
 		const response = await this.request(`auth/api-keys/${id}`, {
-			method: "DELETE",
-			...options
+			method: "DELETE"
 		});
 
 		if (response.success) {
+			cacheService.remove(CacheKind.API_KEYS);
 			toastService.success("API key deleted successfully.");
-		} else {
-			toastService.error("Failed to delete API key.");
+		} else if (response.error?.message) {
+			toastService.error(response.error?.message);
 		}
 
 		return response;
@@ -184,7 +168,7 @@ export interface User {
 	email: string;
 }
 
-export interface RegisterRequest {
+export interface RegisterPayload {
 	fullName: string;
 	email: string;
 	password: string;
@@ -196,7 +180,7 @@ export interface RegisterResponse {
 	email: string;
 }
 
-export interface LoginRequest {
+export interface LoginPayload {
 	email?: string;
 	password?: string;
 }
@@ -212,12 +196,12 @@ export interface AuthStatusResponse {
 	user: { id: number; fullName: string; email: string };
 }
 
-export interface ChangePasswordRequest {
+export interface ChangePasswordPayload {
 	currentPassword: string;
 	newPassword: string;
 }
 
-export interface CreateApiKeyRequest {
+export interface CreateApiKeyPayload {
 	name: string;
 }
 
@@ -240,7 +224,7 @@ export interface GetApiKeysResponse {
 	apiKeys: ApiKey[];
 }
 
-export interface UpdateApiKeyRequest {
+export interface UpdateApiKeyPayload {
 	name: string;
 }
 

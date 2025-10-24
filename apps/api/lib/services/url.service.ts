@@ -8,7 +8,7 @@ import {
 import { CustomUrlQuerySchema, UrlQuerySchema } from "~/schemas/url.schema";
 
 import { App } from "~/types/fastify";
-import { CacheType } from "./cache.service";
+import { CacheKind } from "./cache.service";
 import { URLSegment } from "~/helpers";
 import { UrlRepository } from "~/repositories/url.repository";
 import z from "zod";
@@ -39,7 +39,7 @@ export class UrlService {
 			userId
 		});
 
-		this.app.services.cache.set(CacheType.CUSTOM_URL, customCode, originalUrl, {
+		this.app.services.cache.set(CacheKind.CUSTOM_URL, customCode, originalUrl, {
 			expiration: {
 				type: "EX",
 				value: CUSTOM_URL_EXPIRY
@@ -60,7 +60,7 @@ export class UrlService {
 
 		const shortCode = this.app.helpers.url.encodeId(id);
 
-		this.app.services.cache.set(CacheType.GENERATED_URL, shortCode, originalUrl, {
+		this.app.services.cache.set(CacheKind.GENERATED_URL, shortCode, originalUrl, {
 			expiration: {
 				type: "EX",
 				value: GENERATED_URL_EXPIRY
@@ -84,7 +84,7 @@ export class UrlService {
 		if (isCustom) {
 			const customCode = shortCode;
 
-			const cachedUrl = await this.app.services.cache.get(CacheType.CUSTOM_URL, customCode);
+			const cachedUrl = await this.app.services.cache.get(CacheKind.CUSTOM_URL, customCode);
 			if (cachedUrl) {
 				return cachedUrl;
 			}
@@ -97,7 +97,7 @@ export class UrlService {
 
 			return existingCustom.url;
 		} else {
-			const cachedUrl = await this.app.services.cache.get(CacheType.GENERATED_URL, shortCode);
+			const cachedUrl = await this.app.services.cache.get(CacheKind.GENERATED_URL, shortCode);
 			if (cachedUrl) {
 				return cachedUrl;
 			}
@@ -153,7 +153,7 @@ export class UrlService {
 		}
 
 		const updatedUrl = await this.urlRepository.updateCustomUrl(id, userId, { url: originalUrl });
-		await this.app.services.cache.set(CacheType.CUSTOM_URL, updatedUrl.customCode, originalUrl);
+		await this.app.services.cache.set(CacheKind.CUSTOM_URL, updatedUrl.customCode, originalUrl);
 
 		return {
 			id: updatedUrl.id,
@@ -171,10 +171,10 @@ export class UrlService {
 			const customCode = shortCode;
 
 			await this.deleteCustomUrl(id, userId);
-			await this.app.services.cache.del(CacheType.CUSTOM_URL, customCode);
+			await this.app.services.cache.del(CacheKind.CUSTOM_URL, customCode);
 		} else {
 			await this.deleteGeneratedUrl(id, userId);
-			await this.app.services.cache.del(CacheType.GENERATED_URL, shortCode);
+			await this.app.services.cache.del(CacheKind.GENERATED_URL, shortCode);
 		}
 	}
 

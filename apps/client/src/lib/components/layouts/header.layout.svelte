@@ -39,20 +39,20 @@
 			<a
 				href={resolve("/")}
 				data-sveltekit-reload={isHome}
-				class="text-heading-2 text-bright font-bold hover:text-white"
+				class="text-heading-2 text-bright leading-9 font-bold hover:text-white"
 			>
 				Shortn
 			</a>
 			<a
 				href={config.HTTP.DOCS_URL}
-				class="text-button-small text-secondary hover:text-bright leading-6"
+				class="text-button-small text-secondary hover:text-bright leading-7"
 				target="_blank"
 				>Developers
 			</a>
 		</div>
 
 		<!-- Auth Navigation -->
-		<div class="flex items-center gap-3 sm:gap-4">
+		<div class="flex items-center gap-3">
 			{#if authState.loading}
 				<Loading class="h-8 w-8" />
 			{:else if authState.user && !authState.loading}

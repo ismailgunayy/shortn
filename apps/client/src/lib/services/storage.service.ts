@@ -1,9 +1,12 @@
 import { browser } from "$app/environment";
 
-export enum StorageType {
+export enum StorageKind {
 	AUTH_USER = "shortn_session",
-	EASTER_EGG_COUNTER = "shortn_easter_egg_counter"
+	EASTER_EGG_COUNTER = "shortn_easter_egg_counter",
+	API_CACHE_PREFIX = "api_cache"
 }
+
+export type StorageType = StorageKind | `${StorageKind}:${string}`;
 
 export class StorageService {
 	public get<T = string>(type: StorageType): T | null {
@@ -59,12 +62,14 @@ export class StorageService {
 		}
 
 		try {
-			Object.values(StorageType).forEach((key) => {
-				localStorage.removeItem(key);
-			});
+			localStorage.clear();
 		} catch (err) {
 			console.error("Failed to clear storage:", err);
 		}
+	}
+
+	public keys(): string[] {
+		return Object.keys(localStorage);
 	}
 }
 

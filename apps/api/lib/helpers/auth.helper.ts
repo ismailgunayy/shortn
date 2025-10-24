@@ -10,7 +10,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { compare, hash } from "bcrypt";
 
 import { API_KEY_LENGTH } from "~/schemas/auth.schema";
-import { CacheType } from "~/services/cache.service";
+import { CacheKind } from "~/services/cache.service";
 import { CookieSerializeOptions } from "@fastify/cookie";
 import crypto from "crypto";
 
@@ -120,13 +120,13 @@ export class AuthHelper {
 					throw new InvalidTokenType();
 				}
 
-				const cachedToken = await this.app.services.cache.get(CacheType.REFRESH, decoded.id.toString());
+				const cachedToken = await this.app.services.cache.get(CacheKind.REFRESH, decoded.id.toString());
 
 				if (!cachedToken) {
 					throw new InvalidOrExpiredToken();
 				}
 
-				await this.app.services.cache.del(CacheType.REFRESH, decoded.id.toString());
+				await this.app.services.cache.del(CacheKind.REFRESH, decoded.id.toString());
 			} catch (err) {
 				throw new InvalidOrExpiredToken(err);
 			}

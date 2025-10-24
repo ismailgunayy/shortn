@@ -1,7 +1,7 @@
 import { ApiKeyNameSchema, EmailSchema, FullNameSchema, PasswordSchema } from "~/schemas/auth.schema";
 
 import { App } from "~/types/fastify";
-import { CacheType } from "~/services/cache.service";
+import { CacheKind } from "~/services/cache.service";
 import { IdSchema } from "~/schemas/common.schema";
 import { TokenType } from "~/helpers";
 import { createResponseSchema } from "~/schemas/api-response.schema";
@@ -92,7 +92,7 @@ export const AuthController = (app: App) => {
 				tokenType: TokenType.REFRESH
 			});
 
-			await app.services.cache.set(CacheType.REFRESH, user.id.toString(), refreshToken, {
+			await app.services.cache.set(CacheKind.REFRESH, user.id.toString(), refreshToken, {
 				expiration: {
 					type: "EX",
 					value: refreshTokenExpiresIn
@@ -175,7 +175,7 @@ export const AuthController = (app: App) => {
 				tokenType: TokenType.REFRESH
 			});
 
-			await app.services.cache.set(CacheType.REFRESH, decoded.id.toString(), newRefreshToken, {
+			await app.services.cache.set(CacheKind.REFRESH, decoded.id.toString(), newRefreshToken, {
 				expiration: {
 					type: "EX",
 					value: refreshTokenExpiresIn
@@ -266,7 +266,7 @@ export const AuthController = (app: App) => {
 		async (request, reply) => {
 			app.helpers.auth.clearTokenCookies(reply);
 			await app.services.auth.deleteUser(request.user.id);
-			await app.services.cache.del(CacheType.REFRESH, request.user.id.toString());
+			await app.services.cache.del(CacheKind.REFRESH, request.user.id.toString());
 
 			return reply.code(200).send({ success: true });
 		}
@@ -284,7 +284,7 @@ export const AuthController = (app: App) => {
 		},
 		async (request, reply) => {
 			app.helpers.auth.clearTokenCookies(reply);
-			await app.services.cache.del(CacheType.REFRESH, request.user.id.toString());
+			await app.services.cache.del(CacheKind.REFRESH, request.user.id.toString());
 
 			return reply.code(200).send({ success: true });
 		}
