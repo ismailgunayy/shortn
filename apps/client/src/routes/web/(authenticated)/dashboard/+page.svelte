@@ -2,7 +2,7 @@
 	import ApiKeysSection from "$lib/components/sections/api-keys.section.svelte";
 	import UrlsSection from "$lib/components/sections/urls.section.svelte";
 
-	let activeTab: "urls" | "apikeys" = $state("urls");
+	let activeTab: "urls" | "apikeys" = $state("apikeys");
 </script>
 
 <svelte:head>
@@ -29,6 +29,7 @@
 		<div class="mb-6">
 			<div class="flex space-x-1 rounded-lg border border-slate-600/60 bg-slate-700/40 p-1 backdrop-blur-lg">
 				<button
+					type="button"
 					onclick={() => (activeTab = "urls")}
 					class={`text-button-small flex-1 rounded-md px-3 py-2 font-medium transition-all duration-200 ${
 						activeTab === "urls"
@@ -39,6 +40,7 @@
 					URLs
 				</button>
 				<button
+					type="button"
 					onclick={() => (activeTab = "apikeys")}
 					class={`text-button-small flex-1 rounded-md px-3 py-2 font-medium transition-all duration-200 ${
 						activeTab === "apikeys"

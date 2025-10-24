@@ -139,6 +139,7 @@
 						onclick={() => (showPassword = !showPassword)}
 						class="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 hover:text-slate-300 focus:outline-none"
 						disabled={authState.loading}
+						aria-label={showPassword ? "Hide password" : "Show password"}
 					>
 						{#if showPassword}
 							<EyeOff class="h-5 w-5" />

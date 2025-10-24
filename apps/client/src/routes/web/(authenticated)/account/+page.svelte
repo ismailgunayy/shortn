@@ -221,6 +221,7 @@
 							class="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 hover:text-slate-300 focus:outline-none"
 							disabled={changePasswordLoading}
 							tabindex="-1"
+							aria-label={showPassword ? "Hide password" : "Show password"}
 						>
 							{#if showPassword}
 								<EyeOff class="h-5 w-5" />
@@ -256,6 +257,7 @@
 							class="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 hover:text-slate-300 focus:outline-none"
 							disabled={changePasswordLoading}
 							tabindex="-1"
+							aria-label={showPassword ? "Hide password" : "Show password"}
 						>
 							{#if showPassword}
 								<EyeOff class="h-5 w-5" />
@@ -302,6 +304,7 @@
 
 		{#if !showDeleteConfirm}
 			<button
+				type="button"
 				onclick={() => (showDeleteConfirm = true)}
 				class="text-button rounded-xl bg-red-600/80 px-6 py-2.5 font-semibold text-white transition-all duration-200 hover:bg-red-600 hover:shadow-lg focus:ring-2 focus:ring-red-400/20 focus:outline-none"
 			>
@@ -328,6 +331,7 @@
 
 				<div class="flex gap-3">
 					<button
+						type="button"
 						onclick={handleDeleteAccount}
 						disabled={deleteLoading || deleteConfirmText !== "DELETE"}
 						class="text-button flex-1 rounded-xl bg-red-600/80 px-6 py-2.5 font-semibold text-white transition-all duration-200 hover:bg-red-600 hover:shadow-lg focus:ring-2 focus:ring-red-400/20 focus:outline-none disabled:opacity-50"
@@ -342,6 +346,7 @@
 						{/if}
 					</button>
 					<button
+						type="button"
 						onclick={cancelDelete}
 						disabled={deleteLoading}
 						class="text-button text-secondary hover:text-bright rounded-xl border border-slate-600/60 bg-slate-700/40 px-6 py-2.5 font-medium backdrop-blur-lg transition-all hover:bg-slate-600/40 focus:ring-2 focus:ring-slate-400/20 focus:outline-none disabled:opacity-50"

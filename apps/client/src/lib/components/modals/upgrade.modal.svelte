@@ -52,6 +52,7 @@
 		>
 			<!-- Close button -->
 			<button
+				type="button"
 				onclick={handleClose}
 				class="text-muted hover:text-bright absolute top-4 right-4 p-1 transition-colors"
 				aria-label="Close modal"
@@ -112,12 +113,14 @@
 			<!-- Action buttons -->
 			<div class="space-y-3">
 				<button
+					type="button"
 					onclick={handleRegister}
 					class="text-button-color w-full transform rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-6 py-2.5 font-semibold shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:ring-2 focus:ring-slate-400/20 focus:outline-none active:scale-[0.98] sm:py-3"
 				>
 					Create an account
 				</button>
 				<button
+					type="button"
 					onclick={handleLogin}
 					class="text-secondary hover:text-bright w-full rounded-xl border border-slate-600/60 bg-slate-700/40 px-6 py-2.5 font-medium backdrop-blur-lg transition-all duration-200 hover:bg-slate-600/40 sm:py-3"
 				>

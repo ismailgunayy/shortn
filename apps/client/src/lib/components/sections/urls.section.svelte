@@ -142,6 +142,7 @@
 														onkeydown={(e) => e.key === "Enter" && updateCustomUrl()}
 													/>
 													<button
+														type="button"
 														onclick={updateCustomUrl}
 														disabled={updatingUrl || !editOriginalUrl.trim()}
 														class="text-caption text-success rounded bg-emerald-800/60 px-2 py-1 hover:bg-emerald-800/80 disabled:opacity-50"
@@ -153,6 +154,7 @@
 														{/if}
 													</button>
 													<button
+														type="button"
 														onclick={cancelEditingUrl}
 														class="text-caption text-secondary rounded bg-slate-600/60 px-2 py-1 hover:bg-slate-600/80"
 													>
@@ -164,6 +166,7 @@
 													<span class="text-body-small text-bright whitespace-nowrap">{url.originalUrl}</span>
 												</div>
 												<button
+													type="button"
 													onclick={() => copyToClipboard(url.originalUrl, `custom-original-${url.id}`)}
 													class="text-secondary hover:text-bright rounded p-1 hover:bg-slate-600/40"
 													title="Copy original URL"
@@ -181,6 +184,7 @@
 										<div class="flex items-center gap-2">
 											<span class="text-body-small text-bright whitespace-nowrap">{url.customCode}</span>
 											<button
+												type="button"
 												onclick={() => copyToClipboard(url.shortenedUrl, `custom-${url.id}`)}
 												class="text-secondary hover:text-bright rounded p-1 hover:bg-slate-600/40"
 												title="Copy shortened URL"
@@ -200,16 +204,20 @@
 										{#if editingUrl?.id !== url.id}
 											<div class="flex gap-1">
 												<button
+													type="button"
 													onclick={() => startEditingUrl(url)}
 													class="text-caption text-tertiary hover:text-secondary rounded px-2 py-1 hover:bg-slate-600/40"
 													title="Edit original URL"
+													aria-label="Edit original URL"
 												>
 													<Edit class="h-4 w-4" />
 												</button>
 												<button
+													type="button"
 													onclick={() => deleteUrl(url.id, url.shortenedUrl, true)}
 													class="text-caption text-error rounded px-2 py-1 hover:bg-red-900/20 hover:text-red-300"
 													title="Delete URL"
+													aria-label="Delete URL"
 												>
 													<Delete class="h-4 w-4" />
 												</button>
@@ -237,6 +245,7 @@
 												onkeydown={(e) => e.key === "Enter" && updateCustomUrl()}
 											/>
 											<button
+												type="button"
 												onclick={updateCustomUrl}
 												disabled={updatingUrl || !editOriginalUrl.trim()}
 												class="text-caption text-success rounded bg-emerald-800/60 px-2 py-1 hover:bg-emerald-800/80 disabled:opacity-50"
@@ -248,6 +257,7 @@
 												{/if}
 											</button>
 											<button
+												type="button"
 												onclick={cancelEditingUrl}
 												class="text-caption text-secondary rounded bg-slate-600/60 px-2 py-1 hover:bg-slate-600/80"
 											>
@@ -271,13 +281,16 @@
 										</div>
 										<div class="flex gap-2">
 											<button
+												type="button"
 												onclick={() => startEditingUrl(url)}
 												class="text-caption text-tertiary hover:text-secondary rounded px-2 py-1 hover:bg-slate-600/40"
 												title="Edit original URL"
+												aria-label="Edit original URL"
 											>
 												<Edit class="h-4 w-4" />
 											</button>
 											<button
+												type="button"
 												onclick={() => deleteUrl(url.id, url.shortenedUrl, true)}
 												class="text-caption text-error rounded px-2 py-1 hover:bg-red-900/20 hover:text-red-300"
 												title="Delete URL"
@@ -321,6 +334,7 @@
 												<span class="text-body-small text-bright whitespace-nowrap">{url.originalUrl}</span>
 											</div>
 											<button
+												type="button"
 												onclick={() => copyToClipboard(url.originalUrl, `url-original-${url.id}`)}
 												class="text-secondary hover:text-bright rounded p-1 hover:bg-slate-600/40"
 												title="Copy original URL"
@@ -337,6 +351,7 @@
 										<div class="flex items-center gap-2">
 											<span class="text-body-small text-bright whitespace-nowrap">{url.shortCode}</span>
 											<button
+												type="button"
 												onclick={() => copyToClipboard(url.shortenedUrl, `url-${url.id}`)}
 												class="text-secondary hover:text-bright rounded p-1 hover:bg-slate-600/40"
 												title="Copy shortened URL"
@@ -354,8 +369,10 @@
 									</td>
 									<td class="px-4 py-3">
 										<button
+											type="button"
 											onclick={() => deleteUrl(url.id, url.shortenedUrl, false)}
 											class="text-caption text-error rounded px-2 py-1 hover:bg-red-900/20 hover:text-red-300"
+											aria-label="Delete URL"
 										>
 											<Delete class="h-4 w-4" />
 										</button>
@@ -384,8 +401,10 @@
 										<p class="text-caption text-muted">Created {formatDate(url.createdAt)}</p>
 									</div>
 									<button
+										type="button"
 										onclick={() => deleteUrl(url.id, url.shortenedUrl, false)}
 										class="text-caption text-error rounded px-3 py-1 hover:bg-red-900/20 hover:text-red-300"
+										aria-label="Delete URL"
 									>
 										<Delete class="h-4 w-4" />
 									</button>

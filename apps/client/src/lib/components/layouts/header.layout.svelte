@@ -35,7 +35,7 @@
 
 <header class="z-10 w-full px-4 py-4 sm:px-6">
 	<nav class="mx-auto flex max-w-7xl items-center justify-between">
-		<div class="flex items-end gap-8">
+		<div class="flex items-end gap-4 sm:gap-8">
 			<a
 				href={resolve("/")}
 				data-sveltekit-reload={isHome}
@@ -47,12 +47,13 @@
 				href={config.HTTP.DOCS_URL}
 				class="text-button-small text-secondary hover:text-bright leading-7"
 				target="_blank"
+				rel="noopener noreferrer"
 				>Developers
 			</a>
 		</div>
 
 		<!-- Auth Navigation -->
-		<div class="flex items-center gap-3">
+		<div class="flex h-9 items-center gap-3">
 			{#if authState.loading}
 				<Loading class="h-8 w-8" />
 			{:else if authState.user && !authState.loading}
@@ -61,6 +62,7 @@
 					class="relative"
 				>
 					<button
+						type="button"
 						onclick={toggleDropdown}
 						class="text-button-small text-secondary hover:text-bright rounded-lgpx-3 flex items-center gap-2 py-2 font-medium backdrop-blur-lg transition-all sm:px-4 sm:py-2"
 					>
@@ -89,6 +91,7 @@
 								</a>
 								<hr class="my-1 border-slate-600/60" />
 								<button
+									type="button"
 									onclick={async () => {
 										closeDropdown();
 										await clientApi.auth.logout();
@@ -105,13 +108,13 @@
 			{:else}
 				<a
 					href={resolve("/web/login")}
-					class="text-button-small text-secondary hover:text-bright rounded-lg border border-slate-600/60 bg-slate-700/40 px-3 py-2 font-medium backdrop-blur-lg transition-all duration-230 hover:bg-slate-600/40 sm:px-4 sm:py-2"
+					class="text-button-small text-secondary hover:text-bright rounded-lg border border-slate-600/60 bg-slate-700/40 px-3 py-2 font-medium backdrop-blur-lg transition-all duration-230 hover:bg-slate-600/40 sm:px-4"
 				>
 					Log in
 				</a>
 				<a
 					href={resolve("/web/register")}
-					class="text-button-small text-button-color rounded-lg bg-gradient-to-r from-slate-500/80 to-slate-600/80 px-3 py-2 font-semibold backdrop-blur-lg transition-all duration-230 hover:from-slate-400 hover:to-slate-600 sm:px-4 sm:py-2"
+					class="text-button-small text-button-color rounded-lg bg-gradient-to-r from-slate-500/80 to-slate-600/80 px-3 py-2 font-medium backdrop-blur-lg transition-all duration-230 hover:from-slate-400 hover:to-slate-600 sm:px-4"
 				>
 					Register
 				</a>

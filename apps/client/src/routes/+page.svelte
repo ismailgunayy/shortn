@@ -9,6 +9,7 @@
 	import { toastService } from "$lib/services/toast.service";
 	import { clientApi } from "$lib/services/api/api.client";
 	import { storageService, StorageKind } from "$lib/services/storage.service";
+	import { onMount } from "svelte";
 
 	let url = $state("");
 	let customCode = $state("");
@@ -201,6 +202,7 @@
 								{shortenedUrl.replace(/^(https?:\/\/)/, "")}
 							</code>
 							<button
+								type="button"
 								onclick={copyToClipboard}
 								class="text-button-small text-secondary hover:text-bright flex items-center justify-center gap-2 rounded-lg border border-slate-600/60 bg-slate-700/40 px-4 py-2 font-medium backdrop-blur-lg
 									   transition-all duration-230 hover:bg-slate-600/40"
@@ -231,6 +233,7 @@
 							Visit URL
 						</a>
 						<button
+							type="button"
 							onclick={reset}
 							class="text-button text-secondary hover:text-bright flex-1 transform rounded-xl border border-slate-600/60 bg-gradient-to-r from-slate-600/40 to-slate-700
 								   px-4 py-2.5 font-semibold backdrop-blur-lg transition-all duration-230
