@@ -33,22 +33,16 @@
 		// 	"matchPackageNames": ["svelte{/,}**", "@sveltejs{/,}**"]
 		// },
 		{
-			"automerge": true,
-			"autoApprove": true,
 			"groupName": "ESLint ecosystem",
 			"groupSlug": "eslint",
 			"matchPackageNames": ["eslint{/,}**", "@eslint{/,}**"]
 		},
 		{
-			"automerge": true,
-			"autoApprove": true,
 			"groupName": "all patches",
 			"groupSlug": "patches",
 			"matchUpdateTypes": ["patch"]
 		},
 		{
-			"automerge": true,
-			"autoApprove": true,
 			"matchPackageNames": ["@types/**"],
 			"matchUpdateTypes": ["patch"]
 		}
