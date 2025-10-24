@@ -41,7 +41,7 @@
 	/>
 	<link
 		rel="manifest"
-		href="/favicon/site.webmanifest"
+		href="/site.webmanifest"
 	/>
 
 	<link
