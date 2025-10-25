@@ -16,8 +16,8 @@ export class AuthService extends Service {
 			body: JSON.stringify(payload)
 		});
 
-		if (!response.success && response.error?.message) {
-			toastService.error(response.error?.message);
+		if (!response.success && response.error) {
+			toastService.error(response.error);
 		}
 
 		return response;
@@ -32,8 +32,8 @@ export class AuthService extends Service {
 		if (response.success && response.data) {
 			authStore.updateUser(response.data.user);
 			goto(resolve("/web/dashboard"));
-		} else if (response.error?.message) {
-			toastService.error(response.error?.message);
+		} else if (response.error) {
+			toastService.error(response.error);
 		}
 
 		return response;
@@ -69,8 +69,8 @@ export class AuthService extends Service {
 		if (response.success && response.data) {
 			authStore.updateUser(response.data);
 			toastService.success("Profile updated successfully.");
-		} else if (response.error?.message) {
-			toastService.error(response.error?.message);
+		} else if (response.error) {
+			toastService.error(response.error);
 		}
 
 		return response;
@@ -84,8 +84,8 @@ export class AuthService extends Service {
 
 		if (response.success) {
 			toastService.success("Password changed successfully.");
-		} else if (response.error?.message) {
-			toastService.error(response.error?.message);
+		} else if (response.error) {
+			toastService.error(response.error);
 		}
 
 		return response;
@@ -99,8 +99,8 @@ export class AuthService extends Service {
 		if (response.success) {
 			authStore.clear();
 			goto(resolve("/"));
-		} else if (response.error?.message) {
-			toastService.error(response.error?.message);
+		} else if (response.error) {
+			toastService.error(response.error);
 		}
 
 		return response;
@@ -122,9 +122,10 @@ export class AuthService extends Service {
 			body: JSON.stringify(payload)
 		});
 
-		if (!response.success && response.error?.message) {
+		if (response.success) {
 			cacheService.remove(CacheKind.API_KEYS);
-			toastService.error(response.error?.message);
+		} else if (response.error) {
+			toastService.error(response.error);
 		}
 
 		return response;
@@ -139,8 +140,8 @@ export class AuthService extends Service {
 		if (response.success) {
 			cacheService.remove(CacheKind.API_KEYS);
 			toastService.success("API key updated successfully.");
-		} else if (response.error?.message) {
-			toastService.error(response.error?.message);
+		} else if (response.error) {
+			toastService.error(response.error);
 		}
 
 		return response;
@@ -154,8 +155,8 @@ export class AuthService extends Service {
 		if (response.success) {
 			cacheService.remove(CacheKind.API_KEYS);
 			toastService.success("API key deleted successfully.");
-		} else if (response.error?.message) {
-			toastService.error(response.error?.message);
+		} else if (response.error) {
+			toastService.error(response.error);
 		}
 
 		return response;

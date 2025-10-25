@@ -32,8 +32,8 @@ export class UrlService extends Service {
 			} else {
 				cacheService.remove(CacheKind.GENERATED_URLS);
 			}
-		} else if (response.error?.message) {
-			toastService.error(response.error?.message);
+		} else if (response.error) {
+			toastService.error(response.error);
 		}
 
 		return response;
@@ -55,8 +55,8 @@ export class UrlService extends Service {
 			}
 		});
 
-		if (!response.success && response.error?.message) {
-			toastService.error(response.error?.message);
+		if (!response.success && response.error) {
+			toastService.error(response.error);
 		}
 
 		return response;
@@ -71,8 +71,8 @@ export class UrlService extends Service {
 			}
 		});
 
-		if (!response.success && response.error?.message) {
-			toastService.error(response.error?.message);
+		if (!response.success && response.error) {
+			toastService.error(response.error);
 		}
 
 		return response;
@@ -90,8 +90,8 @@ export class UrlService extends Service {
 		if (response.success && response.data) {
 			cacheService.remove(CacheKind.CUSTOM_URLS);
 			toastService.success("Custom URL updated successfully.");
-		} else if (response.error?.message) {
-			toastService.error(response.error?.message);
+		} else if (response.error) {
+			toastService.error(response.error);
 		}
 
 		return response;
@@ -110,8 +110,8 @@ export class UrlService extends Service {
 				cacheService.remove(CacheKind.GENERATED_URLS);
 			}
 			toastService.success("URL deleted successfully.");
-		} else if (response.error?.message) {
-			toastService.error(response.error?.message);
+		} else if (response.error) {
+			toastService.error(response.error);
 		}
 
 		return response;

@@ -175,6 +175,10 @@ export interface ApiRequestOptions {
 
 export interface ApiError {
 	message: string;
+	details?: {
+		field: string;
+		message: string;
+	}[];
 }
 
 export interface ApiResponse<T = unknown> {
