@@ -2,7 +2,7 @@
 	import ApiKeysSection from "$lib/components/sections/api-keys.section.svelte";
 	import UrlsSection from "$lib/components/sections/urls.section.svelte";
 
-	let activeTab: "urls" | "apikeys" = $state("apikeys");
+	let activeTab: "urls" | "apikeys" = $state("urls");
 </script>
 
 <svelte:head>
