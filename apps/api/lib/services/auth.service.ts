@@ -1,4 +1,5 @@
 import {
+	ApiKeyCreationLimitReached,
 	ApiKeyNameAlreadyInUse,
 	ApiKeyNotFound,
 	ApiKeyNotProvided,
@@ -14,6 +15,8 @@ import { ApiKeySchema } from "~/schemas/auth.schema";
 import { App } from "~/types/fastify";
 import { AuthRepository } from "~/repositories/auth.repository";
 import { ShortnUsers } from "~/types/db";
+
+const MAX_API_KEYS_PER_USER = 5;
 
 export class AuthService {
 	constructor(
@@ -191,6 +194,12 @@ export class AuthService {
 	}
 
 	public async createApiKey(userId: number, name: string) {
+		const apiKeysCount = await this.authRepository.countApiKeysByUserId(userId);
+
+		if (apiKeysCount >= MAX_API_KEYS_PER_USER) {
+			throw new ApiKeyCreationLimitReached(MAX_API_KEYS_PER_USER);
+		}
+
 		const existingApiKey = await this.authRepository.findApiKeyByName(userId, name);
 		if (existingApiKey) {
 			throw new ApiKeyNameAlreadyInUse();

@@ -78,4 +78,14 @@ export class AuthRepository {
 			.where("userId", "=", userId)
 			.execute();
 	}
+
+	async countApiKeysByUserId(userId: number) {
+		const result = await this.db
+			.selectFrom("shortn.apiKeys")
+			.select(this.db.fn.count<number>("id").as("count"))
+			.where("userId", "=", userId)
+			.executeTakeFirst();
+
+		return result ? result.count : 0;
+	}
 }

@@ -59,8 +59,12 @@ export abstract class Service {
 	constructor(protected serviceConfig?: ServiceConfig) {}
 
 	public async request<T>(endpoint: string, options: ApiRequestOptions = {}): Promise<ApiResponse<T>> {
+		if (options.query) {
+			endpoint = this.buildQuery(endpoint, options.query);
+		}
+
 		if (options.caching) {
-			const cachedResponse = cacheService.get<T>(options.caching.kind);
+			const cachedResponse = cacheService.get<T>(options.caching.kind, endpoint);
 
 			if (cachedResponse) {
 				return {
@@ -91,7 +95,7 @@ export abstract class Service {
 			}
 
 			if (response.api.success && options.caching) {
-				cacheService.set(options.caching.kind, response.api.data, options.caching.ttl);
+				cacheService.set(options.caching.kind, endpoint, response.api.data, options.caching.ttl);
 			}
 
 			return response.api;
@@ -108,11 +112,7 @@ export abstract class Service {
 	}
 
 	private async makeRequest<T>(endpoint: string, options: ApiRequestOptions) {
-		let url = `${config.HTTP.API_BASE_URL}/${endpoint}`;
-
-		if (options.query) {
-			url = this.buildQuery(url, options.query);
-		}
+		const url = `${config.HTTP.API_BASE_URL}/${endpoint}`;
 
 		const headers: HeadersInit = {
 			...(options.body && { "Content-Type": "application/json" }),

@@ -119,3 +119,9 @@ export class InvalidFullNameLength extends AuthError {
 		super("Full name must be at least 2 characters long", 400, cause);
 	}
 }
+
+export class ApiKeyCreationLimitReached extends AuthError {
+	constructor(count: number, cause?: unknown) {
+		super(`Maximum number of ${count} API keys reached`, 403, cause);
+	}
+}

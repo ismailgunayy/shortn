@@ -6,19 +6,59 @@
 	import Edit from "$lib/icons/edit.icon.svelte";
 	import Loading from "$lib/icons/loading.icon.svelte";
 	import { clientApi } from "$lib/services/api/api.client";
-	import type { CustomUrlItem, UrlItem } from "$lib/services/api/url.api";
+	import type {
+		CustomUrlItem,
+		CustomUrlQueryParams,
+		PaginationMeta,
+		UrlItem,
+		UrlQueryParams
+	} from "$lib/services/api/url.api";
 	import { toastService } from "$lib/services/toast.service";
 	import { formatDate } from "$lib/utils/format-date.util";
 	import { onMount } from "svelte";
+	import Table from "../ui/table.svelte";
+	import Close from "$lib/icons/close.icon.svelte";
 
 	let loading = $state(true);
+	let urlsLoading = $state(false);
+	let customUrlsLoading = $state(false);
 	let urls: UrlItem[] = $state([]);
 	let customUrls: CustomUrlItem[] = $state([]);
+	let urlsPagination: PaginationMeta = $state({} as PaginationMeta);
+	let customUrlsPagination: PaginationMeta = $state({} as PaginationMeta);
 	let copiedId: string | null = $state(null);
 	let copiedTimeout: ReturnType<typeof setTimeout> | null = $state(null);
 	let editingUrl: { id: number; originalUrl: string } | null = $state(null);
 	let editOriginalUrl = $state("");
 	let updatingUrl = $state(false);
+
+	let urlsQuery: UrlQueryParams = $state({
+		page: 1,
+		limit: 10,
+		sortBy: "createdAt",
+		sortOrder: "desc"
+	});
+
+	let customUrlsQuery: CustomUrlQueryParams = $state({
+		page: 1,
+		limit: 10,
+		sortBy: "createdAt",
+		sortOrder: "desc"
+	});
+
+	const urlColumns = [
+		{ key: "originalUrl" as keyof UrlItem, label: "Original URL", sortable: true, width: "w-6/12" },
+		{ key: "shortCode" as keyof UrlItem, label: "Short Code", sortable: false, width: "w-3/12" },
+		{ key: "createdAt" as keyof UrlItem, label: "Created Date", sortable: true, width: "w-2/12" },
+		{ key: "id" as keyof UrlItem, label: "Delete", sortable: false, width: "w-1/12" }
+	];
+
+	const customUrlColumns = [
+		{ key: "originalUrl" as keyof CustomUrlItem, label: "Original URL", sortable: true, width: "w-6/12" },
+		{ key: "customCode" as keyof CustomUrlItem, label: "Custom Code", sortable: true, width: "w-3/12" },
+		{ key: "createdAt" as keyof CustomUrlItem, label: "Created Date", sortable: true, width: "w-2/12" },
+		{ key: "id" as keyof CustomUrlItem, label: "Actions", sortable: false, width: "w-1/12" }
+	];
 
 	onMount(async () => {
 		await loadData();
@@ -28,16 +68,18 @@
 		loading = true;
 
 		const [generatedUrlsResponse, customUrlsResponse] = await Promise.all([
-			clientApi.url.getGeneratedUrls(),
-			clientApi.url.getCustomUrls()
+			clientApi.url.getGeneratedUrls(urlsQuery),
+			clientApi.url.getCustomUrls(customUrlsQuery)
 		]);
 
 		if (generatedUrlsResponse.data) {
 			urls = generatedUrlsResponse.data.urls;
+			urlsPagination = generatedUrlsResponse.data.pagination;
 		}
 
 		if (customUrlsResponse.data) {
 			customUrls = customUrlsResponse.data.customUrls;
+			customUrlsPagination = customUrlsResponse.data.pagination;
 		}
 
 		loading = false;
@@ -102,6 +144,62 @@
 			}
 		}
 	}
+
+	async function handleUrlSort(sortBy: string, sortOrder: "asc" | "desc") {
+		urlsQuery.sortBy = sortBy as UrlQueryParams["sortBy"];
+		urlsQuery.sortOrder = sortOrder;
+		urlsQuery.page = 1;
+		await loadUrlsData();
+	}
+
+	async function handleUrlPageChange(page: number) {
+		urlsQuery.page = page;
+		await loadUrlsData();
+	}
+
+	async function handleUrlLimitChange(limit: number) {
+		urlsQuery.limit = limit;
+		urlsQuery.page = 1;
+		await loadUrlsData();
+	}
+
+	async function loadUrlsData() {
+		urlsLoading = true;
+		const response = await clientApi.url.getGeneratedUrls(urlsQuery);
+		if (response.data) {
+			urls = response.data.urls;
+			urlsPagination = response.data.pagination;
+		}
+		urlsLoading = false;
+	}
+
+	async function handleCustomUrlSort(sortBy: string, sortOrder: "asc" | "desc") {
+		customUrlsQuery.sortBy = sortBy as CustomUrlQueryParams["sortBy"];
+		customUrlsQuery.sortOrder = sortOrder;
+		customUrlsQuery.page = 1;
+		await loadCustomUrlsData();
+	}
+
+	async function handleCustomUrlPageChange(page: number) {
+		customUrlsQuery.page = page;
+		await loadCustomUrlsData();
+	}
+
+	async function handleCustomUrlLimitChange(limit: number) {
+		customUrlsQuery.limit = limit;
+		customUrlsQuery.page = 1;
+		await loadCustomUrlsData();
+	}
+
+	async function loadCustomUrlsData() {
+		customUrlsLoading = true;
+		const response = await clientApi.url.getCustomUrls(customUrlsQuery);
+		if (response.data) {
+			customUrls = response.data.customUrls;
+			customUrlsPagination = response.data.pagination;
+		}
+		customUrlsLoading = false;
+	}
 </script>
 
 <div class="space-y-6">
@@ -111,310 +209,203 @@
 			<Loading class="mt-8 h-12 w-12" />
 		</div>
 	{:else}
-		{#if customUrls.length > 0}
-			<div>
-				<h2 class="text-heading-3 text-bright mb-4 font-semibold">Custom URLs</h2>
+		<div class="mb-8">
+			<h2 class="text-heading-3 text-bright mb-4 font-semibold">Custom URLs</h2>
 
-				<!-- Desktop Table View -->
-				<div
-					class="hidden overflow-hidden rounded-lg border border-slate-600/60 bg-slate-700/40 backdrop-blur-lg md:block"
-				>
-					<table class="w-full table-fixed">
-						<thead class="bg-slate-600/40">
-							<tr>
-								<th class="text-body-small text-bright w-6/12 px-4 py-3 text-left font-medium">Original URL</th>
-								<th class="text-body-small text-bright w-3/12 px-4 py-3 text-left font-medium">Short Code</th>
-								<th class="text-body-small text-bright w-2/12 px-4 py-3 text-left font-medium">Created Date</th>
-								<th class="text-body-small text-bright w-1/12 px-4 py-3 text-left font-medium">Actions</th>
-							</tr>
-						</thead>
-						<tbody class="divide-y divide-slate-600/30">
-							{#each customUrls as url (url.id)}
-								<tr class="hover:bg-slate-600/20">
-									<td class="px-4 py-3">
-										<div class="flex items-center gap-2">
-											{#if editingUrl?.id === url.id}
-												<div class="flex w-full items-center gap-2">
-													<input
-														bind:value={editOriginalUrl}
-														class="text-form-input w-min flex-1 rounded-xl border border-slate-600/60 bg-slate-800/40 px-3 py-2 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:ring-2 focus:ring-slate-400/20 focus:outline-none"
-														placeholder="Original Url"
-														onkeydown={(e) => e.key === "Enter" && updateCustomUrl()}
-													/>
-													<button
-														type="button"
-														onclick={updateCustomUrl}
-														disabled={updatingUrl || !editOriginalUrl.trim()}
-														class="text-caption text-success rounded bg-emerald-800/60 px-2 py-1 hover:bg-emerald-800/80 disabled:opacity-50"
-													>
-														{#if updatingUrl}
-															<Loading class="h-3 w-3" />
-														{:else}
-															Save
-														{/if}
-													</button>
-													<button
-														type="button"
-														onclick={cancelEditingUrl}
-														class="text-caption text-secondary rounded bg-slate-600/60 px-2 py-1 hover:bg-slate-600/80"
-													>
-														Cancel
-													</button>
-												</div>
-											{:else}
-												<div class="max-w-full overflow-x-auto">
-													<span class="text-body-small text-bright whitespace-nowrap">{url.originalUrl}</span>
-												</div>
-												<button
-													type="button"
-													onclick={() => copyToClipboard(url.originalUrl, `custom-original-${url.id}`)}
-													class="text-secondary hover:text-bright rounded p-1 hover:bg-slate-600/40"
-													title="Copy original URL"
-												>
-													{#if copiedId === `custom-original-${url.id}`}
-														<CheckMark class="text-success h-4 w-4" />
-													{:else}
-														<Copy class="h-4 w-4" />
-													{/if}
-												</button>
-											{/if}
-										</div>
-									</td>
-									<td class="px-4 py-3">
-										<div class="flex items-center gap-2">
-											<span class="text-body-small text-bright whitespace-nowrap">{url.customCode}</span>
-											<button
-												type="button"
-												onclick={() => copyToClipboard(url.shortenedUrl, `custom-${url.id}`)}
-												class="text-secondary hover:text-bright rounded p-1 hover:bg-slate-600/40"
-												title="Copy shortened URL"
-											>
-												{#if copiedId === `custom-${url.id}`}
-													<CheckMark class="text-success h-4 w-4" />
-												{:else}
-													<Copy class="h-4 w-4" />
-												{/if}
-											</button>
-										</div>
-									</td>
-									<td class="px-4 py-3">
-										<span class="text-body-small text-tertiary">{formatDate(url.createdAt)}</span>
-									</td>
-									<td class="px-4 py-3">
-										{#if editingUrl?.id !== url.id}
-											<div class="flex gap-1">
-												<button
-													type="button"
-													onclick={() => startEditingUrl(url)}
-													class="text-caption text-tertiary hover:text-secondary rounded px-2 py-1 hover:bg-slate-600/40"
-													title="Edit original URL"
-													aria-label="Edit original URL"
-												>
-													<Edit class="h-4 w-4" />
-												</button>
-												<button
-													type="button"
-													onclick={() => deleteUrl(url.id, url.shortenedUrl, true)}
-													class="text-caption text-error rounded px-2 py-1 hover:bg-red-900/20 hover:text-red-300"
-													title="Delete URL"
-													aria-label="Delete URL"
-												>
-													<Delete class="h-4 w-4" />
-												</button>
-											</div>
-										{/if}
-									</td>
-								</tr>
-							{/each}
-						</tbody>
-					</table>
-				</div>
-
-				<!-- Mobile Card View -->
-				<div class="block space-y-3 md:hidden">
-					{#each customUrls as url (url.id)}
-						<div class="relative">
-							<div class="rounded-lg border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg">
-								{#if editingUrl?.id === url.id}
-									<div class="space-y-3">
-										<div class="flex items-center gap-2">
-											<input
-												bind:value={editOriginalUrl}
-												class="text-form-input flex-1 rounded-xl border border-slate-600/60 bg-slate-800/40 px-3 py-2 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:ring-2 focus:ring-slate-400/20 focus:outline-none"
-												placeholder="Original Url"
-												onkeydown={(e) => e.key === "Enter" && updateCustomUrl()}
-											/>
-											<button
-												type="button"
-												onclick={updateCustomUrl}
-												disabled={updatingUrl || !editOriginalUrl.trim()}
-												class="text-caption text-success rounded bg-emerald-800/60 px-2 py-1 hover:bg-emerald-800/80 disabled:opacity-50"
-											>
-												{#if updatingUrl}
-													<Loading class="h-3 w-3" />
-												{:else}
-													Save
-												{/if}
-											</button>
-											<button
-												type="button"
-												onclick={cancelEditingUrl}
-												class="text-caption text-secondary rounded bg-slate-600/60 px-2 py-1 hover:bg-slate-600/80"
-											>
-												Cancel
-											</button>
-										</div>
-										<p class="text-caption text-muted">Created {formatDate(url.createdAt)}</p>
-									</div>
-								{:else}
-									<div class="flex items-start justify-between gap-4">
-										<div class="min-w-0 flex-1">
-											<div class="mb-2 flex items-center gap-2">
-												<span class="text-body-small text-bright whitespace-nowrap">{url.customCode}</span>
-											</div>
-											<div class="mb-1 flex items-center gap-2">
-												<div class="max-w-full overflow-x-auto">
-													<span class="text-body-small text-bright whitespace-nowrap">→ {url.originalUrl}</span>
-												</div>
-											</div>
-											<p class="text-caption text-muted">Created {formatDate(url.createdAt)}</p>
-										</div>
-										<div class="flex gap-2">
-											<button
-												type="button"
-												onclick={() => startEditingUrl(url)}
-												class="text-caption text-tertiary hover:text-secondary rounded px-2 py-1 hover:bg-slate-600/40"
-												title="Edit original URL"
-												aria-label="Edit original URL"
-											>
-												<Edit class="h-4 w-4" />
-											</button>
-											<button
-												type="button"
-												onclick={() => deleteUrl(url.id, url.shortenedUrl, true)}
-												class="text-caption text-error rounded px-2 py-1 hover:bg-red-900/20 hover:text-red-300"
-												title="Delete URL"
-											>
-												<Delete class="h-4 w-4" />
-											</button>
-										</div>
-									</div>
-								{/if}
+			<Table
+				loading={customUrlsLoading}
+				data={customUrls}
+				columns={customUrlColumns}
+				pagination={customUrlsPagination}
+				onSort={handleCustomUrlSort}
+				onPageChange={handleCustomUrlPageChange}
+				onLimitChange={handleCustomUrlLimitChange}
+				defaultSortKey="createdAt"
+				keyField="id"
+			>
+				{#snippet cellContent(item: CustomUrlItem, column: { key: keyof CustomUrlItem })}
+					{#if column.key === "originalUrl"}
+						{#if editingUrl?.id === item.id}
+							<div class="flex items-center space-x-2">
+								<input
+									bind:value={editOriginalUrl}
+									onkeydown={(e) => {
+										if (e.key === "Enter") updateCustomUrl();
+										if (e.key === "Escape") cancelEditingUrl();
+									}}
+									class="text-form-input flex-1 rounded-xl border border-slate-600/60 bg-slate-800/40 px-3 py-2 placeholder-slate-500 backdrop-blur-lg transition-all duration-200 focus:border-slate-500/80 focus:ring-2 focus:ring-slate-400/20 focus:outline-none"
+									placeholder="Enter URL"
+								/>
+								<button
+									type="button"
+									onclick={updateCustomUrl}
+									disabled={updatingUrl}
+									class="text-caption text-success rounded bg-emerald-800/60 px-2 py-1 hover:bg-emerald-800/80 disabled:opacity-50"
+									title="Save"
+								>
+									{#if updatingUrl}
+										<Loading class="h-4 w-4" />
+									{:else}
+										<CheckMark class="h-4 w-4" />
+									{/if}
+								</button>
+								<button
+									type="button"
+									onclick={cancelEditingUrl}
+									class="text-caption text-secondary rounded bg-slate-600/60 px-2 py-1 hover:bg-slate-600/80"
+									title="Cancel"
+								>
+									<Close class="h-4 w-4 text-red-400" />
+								</button>
 							</div>
+						{:else}
+							<div class="flex items-center gap-2">
+								<div class="max-w-full overflow-x-auto">
+									<span class="text-body-small text-bright whitespace-nowrap">{item.originalUrl}</span>
+								</div>
+								<button
+									type="button"
+									onclick={() => copyToClipboard(item.originalUrl, `custom-original-${item.id}`)}
+									class="text-secondary hover:text-bright rounded p-1 hover:bg-slate-600/40"
+									title="Copy original URL"
+								>
+									{#if copiedId === `custom-original-${item.id}`}
+										<CheckMark class="text-success h-4 w-4" />
+									{:else}
+										<Copy class="h-4 w-4" />
+									{/if}
+								</button>
+							</div>
+						{/if}
+					{:else if column.key === "customCode"}
+						<div class="flex items-center gap-2">
+							<span class="text-body-small text-bright whitespace-nowrap">{item.customCode}</span>
+							<button
+								type="button"
+								onclick={() => copyToClipboard(item.shortenedUrl, `custom-${item.id}`)}
+								class="text-secondary hover:text-bright rounded p-1 hover:bg-slate-600/40"
+								title="Copy shortened URL"
+							>
+								{#if copiedId === `custom-${item.id}`}
+									<CheckMark class="text-success h-4 w-4" />
+								{:else}
+									<Copy class="h-4 w-4" />
+								{/if}
+							</button>
 						</div>
-					{/each}
-				</div>
-			</div>
-		{/if}
+					{:else if column.key === "createdAt"}
+						<span class="text-body-small text-tertiary">{formatDate(item.createdAt)}</span>
+					{:else if column.key === "id"}
+						{#if editingUrl?.id !== item.id}
+							<div class="flex gap-1">
+								<button
+									type="button"
+									onclick={() => startEditingUrl(item)}
+									class="text-caption text-tertiary hover:text-secondary rounded px-2 py-1 hover:bg-slate-600/40"
+									title="Edit original URL"
+								>
+									<Edit class="h-4 w-4" />
+								</button>
+								<button
+									type="button"
+									onclick={() => deleteUrl(item.id, item.shortenedUrl, true)}
+									class="text-caption text-error rounded px-2 py-1 hover:bg-red-900/20 hover:text-red-300"
+									title="Delete URL"
+								>
+									<Delete class="h-4 w-4" />
+								</button>
+							</div>
+						{/if}
+					{/if}
+				{/snippet}
+
+				{#snippet emptyState()}
+					<div class="rounded-lg border border-slate-600/60 bg-slate-700/40 p-8 text-center backdrop-blur-lg">
+						<p class="text-body text-secondary mb-2">No custom URLs yet</p>
+						<p class="text-body-small text-muted">Start by creating your first custom URL!</p>
+					</div>
+				{/snippet}
+			</Table>
+		</div>
 
 		<!-- Generated URLs -->
-		{#if urls.length > 0}
-			<div>
-				<h2 class="text-heading-3 text-bright mb-4 font-semibold">Generated URLs</h2>
+		<div>
+			<h2 class="text-heading-3 text-bright mb-4 font-semibold">Generated URLs</h2>
 
-				<!-- Desktop Table View -->
-				<div
-					class="hidden overflow-hidden rounded-lg border border-slate-600/60 bg-slate-700/40 backdrop-blur-lg md:block"
-				>
-					<table class="w-full table-fixed">
-						<thead class="bg-slate-600/40">
-							<tr>
-								<th class="text-body-small text-bright w-6/12 px-4 py-3 text-left font-medium">Original URL</th>
-								<th class="text-body-small text-bright w-3/12 px-4 py-3 text-left font-medium">Short Code</th>
-								<th class="text-body-small text-bright w-2/12 px-4 py-3 text-left font-medium">Created Date</th>
-								<th class="text-body-small text-bright w-1/12 px-4 py-3 text-left font-medium">Delete</th>
-							</tr>
-						</thead>
-						<tbody class="divide-y divide-slate-600/30">
-							{#each urls as url (url.id)}
-								<tr class="hover:bg-slate-600/20">
-									<td class="px-4 py-3">
-										<div class="flex items-center gap-2">
-											<div class="max-w-full overflow-x-auto">
-												<span class="text-body-small text-bright whitespace-nowrap">{url.originalUrl}</span>
-											</div>
-											<button
-												type="button"
-												onclick={() => copyToClipboard(url.originalUrl, `url-original-${url.id}`)}
-												class="text-secondary hover:text-bright rounded p-1 hover:bg-slate-600/40"
-												title="Copy original URL"
-											>
-												{#if copiedId === `url-original-${url.id}`}
-													<CheckMark class="text-success h-4 w-4" />
-												{:else}
-													<Copy class="h-4 w-4" />
-												{/if}
-											</button>
-										</div>
-									</td>
-									<td class="px-4 py-3">
-										<div class="flex items-center gap-2">
-											<span class="text-body-small text-bright whitespace-nowrap">{url.shortCode}</span>
-											<button
-												type="button"
-												onclick={() => copyToClipboard(url.shortenedUrl, `url-${url.id}`)}
-												class="text-secondary hover:text-bright rounded p-1 hover:bg-slate-600/40"
-												title="Copy shortened URL"
-											>
-												{#if copiedId === `url-${url.id}`}
-													<CheckMark class="text-success h-4 w-4" />
-												{:else}
-													<Copy class="h-4 w-4" />
-												{/if}
-											</button>
-										</div>
-									</td>
-									<td class="px-4 py-3">
-										<span class="text-body-small text-tertiary">{formatDate(url.createdAt)}</span>
-									</td>
-									<td class="px-4 py-3">
-										<button
-											type="button"
-											onclick={() => deleteUrl(url.id, url.shortenedUrl, false)}
-											class="text-caption text-error rounded px-2 py-1 hover:bg-red-900/20 hover:text-red-300"
-											aria-label="Delete URL"
-										>
-											<Delete class="h-4 w-4" />
-										</button>
-									</td>
-								</tr>
-							{/each}
-						</tbody>
-					</table>
-				</div>
-
-				<!-- Mobile Card View -->
-				<div class="block space-y-3 md:hidden">
-					{#each urls as url (url.id)}
-						<div class="relative">
-							<div class="rounded-lg border border-slate-600/60 bg-slate-700/40 p-4 backdrop-blur-lg">
-								<div class="flex items-start justify-between gap-4">
-									<div class="min-w-0 flex-1">
-										<div class="mb-2 flex items-center gap-2">
-											<span class="text-body-small text-bright whitespace-nowrap">{url.shortCode}</span>
-										</div>
-										<div class="mb-1 flex items-center gap-2">
-											<div class="max-w-full overflow-x-auto">
-												<span class="text-body-small text-bright whitespace-nowrap">→ {url.originalUrl}</span>
-											</div>
-										</div>
-										<p class="text-caption text-muted">Created {formatDate(url.createdAt)}</p>
-									</div>
-									<button
-										type="button"
-										onclick={() => deleteUrl(url.id, url.shortenedUrl, false)}
-										class="text-caption text-error rounded px-3 py-1 hover:bg-red-900/20 hover:text-red-300"
-										aria-label="Delete URL"
-									>
-										<Delete class="h-4 w-4" />
-									</button>
-								</div>
+			<Table
+				loading={urlsLoading}
+				data={urls}
+				columns={urlColumns}
+				pagination={urlsPagination}
+				onSort={handleUrlSort}
+				onPageChange={handleUrlPageChange}
+				onLimitChange={handleUrlLimitChange}
+				defaultSortKey="createdAt"
+				keyField="id"
+			>
+				{#snippet cellContent(item: UrlItem, column: { key: keyof UrlItem })}
+					{#if column.key === "originalUrl"}
+						<div class="flex items-center gap-2">
+							<div class="max-w-full overflow-x-auto">
+								<span class="text-body-small text-bright whitespace-nowrap">{item.originalUrl}</span>
 							</div>
+							<button
+								type="button"
+								onclick={() => copyToClipboard(item.originalUrl, `url-original-${item.id}`)}
+								class="text-secondary hover:text-bright rounded p-1 hover:bg-slate-600/40"
+								title="Copy original URL"
+							>
+								{#if copiedId === `url-original-${item.id}`}
+									<CheckMark class="text-success h-4 w-4" />
+								{:else}
+									<Copy class="h-4 w-4" />
+								{/if}
+							</button>
 						</div>
-					{/each}
-				</div>
-			</div>
-		{/if}
+					{:else if column.key === "shortCode"}
+						<div class="flex items-center gap-2">
+							<span class="text-body-small text-bright whitespace-nowrap">{item.shortCode}</span>
+							<button
+								type="button"
+								onclick={() => copyToClipboard(item.shortenedUrl, `url-${item.id}`)}
+								class="text-secondary hover:text-bright rounded p-1 hover:bg-slate-600/40"
+								title="Copy shortened URL"
+							>
+								{#if copiedId === `url-${item.id}`}
+									<CheckMark class="text-success h-4 w-4" />
+								{:else}
+									<Copy class="h-4 w-4" />
+								{/if}
+							</button>
+						</div>
+					{:else if column.key === "createdAt"}
+						<span class="text-body-small text-tertiary">{formatDate(item.createdAt)}</span>
+					{:else if column.key === "id"}
+						<button
+							type="button"
+							onclick={() => deleteUrl(item.id, item.shortenedUrl, false)}
+							class="text-caption text-error rounded px-2 py-1 hover:bg-red-900/20 hover:text-red-300"
+							title="Delete URL"
+						>
+							<Delete class="h-4 w-4" />
+						</button>
+					{/if}
+				{/snippet}
+
+				{#snippet emptyState()}
+					<div class="rounded-lg border border-slate-600/60 bg-slate-700/40 p-8 text-center backdrop-blur-lg">
+						<p class="text-body text-secondary mb-2">No URLs yet</p>
+						<p class="text-body-small text-muted">Start by creating your first short URL!</p>
+						<a
+							href={resolve("/")}
+							class="text-button-small text-button-color mt-4 inline-block rounded-lg bg-slate-600/60 px-4 py-2 hover:bg-slate-600/80"
+						>
+							Create URL
+						</a>
+					</div>
+				{/snippet}
+			</Table>
+		</div>
 
 		<!-- No URLs Message -->
 		{#if urls.length === 0 && customUrls.length === 0}

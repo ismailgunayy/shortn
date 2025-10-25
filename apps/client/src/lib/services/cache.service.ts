@@ -6,6 +6,8 @@ export enum CacheKind {
 	API_KEYS = "api_keys"
 }
 
+type CacheType = CacheKind | `${CacheKind}:${string}`;
+
 type CacheRecord<T = unknown> = {
 	timestamp: number;
 	ttl: number; // milliseconds
@@ -15,12 +17,18 @@ type CacheRecord<T = unknown> = {
 export class CacheService {
 	private static readonly DEFAULT_TTL = 5 * 60 * 1000; // 5 minutes in milliseconds
 
-	private generateKey(key: CacheKind): `${StorageKind.API_CACHE_PREFIX}:${CacheKind}` {
-		return `${StorageKind.API_CACHE_PREFIX}:${key}`;
+	private generateKey(type: CacheType, key?: string): `${StorageKind.API_CACHE_PREFIX}:${CacheType}` {
+		let baseKey = `${StorageKind.API_CACHE_PREFIX}:${type}`;
+
+		if (key) {
+			baseKey = `${baseKey}:${key}`;
+		}
+
+		return baseKey as `${StorageKind.API_CACHE_PREFIX}:${CacheType}`;
 	}
 
-	public get<T>(key: CacheKind): T | null {
-		const storageKey = this.generateKey(key);
+	public get<T>(type: CacheType, key: string): T | null {
+		const storageKey = this.generateKey(type, key);
 		const record = storageService.get<CacheRecord<T>>(storageKey);
 
 		if (!record) {
@@ -37,20 +45,26 @@ export class CacheService {
 		return record.data;
 	}
 
-	public set(key: CacheKind, data: unknown, ttl: number = CacheService.DEFAULT_TTL): void {
+	public set(type: CacheType, key: string, data: unknown, ttl: number = CacheService.DEFAULT_TTL): void {
 		const record: CacheRecord = {
 			timestamp: Math.floor(Date.now()),
 			ttl,
 			data
 		};
 
-		const storageKey = this.generateKey(key);
+		const storageKey = this.generateKey(type, key);
 		storageService.set(storageKey, record);
 	}
 
-	public remove(key: CacheKind): void {
-		const storageKey = this.generateKey(key);
-		storageService.remove(storageKey);
+	public remove(type: CacheType): void {
+		const storageKey = this.generateKey(type);
+		const keys = storageService.keys();
+
+		keys.forEach((key) => {
+			if (key.startsWith(storageKey)) {
+				storageService.remove(key as StorageType);
+			}
+		});
 	}
 
 	public clear(): void {

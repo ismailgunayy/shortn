@@ -47,6 +47,10 @@ export class UrlService extends Service {
 	}
 
 	public async getGeneratedUrls(query?: UrlQueryParams): Promise<ApiResponse<GetGeneratedUrlsResponse>> {
+		if (query?.sortBy === "originalUrl") {
+			query.sortBy = "url";
+		}
+
 		const response = await this.request<GetGeneratedUrlsResponse>("url/generated", {
 			method: "GET",
 			query,
@@ -63,6 +67,10 @@ export class UrlService extends Service {
 	}
 
 	public async getCustomUrls(query?: CustomUrlQueryParams): Promise<ApiResponse<GetCustomUrlsResponse>> {
+		if (query?.sortBy === "originalUrl") {
+			query.sortBy = "url";
+		}
+
 		const response = await this.request<GetCustomUrlsResponse>("url/custom", {
 			method: "GET",
 			query,
@@ -180,13 +188,13 @@ export interface DeleteUrlPayload {
 export interface UrlQueryParams {
 	page?: number;
 	limit?: number;
-	sortBy?: "url" | "createdAt";
+	sortBy?: "originalUrl" | "url" | "createdAt";
 	sortOrder?: "asc" | "desc";
 	search?: string;
 }
 
 export interface CustomUrlQueryParams extends Omit<UrlQueryParams, "sortBy"> {
-	sortBy?: "url" | "createdAt" | "customCode";
+	sortBy?: "originalUrl" | "url" | "createdAt" | "customCode";
 }
 
 export interface PaginationMeta {
