@@ -22,22 +22,6 @@ A non-innovative URL Shortener
 
 - **📈 Analytics**: View click statistics for your URLs
 
-## Architecture
-
-#### Backend
-
-- **Plugin-based API**: Modular Fastify plugins for easy extensibility
-- **Type-safe database**: Kysely ORM with generated TypeScript types
-- **Layered architecture**: Controllers → Services → Repositories → Database
-- **Dual authentication**: JWT cookies for web + API keys for programmatic access
-
-#### Frontend
-
-- **SvelteKit 5 with runes**: Modern reactive patterns with server-side rendering
-- **Route-based auth**: Protected routes with automatic redirects
-- **API proxy**: Server-side API calls to hide sensitive keys
-- **Responsive design**: Mobile-first approach with Tailwind CSS
-
 ## Tech Stack
 
 #### Backend
@@ -53,6 +37,7 @@ A non-innovative URL Shortener
 
 - **[SvelteKit 5](https://kit.svelte.dev/)** - Full-stack framework
 - **[Tailwind CSS](https://tailwindcss.com/)** - Styling
+- **[Zod](https://zod.dev/)** - Runtime type validation
 - **[Vite](https://vite.dev)** - Build tool
 
 #### DevOps & Tooling
