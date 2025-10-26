@@ -69,6 +69,10 @@ export class StorageService {
 	}
 
 	public keys(): string[] {
+		if (!browser) {
+			return [];
+		}
+
 		return Object.keys(localStorage);
 	}
 }
