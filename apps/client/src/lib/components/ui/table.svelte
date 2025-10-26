@@ -248,7 +248,7 @@
 					class="text-body-small text-bright rounded border border-slate-600/60 bg-slate-800/40 px-2 py-1 md:hidden"
 				>
 					{#each limitOptions as limit (limit)}
-						<option value={limit}>{limit}asd</option>
+						<option value={limit}>{limit}</option>
 					{/each}
 				</select>
 			</div>
