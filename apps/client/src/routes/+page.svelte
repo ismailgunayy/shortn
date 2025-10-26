@@ -233,7 +233,7 @@
 					>
 						{#if loading}
 							<span class="flex items-center justify-center">
-								<Loading />
+								<Loading class="mr-2" />
 								Please wait
 							</span>
 						{:else}
