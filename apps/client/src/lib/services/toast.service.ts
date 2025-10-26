@@ -1,5 +1,5 @@
 import { browser } from "$app/environment";
-import toast, { type Renderable, type ToastOptions } from "svelte-french-toast";
+import toast, { type ToastOptions } from "svelte-french-toast";
 import type { ApiError } from "./api/base.api";
 
 export type ToastType = "success" | "error" | "info" | "warning";
@@ -17,7 +17,7 @@ class ToastService {
 			return this.show(error, "error", options);
 		}
 
-		let message: Renderable = `Error: ${error.message}`;
+		let message: string = `Error: ${error.message}`;
 
 		if (error.details) {
 			const detailsList = error.details.map((detail) => `- ${detail.message}`).join("\n");
@@ -44,7 +44,8 @@ class ToastService {
 			...options,
 			position: this.defaultPosition,
 			style,
-			ariaProps: this.getAriaProps(type)
+			ariaProps: this.getAriaProps(type),
+			id: options?.id ?? message
 		};
 
 		switch (type) {

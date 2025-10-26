@@ -323,6 +323,12 @@
 					<div class="rounded-lg border border-slate-600/60 bg-slate-700/40 p-8 text-center backdrop-blur-lg">
 						<p class="text-body text-secondary mb-2">No custom URLs yet</p>
 						<p class="text-body-small text-muted">Start by creating your first custom URL!</p>
+						<a
+							href={resolve("/")}
+							class="text-button-small text-button-color mt-4 inline-block rounded-lg bg-slate-600/60 px-4 py-2 hover:bg-slate-600/80"
+						>
+							Create URL
+						</a>
 					</div>
 				{/snippet}
 			</Table>
@@ -406,19 +412,5 @@
 				{/snippet}
 			</Table>
 		</div>
-
-		<!-- No URLs Message -->
-		{#if urls.length === 0 && customUrls.length === 0}
-			<div class="rounded-lg border border-slate-600/60 bg-slate-700/40 p-8 text-center backdrop-blur-lg">
-				<p class="text-body text-secondary mb-2">No URLs yet</p>
-				<p class="text-body-small text-muted">Start by creating your first short URL!</p>
-				<a
-					href={resolve("/")}
-					class="text-button-small text-button-color mt-4 inline-block rounded-lg bg-slate-600/60 px-4 py-2 hover:bg-slate-600/80"
-				>
-					Create URL
-				</a>
-			</div>
-		{/if}
 	{/if}
 </div>
