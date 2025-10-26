@@ -4,7 +4,6 @@ import {
 	ApiKeyNotFound,
 	ApiKeyNotProvided,
 	InactiveApiKey,
-	InvalidApiKey,
 	InvalidApiKeyFormat,
 	UserAlreadyExists,
 	UserNotFound,
@@ -248,10 +247,6 @@ export class AuthService {
 
 		if (!apiKey.isActive) {
 			throw new InactiveApiKey();
-		}
-
-		if (keyHash !== apiKey.keyHash) {
-			throw new InvalidApiKey();
 		}
 
 		await this.authRepository.updateApiKey(apiKey.id, apiKey.userId, { lastUsedAt: new Date() });

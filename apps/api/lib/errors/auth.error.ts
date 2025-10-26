@@ -42,12 +42,6 @@ export class ApiKeyNameAlreadyInUse extends AuthError {
 	}
 }
 
-export class InvalidApiKey extends AuthError {
-	constructor(cause?: unknown) {
-		super("Invalid API key", 400, cause);
-	}
-}
-
 export class InactiveApiKey extends AuthError {
 	constructor(cause?: unknown) {
 		super("Inactive API key", 403, cause);

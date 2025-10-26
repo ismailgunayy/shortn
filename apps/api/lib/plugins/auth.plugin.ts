@@ -25,7 +25,18 @@ export const auth = fastifyPlugin(async (app: App) => {
 			const userData = await app.services.auth.me(decoded.id);
 			user = { ...userData, authenticatedWith: "accessToken" };
 		} else if (request.headers.authorization) {
-			const apiKey = request.headers.authorization.split(" ")[1];
+			const authHeader = request.headers.authorization;
+
+			if (!authHeader.startsWith("Bearer ") && !authHeader.startsWith("Token ")) {
+				throw new Unauthorized();
+			}
+
+			const parts = authHeader.split(" ");
+			if (parts.length !== 2 || !parts[1] || parts[1].trim() === "") {
+				throw new Unauthorized();
+			}
+
+			const apiKey = parts[1];
 			const { userId } = await app.services.auth.verifyApiKey(apiKey);
 
 			const userData = await app.services.auth.me(userId);
