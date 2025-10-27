@@ -29,7 +29,7 @@
 >
 	<div class="space-y-6">
 		<!-- Description -->
-		<p class="text-secondary text-center">Create your free account and get access to powerful features</p>
+		<p class="text-secondary text-center">Create a free account to unlock these features</p>
 
 		<!-- Features list -->
 		<div class="space-y-4">
@@ -41,7 +41,7 @@
 				</div>
 				<div>
 					<h3 class="text-bright font-semibold">Custom Branded URLs</h3>
-					<p class="text-muted text-sm">Create memorable, branded short links.</p>
+					<p class="text-tertiary text-sm">Create memorable, branded short links</p>
 				</div>
 			</div>
 
@@ -53,7 +53,7 @@
 				</div>
 				<div>
 					<h3 class="text-bright font-semibold">API Keys & Integration</h3>
-					<p class="text-muted text-sm">Generate API keys to integrate Shortn into your apps and workflows.</p>
+					<p class="text-tertiary text-sm">Generate API keys to integrate Shortn into your apps</p>
 				</div>
 			</div>
 
@@ -65,7 +65,7 @@
 				</div>
 				<div>
 					<h3 class="text-bright font-semibold">Personal Dashboard</h3>
-					<p class="text-muted text-sm">Manage your URLs and API keys from a centralized dashboard.</p>
+					<p class="text-tertiary text-sm">Manage your URLs and API keys from a dashboard</p>
 				</div>
 			</div>
 		</div>

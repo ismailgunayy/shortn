@@ -71,7 +71,7 @@
 				<button
 					type="button"
 					onclick={handleClose}
-					class="text-muted hover:text-bright absolute top-4 right-4 p-1 transition-colors"
+					class="text-secondary hover:text-bright absolute top-4 right-4 p-1 transition-colors"
 					aria-label="Close modal"
 				>
 					<Close />
@@ -80,10 +80,10 @@
 
 			<!-- Modal header -->
 			{#if title}
-				<div class="mb-6 {showCloseButton ? 'pr-8' : ''}">
+				<div class="mb-4">
 					<h2
 						id="modal-title"
-						class="bg-linear-to-r from-slate-200 to-slate-100 bg-clip-text text-xl font-bold text-transparent sm:text-2xl"
+						class="bg-linear-to-r from-slate-200 to-slate-100 bg-clip-text text-center text-xl font-bold text-transparent sm:text-2xl"
 					>
 						{title}
 					</h2>

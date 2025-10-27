@@ -43,7 +43,7 @@
 >
 	<div class="space-y-6">
 		<!-- Message -->
-		<p class="text-secondary">{message}</p>
+		<p class="text-secondary text-center">{message}</p>
 
 		<!-- Action buttons -->
 		<div class="flex gap-3">
