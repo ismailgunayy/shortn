@@ -4,21 +4,19 @@ import { App } from "~/types/fastify";
 import fastifyPlugin from "fastify-plugin";
 
 const restrictAuthEndpoints = (app: App) => {
-	app.addHook("onRequest", (request, reply, done) => {
-		if (app.config.IS_LOCAL) {
-			return done();
+	app.addHook("preHandler", (request, reply, done) => {
+		const { origin } = request.headers;
+
+		if (request.user?.authenticatedWith === "apiKey" || !origin || !app.config.HTTP.CLIENT_URL.includes(origin)) {
+			return reply.status(403).send({
+				success: false,
+				error: {
+					message: "Forbidden"
+				}
+			});
 		}
 
-		if (request.user?.authenticatedWith === "accessToken") {
-			return done();
-		}
-
-		return reply.status(403).send({
-			success: false,
-			error: {
-				message: "Forbidden"
-			}
-		});
+		return done();
 	});
 };
 
