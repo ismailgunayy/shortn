@@ -15,7 +15,7 @@ type CacheRecord<T = unknown> = {
 };
 
 export class CacheService {
-	private static readonly DEFAULT_TTL = 5 * 60 * 1000; // 5 minutes in milliseconds
+	private static readonly DEFAULT_TTL = 1 * 60 * 1000; // 1 minute in milliseconds
 
 	private generateKey(type: CacheType, key?: string): `${StorageKind.API_CACHE_PREFIX}:${CacheType}` {
 		let baseKey = `${StorageKind.API_CACHE_PREFIX}:${type}`;
