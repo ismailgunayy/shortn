@@ -26,15 +26,17 @@ A non-innovative URL Shortener
 
 #### Backend
 
+- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript
 - **[Fastify](https://fastify.dev/)** - High-performance HTTP framework
 - **[Kysely](https://kysely.dev/)** - Type-safe SQL query builder
 - **[PostgreSQL](https://www.postgresql.org/)** - Primary database
-- **[Redis](https://redis.io/)** - Cache layer for URLs and sessions
+- **[Redis](https://redis.io/)** - Cache layer
 - **[Zod](https://zod.dev/)** - Runtime type validation
 - **[ESBuild](https://esbuild.github.io/)** - Build tool
 
 #### Frontend
 
+- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript
 - **[SvelteKit 5](https://kit.svelte.dev/)** - Full-stack framework
 - **[Tailwind CSS](https://tailwindcss.com/)** - Styling
 - **[Zod](https://zod.dev/)** - Runtime type validation
