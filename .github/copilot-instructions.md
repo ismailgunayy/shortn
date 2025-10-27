@@ -2,7 +2,7 @@
 
 ## Architecture Overview
 
-This is a **TurboRepo monorepo** with a URL shortener service featuring:
+This is a **Turborepo monorepo** with a URL shortener service featuring:
 
 - **Backend**: Fastify API (`apps/api/`) with PostgreSQL + Redis
 - **Frontend**: SvelteKit 5 client (`apps/client/`)

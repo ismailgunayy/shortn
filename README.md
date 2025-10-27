@@ -44,7 +44,7 @@ A non-innovative URL Shortener
 
 #### DevOps & Tooling
 
-- **[TurboRepo](https://turbo.build/repo)** - Monorepo solution
+- **[Turborepo](https://turbo.build/repo)** - Monorepo solution
 - **[Docker](https://www.docker.com/)** - Containerization
 - **[GitHub Actions](https://github.com/features/actions)** - CI/CD
 - **[Railway](https://railway.app)** - Deployment
