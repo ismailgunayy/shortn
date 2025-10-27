@@ -46,7 +46,7 @@
 </script>
 
 <svelte:head>
-	<title>Login - Shortn URL Shortener | Access Your Account</title>
+	<title>Shortn | Login</title>
 	<meta
 		name="description"
 		content="Log in to your Shortn account to access your dashboard, manage your shortened URLs, and view analytics. Secure login to your URL shortener account."

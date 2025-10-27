@@ -47,7 +47,7 @@
 </script>
 
 <svelte:head>
-	<title>Register - Create Free Shortn Account | URL Shortener Signup</title>
+	<title>Shortn | Register</title>
 	<meta
 		name="description"
 		content="Create your free Shortn account to unlock custom URLs, analytics, API access, and advanced link management features. Sign up for free URL shortener service."
