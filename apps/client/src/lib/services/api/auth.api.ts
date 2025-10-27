@@ -3,7 +3,7 @@ import { resolve } from "$app/paths";
 import { authStore } from "$lib/stores/auth.store";
 import { toastService } from "$lib/services/toast.service";
 import { Service, type ApiResponse, type ServiceConfig } from "./base.api";
-import { CacheKind, cacheService } from "../cache.service";
+import { CacheKind, cacheService } from "$lib/services/cache.service";
 
 export class AuthService extends Service {
 	constructor(config?: ServiceConfig) {

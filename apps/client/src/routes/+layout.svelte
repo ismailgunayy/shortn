@@ -68,7 +68,7 @@
 	</script>
 </svelte:head>
 
-<div class="flex min-h-screen flex-col bg-gradient-to-br from-slate-900 via-slate-800/90 to-slate-900">
+<div class="flex min-h-screen flex-col bg-linear-to-br from-slate-900 via-slate-800/90 to-slate-900">
 	<Header />
 
 	<main class="flex-1 px-4 pt-8 pb-16">

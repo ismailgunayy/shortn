@@ -1,4 +1,4 @@
-import { cacheService, type CacheKind } from "../cache.service";
+import { cacheService, type CacheKind } from "$lib/services/cache.service";
 import { authStore } from "$lib/stores/auth.store";
 import { browser } from "$app/environment";
 import { config } from "$lib/common/config";

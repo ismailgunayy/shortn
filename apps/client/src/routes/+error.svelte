@@ -41,9 +41,7 @@
 
 				<!-- Error Message -->
 				<div class="space-y-2">
-					<h1
-						class="text-heading-2 bg-gradient-to-r from-slate-300 to-slate-100 bg-clip-text font-bold text-transparent"
-					>
+					<h1 class="text-heading-2 bg-linear-to-r from-slate-300 to-slate-100 bg-clip-text font-bold text-transparent">
 						You seem lost
 					</h1>
 				</div>
@@ -59,7 +57,7 @@
 				<!-- Manual Navigation Button -->
 				<a
 					href={resolve("/")}
-					class="text-button text-button-color inline-flex transform cursor-pointer items-center justify-center rounded-xl bg-gradient-to-r
+					class="text-button text-button-color inline-flex transform cursor-pointer items-center justify-center rounded-xl bg-linear-to-r
 						   from-slate-600 to-slate-700 px-6 py-3 font-medium shadow-lg shadow-slate-900/20 backdrop-blur-lg
 						   transition-all duration-230 hover:scale-[1.02] hover:from-slate-500 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30
 						   focus:ring-2 focus:ring-slate-400/20 focus:outline-none active:scale-[0.98]"

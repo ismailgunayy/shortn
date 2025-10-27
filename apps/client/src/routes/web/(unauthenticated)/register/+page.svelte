@@ -69,12 +69,10 @@
 <div class="flex flex-col items-center justify-center">
 	<!-- Title -->
 	<div class="mb-8 text-center">
-		<h1
-			class="text-heading-1 mb-3 bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text font-bold text-transparent"
-		>
+		<h1 class="text-heading-1 mb-3 bg-linear-to-r from-slate-400 to-slate-200 bg-clip-text font-bold text-transparent">
 			Register
 		</h1>
-		<p class="text-body bg-gradient-to-r from-slate-300 to-slate-100 bg-clip-text text-transparent">
+		<p class="text-body bg-linear-to-r from-slate-300 to-slate-100 bg-clip-text text-transparent">
 			Create your Shortn account
 		</p>
 	</div>
@@ -170,7 +168,7 @@
 			<button
 				type="submit"
 				disabled={authState.loading || !formData.fullName.trim() || !formData.email.trim() || !formData.password.trim()}
-				class="text-button text-button-color w-full transform rounded-xl bg-gradient-to-r from-slate-400/80 to-slate-600/80 px-6 py-2.5 font-semibold shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:ring-2 focus:ring-slate-400/20 focus:outline-none active:scale-[0.98] disabled:opacity-50"
+				class="text-button text-button-color w-full transform rounded-xl bg-linear-to-r from-slate-400/80 to-slate-600/80 px-6 py-2.5 font-semibold shadow-lg backdrop-blur-lg transition-all duration-200 hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30 focus:ring-2 focus:ring-slate-400/20 focus:outline-none active:scale-[0.98] disabled:opacity-50"
 			>
 				{#if loading}
 					<span class="flex items-center justify-center">

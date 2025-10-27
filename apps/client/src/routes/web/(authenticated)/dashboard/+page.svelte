@@ -18,7 +18,7 @@
 	<div class="mx-auto max-w-6xl">
 		<div class="mb-8 text-center">
 			<h1
-				class="text-heading-1 mb-3 bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text font-bold text-transparent"
+				class="text-heading-1 mb-3 bg-linear-to-r from-slate-400 to-slate-200 bg-clip-text font-bold text-transparent"
 			>
 				Dashboard
 			</h1>

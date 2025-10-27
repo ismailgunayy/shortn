@@ -16,8 +16,9 @@
 	import { toastService } from "$lib/services/toast.service";
 	import { formatDate } from "$lib/utils/format-date.util";
 	import { onMount } from "svelte";
-	import Table from "../ui/table.svelte";
+	import Table from "$lib/components/ui/table.svelte";
 	import Close from "$lib/icons/close.icon.svelte";
+	import ConfirmationModal from "$lib/components/ui/confirmation-modal.svelte";
 
 	let loading = $state(true);
 	let urlsLoading = $state(false);
@@ -31,6 +32,13 @@
 	let editingUrl: { id: number; originalUrl: string } | null = $state(null);
 	let editOriginalUrl = $state("");
 	let updatingUrl = $state(false);
+
+	// Confirmation modal state
+	let showDeleteConfirm = $state(false);
+	let deleteUrlId: number | null = $state(null);
+	let deleteUrlShortenedUrl = $state("");
+	let deleteUrlIsCustom = $state(false);
+	let deletingUrl = $state(false);
 
 	let urlsQuery: UrlQueryParams = $state({
 		page: 1,
@@ -131,18 +139,43 @@
 	}
 
 	async function deleteUrl(id: number, shortenedUrl: string, isCustom = false) {
-		const confirmed = confirm("Are you sure you want to delete this URL?");
-		if (!confirmed) return;
+		deleteUrlId = id;
+		deleteUrlShortenedUrl = shortenedUrl;
+		deleteUrlIsCustom = isCustom;
+		showDeleteConfirm = true;
+	}
 
-		const response = await clientApi.url.deleteUrl(id, { shortenedUrl }, isCustom);
+	async function confirmDeleteUrl() {
+		if (!deleteUrlId) return;
+
+		deletingUrl = true;
+		const response = await clientApi.url.deleteUrl(
+			deleteUrlId,
+			{ shortenedUrl: deleteUrlShortenedUrl },
+			deleteUrlIsCustom
+		);
 
 		if (response.success) {
-			if (isCustom) {
-				customUrls = customUrls.filter((url) => url.id !== id);
+			if (deleteUrlIsCustom) {
+				customUrls = customUrls.filter((url) => url.id !== deleteUrlId);
 			} else {
-				urls = urls.filter((url) => url.id !== id);
+				urls = urls.filter((url) => url.id !== deleteUrlId);
 			}
 		}
+
+		// Reset state
+		deletingUrl = false;
+		showDeleteConfirm = false;
+		deleteUrlId = null;
+		deleteUrlShortenedUrl = "";
+		deleteUrlIsCustom = false;
+	}
+
+	function cancelDeleteUrl() {
+		showDeleteConfirm = false;
+		deleteUrlId = null;
+		deleteUrlShortenedUrl = "";
+		deleteUrlIsCustom = false;
 	}
 
 	async function handleUrlSort(sortBy: string, sortOrder: "asc" | "desc") {
@@ -414,3 +447,14 @@
 		</div>
 	{/if}
 </div>
+
+<!-- Delete URL Confirmation Modal -->
+<ConfirmationModal
+	bind:isOpen={showDeleteConfirm}
+	title="Delete URL"
+	message="Are you sure you want to delete this URL?"
+	confirmText="Delete"
+	onConfirm={confirmDeleteUrl}
+	onCancel={cancelDeleteUrl}
+	loading={deletingUrl}
+/>

@@ -1,7 +1,7 @@
 import { Service, type ApiRequestOptions, type ApiResponse, type ServiceConfig } from "./base.api";
 import { config } from "$lib/common/config";
 import { toastService } from "$lib/services/toast.service";
-import { CacheKind, cacheService } from "../cache.service";
+import { CacheKind, cacheService } from "$lib/services/cache.service";
 
 export class UrlService extends Service {
 	constructor(config?: ServiceConfig) {

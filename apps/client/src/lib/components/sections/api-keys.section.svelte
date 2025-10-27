@@ -12,8 +12,10 @@
 	import { toastService } from "$lib/services/toast.service";
 	import { formatDate } from "$lib/utils/format-date.util";
 	import { onMount } from "svelte";
-	import Table from "../ui/table.svelte";
+	import Table from "$lib/components/ui/table.svelte";
 	import Close from "$lib/icons/close.icon.svelte";
+	import ConfirmationModal from "$lib/components/ui/confirmation-modal.svelte";
+	import Modal from "$lib/components/ui/modal.svelte";
 
 	let loading = $state(true);
 	let apiKeys: ApiKey[] = $state([]);
@@ -25,6 +27,14 @@
 	let editingApiKey: { id: number; name: string } | null = $state(null);
 	let editApiKeyName = $state("");
 	let updatingApiKey = $state(false);
+
+	let showDeleteConfirm = $state(false);
+	let deleteApiKeyId: number | null = $state(null);
+	let deleteApiKeyName = $state("");
+	let deletingApiKey = $state(false);
+
+	// API Key Created Modal state
+	let showApiKeyCreated = $state(false);
 
 	onMount(async () => {
 		await loadData();
@@ -49,6 +59,7 @@
 
 		if (response.data) {
 			newApiKey = response.data;
+			showApiKeyCreated = true;
 
 			apiKeys = [
 				...apiKeys,
@@ -64,6 +75,12 @@
 		}
 
 		creatingApiKey = false;
+	}
+
+	function closeApiKeyCreatedModal() {
+		showApiKeyCreated = false;
+		newApiKey = null;
+		newApiKeyName = "";
 	}
 
 	async function updateApiKey() {
@@ -86,14 +103,31 @@
 	}
 
 	async function deleteApiKey(id: number, name: string) {
-		const confirmed = confirm(`Are you sure you want to delete the API key "${name}"?`);
-		if (!confirmed) return;
+		deleteApiKeyId = id;
+		deleteApiKeyName = name;
+		showDeleteConfirm = true;
+	}
 
-		const response = await clientApi.auth.deleteApiKey(id);
+	async function confirmDeleteApiKey() {
+		if (!deleteApiKeyId) return;
+
+		deletingApiKey = true;
+		const response = await clientApi.auth.deleteApiKey(deleteApiKeyId);
 
 		if (response.success) {
-			apiKeys = apiKeys.filter((key) => key.id !== id);
+			apiKeys = apiKeys.filter((key) => key.id !== deleteApiKeyId);
 		}
+
+		deletingApiKey = false;
+		showDeleteConfirm = false;
+		deleteApiKeyId = null;
+		deleteApiKeyName = "";
+	}
+
+	function cancelDeleteApiKey() {
+		showDeleteConfirm = false;
+		deleteApiKeyId = null;
+		deleteApiKeyName = "";
 	}
 
 	async function copyToClipboard(text: string, id: string) {
@@ -328,16 +362,14 @@
 </div>
 
 <!-- API Key Created Modal -->
-{#if newApiKey}
-	<div
-		class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
-		role="dialog"
-		aria-modal="true"
-		tabindex="-1"
-		onclick={(e) => e.target === e.currentTarget && (newApiKey = null)}
-		onkeydown={(e) => e.key === "Escape" && (newApiKey = null)}
-	>
-		<div class="w-full max-w-md rounded-xl border border-slate-600/60 bg-slate-700/40 p-6 backdrop-blur-lg">
+<Modal
+	bind:isOpen={showApiKeyCreated}
+	title="API Key Created"
+	onClose={closeApiKeyCreatedModal}
+	maxWidth="sm"
+>
+	{#if newApiKey}
+		<div class="space-y-6">
 			<div class="space-y-4">
 				<div>
 					<span class="text-caption text-muted font-medium">Key Name</span>
@@ -374,14 +406,22 @@
 
 			<button
 				type="button"
-				onclick={() => {
-					newApiKey = null;
-					newApiKeyName = "";
-				}}
-				class="text-button text-button-color mt-6 w-full rounded-lg bg-slate-600/60 px-4 py-2.5 hover:bg-slate-600/80"
+				onclick={closeApiKeyCreatedModal}
+				class="text-button text-button-color w-full rounded-lg bg-slate-600/60 px-4 py-2.5 hover:bg-slate-600/80"
 			>
 				Done
 			</button>
 		</div>
-	</div>
-{/if}
+	{/if}
+</Modal>
+
+<!-- Delete API Key Confirmation Modal -->
+<ConfirmationModal
+	bind:isOpen={showDeleteConfirm}
+	title="Delete API Key"
+	message={`Are you sure you want to delete the API key "${deleteApiKeyName}"?`}
+	confirmText="Delete"
+	onConfirm={confirmDeleteApiKey}
+	onCancel={cancelDeleteApiKey}
+	loading={deletingApiKey}
+/>

@@ -147,12 +147,12 @@
 	<!-- Title -->
 	<div class="mb-8 text-center sm:mb-12">
 		<h1
-			class="text-display mb-3 bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text font-bold text-transparent sm:mb-4"
+			class="text-display mb-3 bg-linear-to-r from-slate-400 to-slate-200 bg-clip-text font-bold text-transparent sm:mb-4"
 		>
 			Shortn
 		</h1>
 		<p
-			class="text-heading-3 mx-auto max-w-sm bg-gradient-to-r from-slate-300 to-slate-100 bg-clip-text text-transparent sm:max-w-lg sm:px-4"
+			class="text-heading-3 mx-auto max-w-sm bg-linear-to-r from-slate-300 to-slate-100 bg-clip-text text-transparent sm:max-w-lg sm:px-4"
 		>
 			Shortn your URLs. Simple. Fast.
 		</p>
@@ -223,7 +223,7 @@
 					<button
 						type="submit"
 						disabled={loading || !url.trim()}
-						class="text-button text-button-color w-full transform rounded-xl bg-gradient-to-r
+						class="text-button text-button-color w-full transform rounded-xl bg-linear-to-r
 							   from-slate-400/80 to-slate-600/80 px-6 py-2.5 font-semibold
 							   shadow-lg backdrop-blur-lg transition-all duration-200
 							   hover:scale-[1.02] hover:from-slate-400 hover:to-slate-600 hover:shadow-xl hover:shadow-slate-900/30
@@ -275,7 +275,7 @@
 							href={shortenedUrl}
 							target="_blank"
 							rel="noopener noreferrer"
-							class="text-button text-success flex-1 transform cursor-pointer rounded-xl bg-gradient-to-r
+							class="text-button text-success flex-1 transform cursor-pointer rounded-xl bg-linear-to-r
 								   from-emerald-800/80 to-emerald-700/80 px-4 py-2.5 text-center font-semibold shadow-lg backdrop-blur-lg
 								   transition-all duration-230 hover:scale-[1.02] hover:from-emerald-800 hover:to-emerald-700
 								   hover:shadow-xl hover:shadow-slate-900/30 active:scale-[0.98]
@@ -286,7 +286,7 @@
 						<button
 							type="button"
 							onclick={reset}
-							class="text-button text-secondary hover:text-bright flex-1 transform rounded-xl border border-slate-600/60 bg-gradient-to-r from-slate-600/40 to-slate-700
+							class="text-button text-secondary hover:text-bright flex-1 transform rounded-xl border border-slate-600/60 bg-linear-to-r from-slate-600/40 to-slate-700
 								   px-4 py-2.5 font-semibold backdrop-blur-lg transition-all duration-230
 								   hover:scale-[1.02] hover:bg-slate-600/40 active:scale-[0.98] sm:px-6 sm:py-3"
 						>

@@ -9,7 +9,7 @@ button {
 }
 
 .text-primary {
-	@apply bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent;
+	@apply bg-linear-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent;
 }
 
 .text-secondary {
@@ -34,7 +34,7 @@ button {
 
 /* Form-specific text colors */
 .text-form-label {
-	@apply bg-gradient-to-r from-slate-300 to-slate-200 bg-clip-text text-transparent;
+	@apply bg-linear-to-r from-slate-300 to-slate-200 bg-clip-text text-transparent;
 }
 
 .text-form-input {

@@ -114,7 +114,7 @@
 				</a>
 				<a
 					href={resolve("/web/register")}
-					class="text-button-small text-button-color rounded-lg bg-gradient-to-r from-slate-500/80 to-slate-600/80 px-3 py-2 font-medium backdrop-blur-lg transition-all duration-230 hover:from-slate-400 hover:to-slate-600 sm:px-4"
+					class="text-button-small text-button-color rounded-lg bg-linear-to-r from-slate-500/80 to-slate-600/80 px-3 py-2 font-medium backdrop-blur-lg transition-all duration-230 hover:from-slate-400 hover:to-slate-600 sm:px-4"
 				>
 					Register
 				</a>
