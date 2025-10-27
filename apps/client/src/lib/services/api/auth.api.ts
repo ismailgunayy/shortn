@@ -122,12 +122,11 @@ export class AuthService extends Service {
 			body: JSON.stringify(payload)
 		});
 
-		if (response.success) {
-			cacheService.remove(CacheKind.API_KEYS);
-		} else if (response.error) {
+		if (response.error) {
 			toastService.error(response.error);
 		}
 
+		cacheService.remove(CacheKind.API_KEYS);
 		return response;
 	}
 
@@ -138,12 +137,12 @@ export class AuthService extends Service {
 		});
 
 		if (response.success) {
-			cacheService.remove(CacheKind.API_KEYS);
 			toastService.success("API key updated successfully.");
 		} else if (response.error) {
 			toastService.error(response.error);
 		}
 
+		cacheService.remove(CacheKind.API_KEYS);
 		return response;
 	}
 
@@ -153,12 +152,12 @@ export class AuthService extends Service {
 		});
 
 		if (response.success) {
-			cacheService.remove(CacheKind.API_KEYS);
 			toastService.success("API key deleted successfully.");
 		} else if (response.error) {
 			toastService.error(response.error);
 		}
 
+		cacheService.remove(CacheKind.API_KEYS);
 		return response;
 	}
 }

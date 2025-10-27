@@ -26,16 +26,15 @@ export class UrlService extends Service {
 			...options
 		});
 
-		if (response.success) {
-			if (payload.customCode) {
-				cacheService.remove(CacheKind.CUSTOM_URLS);
-			} else {
-				cacheService.remove(CacheKind.GENERATED_URLS);
-			}
-		} else if (response.error) {
+		if (response.error) {
 			toastService.error(response.error);
 		}
 
+		if (payload.customCode) {
+			cacheService.remove(CacheKind.CUSTOM_URLS);
+		} else {
+			cacheService.remove(CacheKind.GENERATED_URLS);
+		}
 		return response;
 	}
 
@@ -96,12 +95,12 @@ export class UrlService extends Service {
 		});
 
 		if (response.success && response.data) {
-			cacheService.remove(CacheKind.CUSTOM_URLS);
 			toastService.success("Custom URL updated successfully.");
 		} else if (response.error) {
 			toastService.error(response.error);
 		}
 
+		cacheService.remove(CacheKind.CUSTOM_URLS);
 		return response;
 	}
 
@@ -112,16 +111,16 @@ export class UrlService extends Service {
 		});
 
 		if (response.success) {
-			if (isCustom) {
-				cacheService.remove(CacheKind.CUSTOM_URLS);
-			} else {
-				cacheService.remove(CacheKind.GENERATED_URLS);
-			}
 			toastService.success("URL deleted successfully.");
 		} else if (response.error) {
 			toastService.error(response.error);
 		}
 
+		if (isCustom) {
+			cacheService.remove(CacheKind.CUSTOM_URLS);
+		} else {
+			cacheService.remove(CacheKind.GENERATED_URLS);
+		}
 		return response;
 	}
 }
