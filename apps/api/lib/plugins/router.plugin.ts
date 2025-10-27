@@ -4,7 +4,7 @@ import { App } from "~/types/fastify";
 import fastifyPlugin from "fastify-plugin";
 
 const restrictAuthEndpoints = (app: App) => {
-	app.addHook("preHandler", (request, reply, done) => {
+	app.addHook("onRequest", (request, reply, done) => {
 		const { origin } = request.headers;
 
 		if (request.user?.authenticatedWith === "apiKey" || !origin || !app.config.HTTP.CLIENT_URL.includes(origin)) {
