@@ -181,7 +181,7 @@
 			</button>
 
 			<!-- Login Link -->
-			<p class="text-body-small text-muted mt-4 text-center">
+			<p class="text-body-small text-tertiary mt-4 text-center">
 				Already have an account?
 				<a
 					href={resolve("/web/login")}

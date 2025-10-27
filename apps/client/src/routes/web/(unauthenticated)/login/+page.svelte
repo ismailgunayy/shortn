@@ -158,7 +158,7 @@
 			</button>
 
 			<!-- Register Link -->
-			<p class="text-body-small text-muted mt-4 text-center">
+			<p class="text-body-small text-tertiary mt-4 text-center">
 				Don't have an account?
 				<a
 					href={resolve("/web/register")}
