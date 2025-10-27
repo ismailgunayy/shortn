@@ -180,7 +180,7 @@
 							id="url"
 							type="url"
 							bind:value={url}
-							placeholder="https://example.com/very-long-url"
+							placeholder="https://example.com/your-url"
 							class="text-form-input mt-1 w-full rounded-xl border border-slate-600/60 bg-slate-800/40 px-4 py-2.5
 									   placeholder-slate-500 backdrop-blur-lg transition-all
 									   duration-200 focus:border-slate-500/80 focus:ring-2 focus:ring-slate-400/20 focus:outline-none
