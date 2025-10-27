@@ -32,10 +32,10 @@
 		</div>
 
 		<div class="space-y-3">
-			<p class="text-secondary text-sm">This could happen if:</p>
-			<ul class="text-bright ml-4 list-disc space-y-1 text-left text-sm">
+			<p class="text-bright text-left text-sm">This could happen if:</p>
+			<ul class="text-secondary ml-4 list-disc space-y-1 text-left text-sm">
 				<li>The URL was typed incorrectly</li>
-				<li>The URL was never created</li>
+				<li>The URL was deleted or never created</li>
 				<li>I'm not a good developer</li>
 			</ul>
 		</div>
