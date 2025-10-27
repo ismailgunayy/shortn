@@ -37,17 +37,17 @@ A non-innovative URL Shortener
 #### Frontend
 
 - **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript
-- **[SvelteKit 5](https://kit.svelte.dev/)** - Full-stack framework
+- **[Svelte/SvelteKit](https://svelte.dev/)** - Full-stack framework
 - **[Tailwind CSS](https://tailwindcss.com/)** - Styling
 - **[Zod](https://zod.dev/)** - Runtime type validation
 - **[Vite](https://vite.dev)** - Build tool
 
 #### DevOps & Tooling
 
-- **[Turborepo](https://turbo.build/repo)** - Monorepo solution
 - **[Docker](https://www.docker.com/)** - Containerization
 - **[GitHub Actions](https://github.com/features/actions)** - CI/CD
 - **[Railway](https://railway.app)** - Deployment
+- **[Turborepo](https://turbo.build/repo)** - Monorepo solution
 
 ## Quick Start with Docker
 
