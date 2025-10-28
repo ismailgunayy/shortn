@@ -1,6 +1,6 @@
 import { AuthHelper, type AuthMethod, type TokenType, UrlHelper } from "~/helpers";
 import { AuthService } from "~/services/auth.service";
-import { FastifyBaseLogger, FastifyInstance, RawServerDefault } from "fastify";
+import { FastifyBaseLogger, FastifyInstance, FastifyReply, RawServerDefault } from "fastify";
 import { IncomingMessage, ServerResponse } from "http";
 import { Kysely, Selectable } from "kysely";
 
@@ -34,6 +34,10 @@ declare module "@fastify/jwt" {
 }
 
 declare module "fastify" {
+	interface FastifyRequest {
+		startTime?: number;
+	}
+
 	interface FastifyInstance {
 		authenticate: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
 		authenticateSession: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
