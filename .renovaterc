@@ -7,7 +7,6 @@
 	"commitMessageExtra": "from {{currentVersion}} to {{newVersion}}",
 	"commitMessagePrefix": "deps:",
 	"labels": ["dependencies"],
-	"minimumReleaseAge": "3 days",
 	"prHourlyLimit": 5,
 	"rangeStrategy": "bump",
 	"schedule": ["before 6am"],
