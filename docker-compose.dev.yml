@@ -21,7 +21,7 @@ services:
       - shortn-dev-network
 
   redis:
-    image: redis:8.2-alpine
+    image: redis:8.4-alpine
     container_name: shortn-dev-redis
     command: redis-server --requirepass password
     env_file:
