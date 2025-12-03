@@ -1,8 +1,9 @@
+import { FastifyError } from "fastify";
 import { ShortnError } from "~/errors";
 import fastifyPlugin from "fastify-plugin";
 
 export const error = fastifyPlugin((app) => {
-	app.setErrorHandler((error, _request, reply) => {
+	app.setErrorHandler((error: FastifyError, _request, reply) => {
 		if (error.validation) {
 			const validationErrors = error.validation.map((err) => {
 				let field = err.instancePath.substring(1); // Remove leading slash
