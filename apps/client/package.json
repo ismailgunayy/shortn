@@ -13,7 +13,7 @@
 		"lint:fix": "eslint --fix"
 	},
 	"dependencies": {
-		"@sveltejs/kit": "^2.47.3",
+		"@sveltejs/kit": "^2.49.1",
 		"svelte": "^5.41.2",
 		"svelte-french-toast": "^1.2.0",
 		"zod": "^4.1.12"
