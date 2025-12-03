@@ -1390,6 +1390,11 @@ devalue@^5.3.2:
   resolved "https://registry.yarnpkg.com/devalue/-/devalue-5.4.0.tgz#55dc8a185569a05580fde19d3e83f0ab276a6c1e"
   integrity sha512-n0h6iYbR4IyHe4SdGzm0yV0q4v1aD/maadVkjZC+wICyhWrf1fyNEJTaF7BhlDcKar46tCn5wIMRgTLrrPgmQQ==
 
+devalue@^5.5.0:
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/devalue/-/devalue-5.5.0.tgz#2b7d3959496773dfc6d83dbc909af3ddb65ba6bb"
+  integrity sha512-69sM5yrHfFLJt0AZ9QqZXGCPfJ7fQjvpln3Rq5+PS03LD32Ost1Q9N+eEnaQwGRIriKkMImXD56ocjQmfjbV3w==
+
 diff@^3.5.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/diff/-/diff-3.5.0.tgz#800c0dd1e0a8bfbc95835c202ad220fe317e5a12"
@@ -1655,10 +1660,10 @@ esquery@^1.5.0:
   dependencies:
     estraverse "^5.1.0"
 
-esrap@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/esrap/-/esrap-2.1.0.tgz#70df8f20129df3ad82f20e306dc4000dd5947813"
-  integrity sha512-yzmPNpl7TBbMRC5Lj2JlJZNPml0tzqoqP5B1JXycNUwtqma9AKCO0M2wHrdgsHcy1WRW7S9rJknAMtByg3usgA==
+esrap@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/esrap/-/esrap-2.2.1.tgz#cbe28fe94cd7c75b158609d602f5e345bae21259"
+  integrity sha512-GiYWG34AN/4CUyaWAgunGt0Rxvr1PTMlGC0vvEov/uOQYWne2bpN03Um+k8jT+q3op33mKouP2zeJ6OlM+qeUg==
   dependencies:
     "@jridgewell/sourcemap-codec" "^1.4.15"
 
@@ -3163,10 +3168,10 @@ svelte-writable-derived@^3.1.0:
   resolved "https://registry.yarnpkg.com/svelte-writable-derived/-/svelte-writable-derived-3.1.1.tgz#03222b32f8a66ea503e95b3cce8b94bec0810044"
   integrity sha512-w4LR6/bYZEuCs7SGr+M54oipk/UQKtiMadyOhW0PTwAtJ/Ai12QS77sLngEcfBx2q4H8ZBQucc9ktSA5sUGZWw==
 
-svelte@^5.41.2:
-  version "5.41.2"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-5.41.2.tgz#5e8c048c3ae3139ccdfb4fa38283630f5715540a"
-  integrity sha512-JetVllvRzfAqg/32ST3SWkb0+OiCpJ/sSMTe206QgiTAN6XaCR3s7nx2L+hQHoUd/1YoK+UsEblGWyKcqY7Efg==
+svelte@^5.45.5:
+  version "5.45.5"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-5.45.5.tgz#c0fda859ab36ba9a2d176a90ac29c74e115913cb"
+  integrity sha512-2074U+vObO5Zs8/qhxtBwdi6ZXNIhEBTzNmUFjiZexLxTdt9vq96D/0pnQELl6YcpLMD7pZ2dhXKByfGS8SAdg==
   dependencies:
     "@jridgewell/remapping" "^2.3.4"
     "@jridgewell/sourcemap-codec" "^1.5.0"
@@ -3176,8 +3181,9 @@ svelte@^5.41.2:
     aria-query "^5.3.1"
     axobject-query "^4.1.0"
     clsx "^2.1.1"
+    devalue "^5.5.0"
     esm-env "^1.2.1"
-    esrap "^2.1.0"
+    esrap "^2.2.1"
     is-reference "^3.0.3"
     locate-character "^3.0.0"
     magic-string "^0.30.11"
