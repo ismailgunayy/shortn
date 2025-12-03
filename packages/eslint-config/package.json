@@ -9,13 +9,13 @@
 		"./api": "./api.js"
 	},
 	"devDependencies": {
-		"@eslint/js": "^9.38.0",
+		"@eslint/js": "^9.39.1",
 		"@typescript-eslint/parser": "^8.46.2",
-		"eslint": "^9.38.0",
+		"eslint": "^9.39.1",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-only-warn": "^1.1.0",
-		"eslint-plugin-svelte": "^3.12.5",
-		"eslint-plugin-turbo": "^2.5.8",
+		"eslint-plugin-svelte": "^3.13.0",
+		"eslint-plugin-turbo": "^2.6.1",
 		"globals": "^16.4.0",
 		"svelte-eslint-parser": "^1.4.0",
 		"typescript": "^5.9.3",
