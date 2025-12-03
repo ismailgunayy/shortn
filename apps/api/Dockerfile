@@ -1,5 +1,5 @@
 # Production Dockerfile for API (Fastify)
-FROM node:24.10.0-alpine AS base
+FROM node:24.11.1-alpine AS base
 
 # Dependencies stage - install all dependencies for building
 FROM base AS deps
