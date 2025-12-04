@@ -10,6 +10,7 @@
 	"prHourlyLimit": 5,
 	"rangeStrategy": "bump",
 	"schedule": ["before 6am"],
+	"minimumReleaseAge": "3 days",
 	"docker-compose": {
 		"commitMessagePrefix": "docker:"
 	},
