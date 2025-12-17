@@ -42,7 +42,6 @@ class TokenRefreshManager {
 
 			if (!success) {
 				authStore.clear();
-				toastService.error("Session expired. Please log in again.");
 				goto(resolve("/web/login"));
 			}
 
