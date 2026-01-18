@@ -9,7 +9,7 @@
 	"labels": ["dependencies"],
 	"prHourlyLimit": 5,
 	"rangeStrategy": "bump",
-	"schedule": ["* 7 * * 6"],
+	"schedule": ["before 7am on saturday"],
 	"minimumReleaseAge": "3 days",
 	"docker-compose": {
 		"commitMessagePrefix": "docker:"
