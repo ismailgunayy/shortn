@@ -1053,10 +1053,10 @@
   dependencies:
     undici-types "~7.10.0"
 
-"@types/node@^24.10.9":
-  version "24.10.9"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-24.10.9.tgz#1aeb5142e4a92957489cac12b07f9c7fe26057d0"
-  integrity sha512-ne4A0IpG3+2ETuREInjPNhUGis1SFjv1d5asp8MzEAGtOZeTeHVDOYqOgqfhvseqg/iXty2hjBf1zAOb7RNiNw==
+"@types/node@^24.10.10":
+  version "24.10.11"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-24.10.11.tgz#63e8463eec9fb2cdaa9a1ff96e6bf3303268460f"
+  integrity sha512-/Af7O8r1frCVgOz0I62jWUtMohJ0/ZQU/ZoketltOJPZpnb17yoNc9BSoVuV9qlaIXJiPNOpsfq4ByFajSArNQ==
   dependencies:
     undici-types "~7.16.0"
 
@@ -2321,10 +2321,10 @@ kysely-ctl@^0.19.0:
     std-env "^3.9.0"
     tsconfck "^3.1.6"
 
-kysely@^0.28.10:
-  version "0.28.10"
-  resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.28.10.tgz#d2441080cd6c633a3c6a927c2a364c69bbb829a7"
-  integrity sha512-ksNxfzIW77OcZ+QWSAPC7yDqUSaIVwkTWnTPNiIy//vifNbwsSgQ57OkkncHxxpcBHM3LRfLAZVEh7kjq5twVA==
+kysely@^0.28.11:
+  version "0.28.11"
+  resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.28.11.tgz#23b0d027cf59401e66d516eb23ed5e8e945fd4fd"
+  integrity sha512-zpGIFg0HuoC893rIjYX1BETkVWdDnzTzF5e0kWXJFg5lE0k1/LfNWBejrcnOFu8Q2Rfq/hTDTU7XLUM8QOrpzg==
 
 levn@^0.4.1:
   version "0.4.1"
@@ -3180,10 +3180,10 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
-svelte-check@^4.3.5:
-  version "4.3.5"
-  resolved "https://registry.yarnpkg.com/svelte-check/-/svelte-check-4.3.5.tgz#2e9e05eca63fdb5523a37c666f47614d36c11212"
-  integrity sha512-e4VWZETyXaKGhpkxOXP+B/d0Fp/zKViZoJmneZWe/05Y2aqSKj3YN2nLfYPJBQ87WEiY4BQCQ9hWGu9mPT1a1Q==
+svelte-check@^4.3.6:
+  version "4.3.6"
+  resolved "https://registry.yarnpkg.com/svelte-check/-/svelte-check-4.3.6.tgz#fa4a87eba8239a4279de6b92f5052a69d8306f62"
+  integrity sha512-uBkz96ElE3G4pt9E1Tw0xvBfIUQkeH794kDQZdAUk795UVMr+NJZpuFSS62vcmO/DuSalK83LyOwhgWq8YGU1Q==
   dependencies:
     "@jridgewell/trace-mapping" "^0.3.25"
     chokidar "^4.0.1"
