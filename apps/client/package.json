@@ -13,8 +13,8 @@
 		"lint:fix": "eslint --fix"
 	},
 	"dependencies": {
-		"@sveltejs/kit": "^2.53.2",
-		"svelte": "^5.53.5",
+		"@sveltejs/kit": "^2.53.4",
+		"svelte": "^5.53.6",
 		"svelte-french-toast": "^1.2.0",
 		"zod": "^4.3.6"
 	},
@@ -26,7 +26,7 @@
 		"eslint": "^10.0.2",
 		"prettier-plugin-svelte": "^3.5.0",
 		"prettier-plugin-tailwindcss": "^0.7.2",
-		"svelte-check": "^4.4.3",
+		"svelte-check": "^4.4.4",
 		"typescript": "^5.9.3",
 		"vite": "^7.3.1"
 	}
