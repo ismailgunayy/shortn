@@ -30,7 +30,7 @@
 		"fastify-zod-openapi": "^5.5.0",
 		"kysely": "^0.28.11",
 		"kysely-ctl": "^0.20.0",
-		"pg": "^8.16.3",
+		"pg": "^8.19.0",
 		"redis": "^5.11.0",
 		"zod": "^4.1.13"
 	},
@@ -39,7 +39,7 @@
 		"@repo/typescript-config": "0.0.1",
 		"@types/bcrypt": "^6.0.0",
 		"@types/node": "^24.10.14",
-		"@types/pg": "^8.15.6",
+		"@types/pg": "^8.16.0",
 		"esbuild": "^0.27.3",
 		"eslint": "^9.39.3",
 		"kysely-codegen": "^0.20.0",
