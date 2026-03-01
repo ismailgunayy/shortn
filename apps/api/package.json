@@ -32,7 +32,7 @@
 		"kysely-ctl": "^0.20.0",
 		"pg": "^8.16.3",
 		"redis": "^5.11.0",
-		"zod": "^4.1.13"
+		"zod": "^4.3.6"
 	},
 	"devDependencies": {
 		"@repo/eslint-config": "0.0.1",
