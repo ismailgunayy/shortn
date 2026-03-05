@@ -71,8 +71,4 @@ export class UrlHelper {
 			shortCode: path
 		};
 	}
-
-	public isCustomUrl(shortenedUrl: string) {
-		return new URL(shortenedUrl).pathname.includes(`/${URLSegment.CUSTOM}`);
-	}
 }

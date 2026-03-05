@@ -4,7 +4,6 @@ import { fastifyZodOpenApiPlugin, serializerCompiler, validatorCompiler } from "
 
 import { APP_CONFIG } from "./common/config";
 import Fastify from "fastify";
-import { gracefulShutdown } from "./graceful-shutdown";
 
 const app = Fastify({
 	logger: {
@@ -46,4 +45,16 @@ start().catch((err) => {
 	process.exit(1);
 });
 
-(["SIGINT", "SIGTERM"] as NodeJS.Signals[]).forEach((signal) => process.on(signal, () => gracefulShutdown(app)));
+// Graceful shutdown
+(["SIGINT", "SIGTERM"] as NodeJS.Signals[]).forEach((signal) =>
+	process.on(signal, async () => {
+		try {
+			await app.close();
+			app.log.info("Graceful shutdown complete");
+			process.exit(0);
+		} catch (err) {
+			app.log.error(err, "Error during graceful shutdown");
+			process.exit(1);
+		}
+	})
+);
