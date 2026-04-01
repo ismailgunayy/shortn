@@ -14,7 +14,7 @@
 	},
 	"dependencies": {
 		"@sveltejs/kit": "^2.55.0",
-		"svelte": "^5.53.6",
+		"svelte": "^5.55.0",
 		"svelte-french-toast": "^1.2.0",
 		"zod": "^4.3.6"
 	},
