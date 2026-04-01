@@ -1008,35 +1008,35 @@
     "@tailwindcss/oxide" "4.2.2"
     tailwindcss "4.2.2"
 
-"@turbo/darwin-64@2.8.20":
-  version "2.8.20"
-  resolved "https://registry.yarnpkg.com/@turbo/darwin-64/-/darwin-64-2.8.20.tgz#6ebc903fbfe31db85f67b84af69e84822765cbf4"
-  integrity sha512-FQ9EX1xMU5nbwjxXxM3yU88AQQ6Sqc6S44exPRroMcx9XZHqqppl5ymJF0Ig/z3nvQNwDmz1Gsnvxubo+nXWjQ==
+"@turbo/darwin-64@2.9.3":
+  version "2.9.3"
+  resolved "https://registry.yarnpkg.com/@turbo/darwin-64/-/darwin-64-2.9.3.tgz#5d782d341ddebc20822d09ba1393238d4467ae7b"
+  integrity sha512-P8foouaP+y/p+hhEGBoZpzMbpVvUMwPjDpcy6wN7EYfvvyISD1USuV27qWkczecihwuPJzQ1lDBuL8ERcavTyg==
 
-"@turbo/darwin-arm64@2.8.20":
-  version "2.8.20"
-  resolved "https://registry.yarnpkg.com/@turbo/darwin-arm64/-/darwin-arm64-2.8.20.tgz#f02fdd818bfe610240c1a60865eeb9ca338160f5"
-  integrity sha512-Gpyh9ATFGThD6/s9L95YWY54cizg/VRWl2B67h0yofG8BpHf67DFAh9nuJVKG7bY0+SBJDAo5cMur+wOl9YOYw==
+"@turbo/darwin-arm64@2.9.3":
+  version "2.9.3"
+  resolved "https://registry.yarnpkg.com/@turbo/darwin-arm64/-/darwin-arm64-2.9.3.tgz#75cd662d9c2a572532ce82d7cae1a30e2497d693"
+  integrity sha512-SIzEkvtNdzdI50FJDaIQ6kQGqgSSdFPcdn0wqmmONN6iGKjy6hsT+EH99GP65FsfV7DLZTh2NmtTIRl2kdoz5Q==
 
-"@turbo/linux-64@2.8.20":
-  version "2.8.20"
-  resolved "https://registry.yarnpkg.com/@turbo/linux-64/-/linux-64-2.8.20.tgz#51faba95b242731b0beae9811724b3eeee6aa0a1"
-  integrity sha512-p2QxWUYyYUgUFG0b0kR+pPi8t7c9uaVlRtjTTI1AbCvVqkpjUfCcReBn6DgG/Hu8xrWdKLuyQFaLYFzQskZbcA==
+"@turbo/linux-64@2.9.3":
+  version "2.9.3"
+  resolved "https://registry.yarnpkg.com/@turbo/linux-64/-/linux-64-2.9.3.tgz#de693a996071654a0bea51c7ed9dc6fdc3950ae8"
+  integrity sha512-pLRwFmcHHNBvsCySLS6OFabr/07kDT2pxEt/k6eBf/3asiVQZKJ7Rk88AafQx2aYA641qek4RsXvYO3JYpiBug==
 
-"@turbo/linux-arm64@2.8.20":
-  version "2.8.20"
-  resolved "https://registry.yarnpkg.com/@turbo/linux-arm64/-/linux-arm64-2.8.20.tgz#4c466ec09a2c2e6513df94d703660bb6efa61614"
-  integrity sha512-Gn5yjlZGLRZWarLWqdQzv0wMqyBNIdq1QLi48F1oY5Lo9kiohuf7BPQWtWxeNVS2NgJ1+nb/DzK1JduYC4AWOA==
+"@turbo/linux-arm64@2.9.3":
+  version "2.9.3"
+  resolved "https://registry.yarnpkg.com/@turbo/linux-arm64/-/linux-arm64-2.9.3.tgz#88fc6fe572d83c5488eeae9b564b57c335f4d856"
+  integrity sha512-gy6ApUroC2Nzv+qjGtE/uPNkhHAFU4c8God+zd5Aiv9L9uBgHlxVJpHT3XWl5xwlJZ2KWuMrlHTaS5kmNB+q1Q==
 
-"@turbo/windows-64@2.8.20":
-  version "2.8.20"
-  resolved "https://registry.yarnpkg.com/@turbo/windows-64/-/windows-64-2.8.20.tgz#b8f23ff1d5ddf9b1abe41db2b1cb35b13066c063"
-  integrity sha512-vyaDpYk/8T6Qz5V/X+ihKvKFEZFUoC0oxYpC1sZanK6gaESJlmV3cMRT3Qhcg4D2VxvtC2Jjs9IRkrZGL+exLw==
+"@turbo/windows-64@2.9.3":
+  version "2.9.3"
+  resolved "https://registry.yarnpkg.com/@turbo/windows-64/-/windows-64-2.9.3.tgz#a7812e4f33972f74daed93b2ac8845f88a68c775"
+  integrity sha512-d0YelTX6hAsB7kIEtGB3PzIzSfAg3yDoUlHwuwJc3adBXUsyUIs0YLG+1NNtuhcDOUGnWQeKUoJ2pGWvbpRj7w==
 
-"@turbo/windows-arm64@2.8.20":
-  version "2.8.20"
-  resolved "https://registry.yarnpkg.com/@turbo/windows-arm64/-/windows-arm64-2.8.20.tgz#8032d42c6cfd954d3c381720d5a65dc3e7ea3014"
-  integrity sha512-voicVULvUV5yaGXo0Iue13BcHGYW3u0VgqSbfQwBaHbpj1zLjYV4KIe+7fYIo6DO8FVUJzxFps3ODCQG/Wy2Qw==
+"@turbo/windows-arm64@2.9.3":
+  version "2.9.3"
+  resolved "https://registry.yarnpkg.com/@turbo/windows-arm64/-/windows-arm64-2.9.3.tgz#1891a89fe87d501e63a7a4367082f3afec18fa6f"
+  integrity sha512-/08CwpKJl3oRY8nOlh2YgilZVJDHsr60XTNxRhuDeuFXONpUZ5X+Nv65izbG/xBew9qxcJFbDX9/sAmAX+ITcQ==
 
 "@tybys/wasm-util@^0.10.1":
   version "0.10.1"
@@ -1682,7 +1682,7 @@ eslint-plugin-only-warn@^1.2.1:
   resolved "https://registry.yarnpkg.com/eslint-plugin-only-warn/-/eslint-plugin-only-warn-1.2.1.tgz#79f3bba0d037d5d897d7bf1d40f3fc93c94e0f87"
   integrity sha512-j37hwfaQDEOfkZ1Dpvu/HnWLavlzQxQxfbrU/9Jb4R9qzrE1eTYuRJyrxq7LzLRI8miG5FOV6veoUVhx7AI84w==
 
-eslint-plugin-svelte@^3.15.2:
+eslint-plugin-svelte@^3.16.0:
   version "3.16.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-svelte/-/eslint-plugin-svelte-3.16.0.tgz#9d41fbc797bb839b9ee2d9ff4b124fb6eed4812a"
   integrity sha512-DJXxqpYZUxcE0SfYo8EJzV2ZC+zAD7fJp1n1HwcEMRR1cOEUYvjT9GuzJeNghMjgb7uxuK3IJAzI+x6zzUxO5A==
@@ -1698,10 +1698,10 @@ eslint-plugin-svelte@^3.15.2:
     semver "^7.6.3"
     svelte-eslint-parser "^1.4.0"
 
-eslint-plugin-turbo@^2.8.18:
-  version "2.8.20"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-turbo/-/eslint-plugin-turbo-2.8.20.tgz#e5df20201810cec18f0165f5bb39dcb86051a58d"
-  integrity sha512-sMDremg73XbX+Imh7iDRS3TAro5jIf7CdzSqrT50wCGhClbiUvmWcLomnX+ldUbfTy+OvtqOeePvTivJMR87eQ==
+eslint-plugin-turbo@^2.8.21:
+  version "2.9.3"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-turbo/-/eslint-plugin-turbo-2.9.3.tgz#f1a771bbaa3bfba8f547f84a2976f6d19d56df63"
+  integrity sha512-64Zgp0eb42D8fD0a0gktpk9gTgHd2sQGx3UL5n4bSoV9E213Rj+swyRaRrqy9ej2J9ajzwOSj9hN5jOnkb38Dg==
   dependencies:
     dotenv "16.0.3"
 
@@ -1738,7 +1738,7 @@ eslint-visitor-keys@^5.0.0, eslint-visitor-keys@^5.0.1:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-5.0.1.tgz#9e3c9489697824d2d4ce3a8ad12628f91e9f59be"
   integrity sha512-tD40eHxA35h0PEIZNeIjkHoDR4YjjJp34biM0mDvplBe//mB+IHCqHDGV7pxF+7MklTvighcCPPZC7ynWyjdTA==
 
-eslint@^10.0.3:
+eslint@^10.0.3, eslint@^10.1.0:
   version "10.1.0"
   resolved "https://registry.yarnpkg.com/eslint/-/eslint-10.1.0.tgz#9ca98e654e642ab2e1af6d1e9d8613857ac341b4"
   integrity sha512-S9jlY/ELKEUwwQnqWDO+f+m6sercqOPSqXM5Go94l7DOmxHVDgmSFGWEzeE/gwgTAr0W103BWt0QLe/7mabIvA==
@@ -2276,10 +2276,10 @@ kysely-ctl@^0.20.0:
     std-env "^3.10.0"
     tsconfck "^3.1.6"
 
-kysely@^0.28.12:
-  version "0.28.14"
-  resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.28.14.tgz#94cb38767aea5dfa18ecea2137497560f276edf4"
-  integrity sha512-SU3lgh0rPvq7upc6vvdVrCsSMUG1h3ChvHVOY7wJ2fw4C9QEB7X3d5eyYEyULUX7UQtxZJtZXGuT6U2US72UYA==
+kysely@^0.28.14:
+  version "0.28.15"
+  resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.28.15.tgz#29c3db0e92fca6115e0846b9e34c2f79ecd317ec"
+  integrity sha512-r2clcf7HLWvDXaVUEvQymXJY4i3bSOIV3xsL/Upy3ZfSv5HeKsk9tsqbBptLvth5qHEIhxeHTA2jNLyQABkLBA==
 
 levn@^0.4.1:
   version "0.4.1"
@@ -3248,17 +3248,17 @@ tsx@^4.21.0:
   optionalDependencies:
     fsevents "~2.3.3"
 
-turbo@^2.8.18:
-  version "2.8.20"
-  resolved "https://registry.yarnpkg.com/turbo/-/turbo-2.8.20.tgz#1632aff5453240f5e96597b6439cc7e70cd871e8"
-  integrity sha512-Rb4qk5YT8RUwwdXtkLpkVhNEe/lor6+WV7S5tTlLpxSz6MjV5Qi8jGNn4gS6NAvrYGA/rNrE6YUQM85sCZUDbQ==
+turbo@^2.8.21:
+  version "2.9.3"
+  resolved "https://registry.yarnpkg.com/turbo/-/turbo-2.9.3.tgz#4f0adf2c8677edd7b46d400629c99e9e26e58e44"
+  integrity sha512-J/VUvsGRykPb9R8Kh8dHVBOqioDexLk9BhLCU/ZybRR+HN9UR3cURdazFvNgMDt9zPP8TF6K73Z+tplfmi0PqQ==
   optionalDependencies:
-    "@turbo/darwin-64" "2.8.20"
-    "@turbo/darwin-arm64" "2.8.20"
-    "@turbo/linux-64" "2.8.20"
-    "@turbo/linux-arm64" "2.8.20"
-    "@turbo/windows-64" "2.8.20"
-    "@turbo/windows-arm64" "2.8.20"
+    "@turbo/darwin-64" "2.9.3"
+    "@turbo/darwin-arm64" "2.9.3"
+    "@turbo/linux-64" "2.9.3"
+    "@turbo/linux-arm64" "2.9.3"
+    "@turbo/windows-64" "2.9.3"
+    "@turbo/windows-arm64" "2.9.3"
 
 type-check@^0.4.0, type-check@~0.4.0:
   version "0.4.0"
