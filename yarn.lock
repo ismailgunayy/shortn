@@ -1106,7 +1106,7 @@
     natural-compare "^1.4.0"
     ts-api-utils "^2.5.0"
 
-"@typescript-eslint/parser@8.58.0", "@typescript-eslint/parser@^8.57.2":
+"@typescript-eslint/parser@8.58.0", "@typescript-eslint/parser@^8.58.0":
   version "8.58.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/parser/-/parser-8.58.0.tgz#da04ece1967b6c2fe8f10c3473dabf3825795ef7"
   integrity sha512-rLoGZIf9afaRBYsPUMtvkDWykwXwUPL60HebR4JgTI8mxfFe2cQTu3AGitANp4b9B2QlVru6WzjgB2IzJKiCSA==
@@ -1685,7 +1685,7 @@ eslint-plugin-svelte@^3.16.0:
     semver "^7.6.3"
     svelte-eslint-parser "^1.4.0"
 
-eslint-plugin-turbo@^2.8.21:
+eslint-plugin-turbo@^2.9.3:
   version "2.9.3"
   resolved "https://registry.yarnpkg.com/eslint-plugin-turbo/-/eslint-plugin-turbo-2.9.3.tgz#f1a771bbaa3bfba8f547f84a2976f6d19d56df63"
   integrity sha512-64Zgp0eb42D8fD0a0gktpk9gTgHd2sQGx3UL5n4bSoV9E213Rj+swyRaRrqy9ej2J9ajzwOSj9hN5jOnkb38Dg==
@@ -1902,10 +1902,10 @@ fastify-plugin@^5.1.0:
   resolved "https://registry.yarnpkg.com/fastify-plugin/-/fastify-plugin-5.1.0.tgz#7083e039d6418415f9a669f8c25e72fc5bf2d3e7"
   integrity sha512-FAIDA8eovSt5qcDgcBvDuX/v0Cjz0ohGhENZ/wpc3y+oZCY2afZ9Baqql3g/lC+OHRnciQol4ww7tuthOb9idw==
 
-fastify-zod-openapi@^5.5.0:
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/fastify-zod-openapi/-/fastify-zod-openapi-5.5.0.tgz#b32a5987cc4b5e5ddca275c5715194191bdb9af1"
-  integrity sha512-b6AhZuz68AiywJxTkxTGtBQonrgxp6udRRKapcimBn4b8iBulQmMYmjjwe8FKwY8LMAXbf8lPPfgwC6apWPa/g==
+fastify-zod-openapi@^5.6.1:
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/fastify-zod-openapi/-/fastify-zod-openapi-5.6.1.tgz#6d98ca532c03d8321feaec32c6dda1faab6031da"
+  integrity sha512-K0tzRYEViPuCV3aKu5Zcgqsew8k0OGzEqu0p1+7P+EvNGXGP7MvcyWNVoq31LUadaT0HiUtD+65tM4sKEQz0Qg==
   dependencies:
     "@fastify/error" "^4.0.0"
     fast-json-stringify "^6.0.0"
@@ -2264,7 +2264,7 @@ kysely-ctl@^0.20.0:
     std-env "^3.10.0"
     tsconfck "^3.1.6"
 
-kysely@^0.28.14:
+kysely@^0.28.15:
   version "0.28.15"
   resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.28.15.tgz#29c3db0e92fca6115e0846b9e34c2f79ecd317ec"
   integrity sha512-r2clcf7HLWvDXaVUEvQymXJY4i3bSOIV3xsL/Upy3ZfSv5HeKsk9tsqbBptLvth5qHEIhxeHTA2jNLyQABkLBA==
@@ -3084,10 +3084,10 @@ supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
-svelte-check@^4.4.5:
-  version "4.4.5"
-  resolved "https://registry.yarnpkg.com/svelte-check/-/svelte-check-4.4.5.tgz#a48ad6c5b372b9ba4bddd72b2d46c22765502c31"
-  integrity sha512-1bSwIRCvvmSHrlK52fOlZmVtUZgil43jNL/2H18pRpa+eQjzGt6e3zayxhp1S7GajPFKNM/2PMCG+DZFHlG9fw==
+svelte-check@^4.4.6:
+  version "4.4.6"
+  resolved "https://registry.yarnpkg.com/svelte-check/-/svelte-check-4.4.6.tgz#c890a102e94ef31b44bea26f5f16de14db717a3b"
+  integrity sha512-kP1zG81EWaFe9ZyTv4ZXv44Csi6Pkdpb7S3oj6m+K2ec/IcDg/a8LsFsnVLqm2nxtkSwsd5xPj/qFkTBgXHXjg==
   dependencies:
     "@jridgewell/trace-mapping" "^0.3.25"
     chokidar "^4.0.1"
@@ -3132,7 +3132,7 @@ svelte-writable-derived@^3.1.0:
   resolved "https://registry.yarnpkg.com/svelte-writable-derived/-/svelte-writable-derived-3.1.1.tgz#03222b32f8a66ea503e95b3cce8b94bec0810044"
   integrity sha512-w4LR6/bYZEuCs7SGr+M54oipk/UQKtiMadyOhW0PTwAtJ/Ai12QS77sLngEcfBx2q4H8ZBQucc9ktSA5sUGZWw==
 
-svelte@^5.55.0:
+svelte@^5.55.1:
   version "5.55.1"
   resolved "https://registry.yarnpkg.com/svelte/-/svelte-5.55.1.tgz#04df5384b4f542815d7145e8de26a5e8aeaffa22"
   integrity sha512-QjvU7EFemf6mRzdMGlAFttMWtAAVXrax61SZYHdkD6yoVGQ89VeyKfZD4H1JrV1WLmJBxWhFch9H6ig/87VGjw==
@@ -3236,7 +3236,7 @@ tsx@^4.21.0:
   optionalDependencies:
     fsevents "~2.3.3"
 
-turbo@^2.8.21:
+turbo@^2.9.3:
   version "2.9.3"
   resolved "https://registry.yarnpkg.com/turbo/-/turbo-2.9.3.tgz#4f0adf2c8677edd7b46d400629c99e9e26e58e44"
   integrity sha512-J/VUvsGRykPb9R8Kh8dHVBOqioDexLk9BhLCU/ZybRR+HN9UR3cURdazFvNgMDt9zPP8TF6K73Z+tplfmi0PqQ==
@@ -3255,7 +3255,7 @@ type-check@^0.4.0, type-check@~0.4.0:
   dependencies:
     prelude-ls "^1.2.1"
 
-typescript-eslint@^8.57.2:
+typescript-eslint@^8.58.0:
   version "8.58.0"
   resolved "https://registry.yarnpkg.com/typescript-eslint/-/typescript-eslint-8.58.0.tgz#5758b1b68ae7ec05d756b98c63a1f6953a01172b"
   integrity sha512-e2TQzKfaI85fO+F3QywtX+tCTsu/D3WW5LVU6nz8hTFKFZ8yBJ6mSYRpXqdR3mFjPWmO0eWsTa5f+UpAOe/FMA==
