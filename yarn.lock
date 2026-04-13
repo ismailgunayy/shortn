@@ -994,7 +994,7 @@
     natural-compare "^1.4.0"
     ts-api-utils "^2.5.0"
 
-"@typescript-eslint/parser@8.58.2", "@typescript-eslint/parser@^8.58.1":
+"@typescript-eslint/parser@8.58.2", "@typescript-eslint/parser@^8.58.2":
   version "8.58.2"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/parser/-/parser-8.58.2.tgz#b267545e4bd515d896fe1f3a5b6f334fa6aa0026"
   integrity sha512-/Zb/xaIDfxeJnvishjGdcR4jmr7S+bda8PKNhRGdljDM+elXhlvN0FyPSsMnLmJUrVG9aPO6dof80wjMawsASg==
@@ -1419,7 +1419,7 @@ dotenv@^17.2.4:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-17.3.1.tgz#2706f5b0165e45a1503348187b8468f87fe6aae2"
   integrity sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==
 
-dotenv@^17.4.1:
+dotenv@^17.4.2:
   version "17.4.2"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-17.4.2.tgz#c07e54a746e11eba021dd9e1047ced5afdc1c034"
   integrity sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==
@@ -3130,7 +3130,7 @@ type-check@^0.4.0, type-check@~0.4.0:
   dependencies:
     prelude-ls "^1.2.1"
 
-typescript-eslint@^8.58.1:
+typescript-eslint@^8.58.2:
   version "8.58.2"
   resolved "https://registry.yarnpkg.com/typescript-eslint/-/typescript-eslint-8.58.2.tgz#55f425fc668c2d5148f45587f2cd04532d715c6a"
   integrity sha512-V8iSng9mRbdZjl54VJ9NKr6ZB+dW0J3TzRXRGcSbLIej9jV86ZRtlYeTKDR/QLxXykocJ5icNzbsl2+5TzIvcQ==
