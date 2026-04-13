@@ -1,7 +1,6 @@
 {
 	"extends": "@repo/typescript-config/tsconfig.api.json",
 	"compilerOptions": {
-		"baseUrl": ".",
 		"outDir": "dist",
 		"paths": {
 			"~/*": ["./lib/*"]
