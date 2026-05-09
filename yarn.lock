@@ -771,10 +771,10 @@
     set-cookie-parser "^3.0.0"
     sirv "^3.0.0"
 
-"@sveltejs/vite-plugin-svelte@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@sveltejs/vite-plugin-svelte/-/vite-plugin-svelte-7.0.0.tgz#a291a0e3b8cc6e2509e2b9a3a7b1c7146505a6a7"
-  integrity sha512-ILXmxC7HAsnkK2eslgPetrqqW1BKSL7LktsFgqzNj83MaivMGZzluWq32m25j2mDOjmSKX7GGWahePhuEs7P/g==
+"@sveltejs/vite-plugin-svelte@^7.1.1":
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/@sveltejs/vite-plugin-svelte/-/vite-plugin-svelte-7.1.2.tgz#23f513f7d65449f88276d27b36f3281a4a0049b5"
+  integrity sha512-DrUBA2UXRfDmUX/ZTiEopd3X40yavsJF1FX2RygcuIScHL7o5YX1fMvoYnDhjeJQC4weCOklirpNWlcb2NiSeA==
   dependencies:
     deepmerge "^4.3.1"
     magic-string "^0.30.21"
