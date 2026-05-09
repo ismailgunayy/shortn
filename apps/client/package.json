@@ -21,7 +21,7 @@
 	"devDependencies": {
 		"@repo/eslint-config": "0.0.1",
 		"@repo/typescript-config": "0.0.1",
-		"@sveltejs/vite-plugin-svelte": "^7.0.0",
+		"@sveltejs/vite-plugin-svelte": "^7.1.1",
 		"@tailwindcss/vite": "^4.2.4",
 		"eslint": "^10.2.1",
 		"prettier-plugin-svelte": "^3.5.1",
