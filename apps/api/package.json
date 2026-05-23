@@ -43,7 +43,7 @@
 		"esbuild": "^0.28.0",
 		"eslint": "^10.3.0",
 		"kysely-codegen": "^0.20.0",
-		"tsx": "^4.21.0",
+		"tsx": "^4.22.3",
 		"typescript": "^6.0.3"
 	}
 }
