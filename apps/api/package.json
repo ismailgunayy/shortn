@@ -41,7 +41,7 @@
 		"@types/node": "^24.12.4",
 		"@types/pg": "^8.20.0",
 		"esbuild": "^0.28.0",
-		"eslint": "^10.3.0",
+		"eslint": "^10.4.0",
 		"kysely-codegen": "^0.20.0",
 		"tsx": "^4.21.0",
 		"typescript": "^6.0.3"
