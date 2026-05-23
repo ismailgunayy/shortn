@@ -33,7 +33,12 @@ export const UrlController = (app: App) => {
 		},
 		async (request, reply) => {
 			const { url, customCode } = request.body;
-			const shortenedUrl = await app.services.url.shortenUrl(url, request.user.id, request.user.email, customCode);
+			const shortenedUrl = await app.services.url.shortenUrl(
+				url,
+				request.user.id,
+				customCode,
+				request.user.isServiceAccount
+			);
 
 			return reply.code(200).send({
 				success: true,

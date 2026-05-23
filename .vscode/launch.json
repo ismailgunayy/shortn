@@ -7,8 +7,7 @@
 				"group": "Monorepo",
 				"hidden": false,
 				"order": 1
-			},
-			"stopAll": true
+			}
 		}
 	],
 	"configurations": [
@@ -22,7 +21,7 @@
 			"request": "launch",
 			"runtimeArgs": ["dev", "--filter", "api"],
 			"runtimeExecutable": "yarn",
-			"runtimeVersion": "24.14.0",
+			"runtimeVersion": "24.15.0",
 			"skipFiles": ["<node_internals>/**"],
 			"type": "node"
 		},
@@ -35,7 +34,7 @@
 			"request": "launch",
 			"runtimeArgs": ["dev", "--filter", "client"],
 			"runtimeExecutable": "yarn",
-			"runtimeVersion": "24.14.0",
+			"runtimeVersion": "24.15.0",
 			"skipFiles": ["<node_internals>/**"],
 			"type": "node"
 		}

@@ -12,36 +12,9 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  changes:
-    name: detect-changes
-    runs-on: ubuntu-latest
-    outputs:
-      api: ${{ steps.changes.outputs.api }}
-      client: ${{ steps.changes.outputs.client }}
-      shared: ${{ steps.changes.outputs.shared }}
-    steps:
-      - uses: actions/checkout@v6
-      - uses: dorny/paths-filter@v4
-        id: changes
-        with:
-          filters: |
-            api:
-              - 'apps/api/**'
-            client:
-              - 'apps/client/**'
-            shared:
-              - '.github/workflows/deploy.yml'
-              - 'packages/**'
-              - 'package.json'
-              - 'yarn.lock'
-              - 'turbo.json'
-              - '.nvmrc'
-
   setup:
     name: setup
     runs-on: ubuntu-latest
-    if: needs.changes.outputs.client == 'true' || needs.changes.outputs.api == 'true' || needs.changes.outputs.shared == 'true'
-    needs: changes
     steps:
       - uses: actions/checkout@v6
       - name: Setup node
@@ -97,8 +70,7 @@ jobs:
   build-api:
     name: build-api
     runs-on: ubuntu-latest
-    if: needs.changes.outputs.api == 'true' || needs.changes.outputs.shared == 'true'
-    needs: [setup, check-types, lint, changes]
+    needs: [setup, check-types, lint]
     env:
       RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
     steps:
@@ -136,8 +108,7 @@ jobs:
   build-client:
     name: build-client
     runs-on: ubuntu-latest
-    if: needs.changes.outputs.client == 'true' || needs.changes.outputs.shared == 'true'
-    needs: [setup, check-types, lint, changes]
+    needs: [setup, check-types, lint]
     env:
       RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
     steps:

@@ -22,8 +22,8 @@ export class UrlService {
 		private readonly urlRepository: UrlRepository
 	) {}
 
-	private async createCustomUrl(originalUrl: string, userId: number, userEmail: string, customCode: string) {
-		if (userEmail === this.app.config.AUTH.SERVICE_ACCOUNT_EMAIL) {
+	private async createCustomUrl(originalUrl: string, userId: number, customCode: string, isServiceAccount?: boolean) {
+		if (isServiceAccount) {
 			throw new CannotCreateCustomUrlWithServiceAccount();
 		}
 
@@ -70,9 +70,9 @@ export class UrlService {
 		return this.app.helpers.url.buildUrl(shortCode);
 	}
 
-	public async shortenUrl(originalUrl: string, userId: number, userEmail: string, customCode?: string) {
+	public async shortenUrl(originalUrl: string, userId: number, customCode?: string, isServiceAccount?: boolean) {
 		const shortenedUrl = customCode
-			? await this.createCustomUrl(originalUrl, userId, userEmail, customCode)
+			? await this.createCustomUrl(originalUrl, userId, customCode, isServiceAccount)
 			: await this.createGeneratedUrl(originalUrl, userId);
 
 		return shortenedUrl;
