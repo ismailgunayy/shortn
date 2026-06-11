@@ -592,10 +592,10 @@
   resolved "https://registry.yarnpkg.com/@sveltejs/acorn-typescript/-/acorn-typescript-1.0.10.tgz#72376d9f46c04be82b714b1c33f0956911a7a6d6"
   integrity sha512-4WfKk68eTih+MiJD4fSbxN7E8kVBmTMPWHUPYjvl2N0rMs53YLTT8/YjKU5Dtnz5LqDjl7LEw4U7lXR2W3J5WA==
 
-"@sveltejs/kit@^2.61.1":
-  version "2.61.1"
-  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-2.61.1.tgz#7e61fbe19bff0d3cb02a9ebedca0a7e5f4e03e0f"
-  integrity sha512-Ny8s1SR1TyQS2hD2Rvw0XKzU2Nw1eUF52dTb6T2bdcgz7wSC+Nyb5IwjWYlR4b2dvbbR5NJDiQwHg3rnNseghg==
+"@sveltejs/kit@^2.64.0":
+  version "2.65.0"
+  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-2.65.0.tgz#5f76424b86ea605ccbf68e07369e4a1ee70ea015"
+  integrity sha512-nUWJ4dSKNo8mIOh+HTL+XyRj8FX9Dyb1ayBxj4q9+WrTJfn4jfTt21p3WUFTnnmdnt9xAXpBKLQ+H9y41x0X7Q==
   dependencies:
     "@standard-schema/spec" "^1.0.0"
     "@sveltejs/acorn-typescript" "^1.0.9"
