@@ -1,4 +1,4 @@
-import { CustomUrlQuerySchema, UrlQuerySchema } from "~/schemas/url.schema";
+import { CustomUrlQuerySchema, UrlQuerySchema } from "~/modules/url/url.schema";
 import { DB, ShortnCustomUrls, ShortnUrls } from "~/types/db";
 import { Insertable, Kysely, Updateable } from "kysely";
 

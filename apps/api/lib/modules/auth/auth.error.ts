@@ -1,4 +1,4 @@
-import { ShortnError } from "./base.error";
+import { ShortnError } from "~/common/error";
 
 export class AuthError extends ShortnError {
 	constructor(message: string, statusCode = 401, cause?: unknown) {

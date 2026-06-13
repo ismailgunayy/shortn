@@ -4,13 +4,13 @@ import {
 	CustomUrlNotFound,
 	InvalidShortenedUrl,
 	UrlNotFound
-} from "~/errors";
-import { CustomUrlQuerySchema, UrlQuerySchema } from "~/schemas/url.schema";
+} from "./url.error";
+import { CustomUrlQuerySchema, UrlQuerySchema } from "~/modules/url/url.schema";
 
 import { App } from "~/types/fastify";
-import { CacheKind } from "./cache.service";
-import { URLSegment } from "~/helpers";
-import { UrlRepository } from "~/repositories/url.repository";
+import { CacheKind } from "~/modules/cache/cache.service";
+import { URLSegment } from "./url.helper";
+import { UrlRepository } from "~/modules/url/url.repository";
 import z from "zod";
 
 const GENERATED_URL_EXPIRY = 60 * 60 * 24; // 1 day

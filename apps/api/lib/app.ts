@@ -26,8 +26,7 @@ await app.register(plugins.auth);
 await app.register(plugins.rateLimit);
 await app.register(plugins.notFound);
 await app.register(plugins.cors);
-await app.register(plugins.helpers);
-await app.register(plugins.services);
+await app.register(plugins.di);
 await app.register(plugins.docs);
 await app.register(plugins.router);
 

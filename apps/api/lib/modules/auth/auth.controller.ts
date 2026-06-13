@@ -1,10 +1,9 @@
-import { ApiKeyNameSchema, EmailSchema, FullNameSchema, PasswordSchema } from "~/schemas/auth.schema";
+import { ApiKeyNameSchema, EmailSchema, FullNameSchema, PasswordSchema } from "~/modules/auth/auth.schema";
+import { IdSchema, createResponseSchema } from "~/common/schema";
 
 import { App } from "~/types/fastify";
-import { CacheKind } from "~/services/cache.service";
-import { IdSchema } from "~/schemas/common.schema";
-import { TokenType } from "~/helpers";
-import { createResponseSchema } from "~/schemas/api-response.schema";
+import { CacheKind } from "~/modules/cache/cache.service";
+import { TokenType } from "./auth.helper";
 import z from "zod";
 
 export const AuthController = (app: App) => {

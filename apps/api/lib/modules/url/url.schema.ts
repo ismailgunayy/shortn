@@ -6,7 +6,7 @@ import {
 	InvalidUrl,
 	InvalidUrlProtocol,
 	UrlError
-} from "~/errors";
+} from "./url.error";
 import { ShortnCustomUrls, ShortnUrls } from "~/types/db";
 
 import { APP_CONFIG } from "~/common/config";

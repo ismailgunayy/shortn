@@ -4,12 +4,11 @@ import {
 	ShortenedUrlSchema,
 	UrlQuerySchema,
 	UrlSchema
-} from "~/schemas/url.schema";
-import { IdSchema, PaginationSchema } from "~/schemas/common.schema";
+} from "~/modules/url/url.schema";
+import { IdSchema, PaginationSchema, createResponseSchema } from "~/common/schema";
 
 import { ApiTags } from "~/plugins";
 import { App } from "~/types/fastify";
-import { createResponseSchema } from "~/schemas/api-response.schema";
 import z from "zod";
 
 export const UrlController = (app: App) => {

@@ -4,7 +4,7 @@ import {
 	InvalidEmailFormat,
 	InvalidFullNameLength,
 	InvalidPasswordLength
-} from "~/errors";
+} from "./auth.error";
 
 import z from "zod";
 
