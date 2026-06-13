@@ -1,14 +1,14 @@
 import { AuthHelper, type AuthMethod, type TokenType, UrlHelper } from "~/helpers";
-import { AuthService } from "~/services/auth.service";
+import { AuthService } from "~/modules/auth/auth.service";
+import { UrlService } from "~/modules/url/url.service";
 import { FastifyBaseLogger, FastifyInstance, FastifyReply, RawServerDefault } from "fastify";
 import { IncomingMessage, ServerResponse } from "http";
 import { Kysely, Selectable } from "kysely";
 
-import { CacheService } from "~/services/cache.service";
+import { CacheService } from "~/modules/cache/cache.service";
 import { DB } from "./db";
 import { FastifyZodOpenApiTypeProvider } from "fastify-zod-openapi";
 import { TConfig } from "~/common/config";
-import { UrlService } from "~/services/url.service";
 
 interface JWTPayload {
 	tokenType: TokenType;

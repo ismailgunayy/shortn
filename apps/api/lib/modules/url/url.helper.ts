@@ -1,5 +1,5 @@
 import { App } from "~/types/fastify";
-import { InvalidShortenedUrl } from "~/errors";
+import { InvalidShortenedUrl } from "./url.error";
 
 const BASE = 62;
 const BASE62_ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";

@@ -1,5 +1,5 @@
 import { APP_CONFIG } from "~/common/config";
-import { ShortnError } from "./base.error";
+import { ShortnError } from "~/common/error";
 
 export class UrlError extends ShortnError {
 	constructor(message: string, statusCode = 400, cause?: unknown) {

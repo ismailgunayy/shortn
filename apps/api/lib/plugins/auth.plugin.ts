@@ -1,8 +1,8 @@
 import { App, User } from "~/types/fastify";
 
 import { FastifyRequest } from "fastify";
-import { TokenType } from "~/helpers";
-import { Unauthorized } from "~/errors/auth.error";
+import { TokenType } from "~/modules/auth/auth.helper";
+import { Unauthorized } from "~/modules/auth/auth.error";
 import fastifyCookie from "@fastify/cookie";
 import fastifyJwt from "@fastify/jwt";
 import fastifyPlugin from "fastify-plugin";

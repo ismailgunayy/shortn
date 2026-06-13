@@ -1,4 +1,4 @@
-import { CacheConnectionError, CacheServiceError } from "~/errors";
+import { CacheConnectionError, CacheServiceError } from "./cache.error";
 import { SetOptions, createClient } from "redis";
 
 import { App } from "~/types/fastify";

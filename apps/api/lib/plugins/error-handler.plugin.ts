@@ -1,5 +1,5 @@
 import { FastifyError } from "fastify";
-import { ShortnError } from "~/errors";
+import { ShortnError } from "~/common/error";
 import fastifyPlugin from "fastify-plugin";
 
 export const error = fastifyPlugin((app) => {

@@ -8,11 +8,11 @@ import {
 	UserAlreadyExists,
 	UserNotFound,
 	WrongPassword
-} from "~/errors";
+} from "./auth.error";
 
-import { ApiKeySchema } from "~/schemas/auth.schema";
+import { ApiKeySchema } from "~/modules/auth/auth.schema";
 import { App } from "~/types/fastify";
-import { AuthRepository } from "~/repositories/auth.repository";
+import { AuthRepository } from "~/modules/auth/auth.repository";
 import { ShortnUsers } from "~/types/db";
 
 const MAX_API_KEYS_PER_USER = 5;

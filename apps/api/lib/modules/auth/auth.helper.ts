@@ -4,13 +4,13 @@ import {
 	InvalidOrExpiredToken,
 	InvalidTokenType,
 	RefreshTokenNotFound
-} from "~/errors";
+} from "./auth.error";
 import { App, JWTPayload } from "~/types/fastify";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { compare, hash } from "bcrypt";
 
-import { API_KEY_LENGTH } from "~/schemas/auth.schema";
-import { CacheKind } from "~/services/cache.service";
+import { API_KEY_LENGTH } from "~/modules/auth/auth.schema";
+import { CacheKind } from "~/modules/cache/cache.service";
 import { CookieSerializeOptions } from "@fastify/cookie";
 import crypto from "crypto";
 
