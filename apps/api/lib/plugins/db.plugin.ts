@@ -1,4 +1,4 @@
-import { CamelCasePlugin, Kysely, PostgresDialect } from "kysely";
+import { CamelCasePlugin, Kysely, PostgresDialect, sql } from "kysely";
 
 import { App } from "~/types/fastify";
 import { DB } from "~/types/db";
@@ -26,7 +26,7 @@ const disconnectDB = async (app: App) => {
 	await app.db.pool.end();
 };
 
-export const db = fastifyPlugin((app: App) => {
+export const db = fastifyPlugin(async (app: App) => {
 	const pool = new Pool({
 		connectionString: app.config.DATABASE.URL,
 		max: 10
@@ -45,6 +45,12 @@ export const db = fastifyPlugin((app: App) => {
 		await disconnectDB(app);
 	});
 
-	app.log.info("Database connection established");
 	app.decorate("db", db);
+
+	try {
+		await sql`SELECT 1`.execute(db);
+		app.log.info("Database connection established");
+	} catch (err) {
+		app.log.error(err, "Error during DB connection");
+	}
 });

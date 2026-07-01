@@ -53,7 +53,7 @@ function validateEnv() {
 	}
 }
 
-function structureConfig() {
+function structurizeConfig() {
 	const env = validateEnv();
 
 	return {
@@ -85,5 +85,5 @@ function structureConfig() {
 	};
 }
 
-export type TConfig = ReturnType<typeof structureConfig>;
-export const APP_CONFIG = Object.freeze(structureConfig());
+export type TConfig = ReturnType<typeof structurizeConfig>;
+export const APP_CONFIG = Object.freeze(structurizeConfig());

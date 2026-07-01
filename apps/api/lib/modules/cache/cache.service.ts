@@ -1,4 +1,3 @@
-import { CacheConnectionError, CacheServiceError } from "./cache.error";
 import { SetOptions, createClient } from "redis";
 
 import { App } from "~/types/fastify";
@@ -16,7 +15,9 @@ export class CacheService {
 		this.client = createClient({
 			url: app.config.REDIS.URL,
 			socket: {
-				connectTimeout: 5000
+				connectTimeout: 5000,
+				timeout: 5000,
+				reconnectStrategy: false
 			}
 		});
 
@@ -26,7 +27,7 @@ export class CacheService {
 					await this.client.quit();
 				}
 			} catch {
-				this.app.log.error("Error closing Redis connection");
+				this.app.log.error("Error closing Cache connection");
 			}
 		});
 
@@ -35,7 +36,7 @@ export class CacheService {
 		});
 
 		this.client.on("error", (err) => {
-			app.log.error("Redis connection error:", err);
+			app.log.error(err, "Cache Client Connection Error");
 		});
 	}
 
@@ -45,7 +46,7 @@ export class CacheService {
 				await this.client.connect();
 			}
 		} catch (err) {
-			throw new CacheConnectionError(err);
+			this.app.log.error(err, "Cache connection failed, will retry on next operation");
 		}
 	}
 
@@ -69,15 +70,16 @@ export class CacheService {
 		return `${kind}:${key}`;
 	}
 
-	private async executeOperation<T>(operation: () => Promise<T>): Promise<T> {
+	private async executeOperation<T>(operation: () => Promise<T>): Promise<T | null> {
 		try {
 			if (!this.client.isOpen) {
-				await this.client.connect();
+				await this.connect();
 			}
 
 			return await operation();
 		} catch (err) {
-			throw new CacheServiceError(err);
+			this.app.log.error(err, "Cache Service Error");
+			return null;
 		}
 	}
 }
