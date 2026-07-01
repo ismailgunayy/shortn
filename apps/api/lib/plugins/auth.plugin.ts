@@ -1,8 +1,8 @@
-import { App, User } from "~/types/fastify";
-
+import { App } from "~/types/fastify";
 import { FastifyRequest } from "fastify";
-import { TokenType } from "~/modules/auth/auth.helper";
+import { TokenType } from "~/modules/auth/auth.service";
 import { Unauthorized } from "~/modules/auth/auth.error";
+import crypto from "crypto";
 import fastifyCookie from "@fastify/cookie";
 import fastifyJwt from "@fastify/jwt";
 import fastifyPlugin from "fastify-plugin";
@@ -16,15 +16,19 @@ export const auth = fastifyPlugin(async (app: App) => {
 		secret: app.config.AUTH.JWT.SECRET
 	});
 
-	app.decorate("authenticate", async (request, _reply) => {
-		let user: User;
-
+	app.decorate("authenticate", async (request: FastifyRequest) => {
+		// Access Token
 		if (request.cookies[TokenType.ACCESS]) {
-			const decoded = app.helpers.auth.authenticateAccessToken(request);
+			const payload = app.services.auth.authenticateAccessToken(request);
 
-			const userData = await app.services.auth.me(decoded.id);
-			user = { ...userData, authenticatedWith: "accessToken" };
-		} else if (request.headers.authorization) {
+			const userData = await app.services.auth.me(payload.userId);
+			request.session = {
+				id: payload.sessionId,
+				user: { ...userData, authenticatedWith: "accessToken" }
+			};
+		}
+		// API Key
+		else if (request.headers.authorization) {
 			const authHeader = request.headers.authorization;
 
 			if (!authHeader.startsWith("Bearer ") && !authHeader.startsWith("Token ")) {
@@ -37,27 +41,32 @@ export const auth = fastifyPlugin(async (app: App) => {
 			}
 
 			const apiKey = parts[1];
-			const { userId } = await app.services.auth.verifyApiKey(apiKey);
+			const { userId } = await app.services.apiKey.verifyApiKey(apiKey);
 
 			const userData = await app.services.auth.me(userId);
-			user = { ...userData, authenticatedWith: "apiKey" };
+
+			request.session = {
+				id: crypto.randomUUID(),
+				user: { ...userData, authenticatedWith: "apiKey" }
+			};
 		} else {
 			throw new Unauthorized();
 		}
 
-		request.user = user;
-
-		if (user.email === app.config.AUTH.SERVICE_ACCOUNT_EMAIL) {
-			request.user.isServiceAccount = true;
+		if (request.session.user.email === app.config.AUTH.SERVICE_ACCOUNT_EMAIL) {
+			request.session.user.isServiceAccount = true;
 		}
 	});
 
 	app.decorate("authenticateSession", async (request: FastifyRequest) => {
 		if (request.cookies[TokenType.ACCESS]) {
-			const decoded = app.helpers.auth.authenticateAccessToken(request);
-			const user = await app.services.auth.me(decoded.id);
+			const payload = app.services.auth.authenticateAccessToken(request);
+			const user = await app.services.auth.me(payload.userId);
 
-			request.user = { ...user, authenticatedWith: "accessToken" };
+			request.session = {
+				id: payload.sessionId,
+				user: { ...user, authenticatedWith: "accessToken" }
+			};
 		} else {
 			throw new Unauthorized();
 		}

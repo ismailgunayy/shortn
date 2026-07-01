@@ -52,7 +52,9 @@ export class AuthService extends Service {
 	}
 
 	public async logout(): Promise<ApiResponse> {
-		const response = await this.request("auth/logout");
+		const response = await this.request("auth/logout", {
+			method: "POST"
+		});
 
 		authStore.clear();
 		goto(resolve("/"));

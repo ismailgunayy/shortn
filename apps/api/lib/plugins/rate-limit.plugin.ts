@@ -11,11 +11,11 @@ export const rateLimit = fastifyPlugin(async (app: App) => {
 				return Number.MAX_SAFE_INTEGER;
 			}
 
-			if (request.user?.isServiceAccount) {
+			if (request.session?.user.isServiceAccount) {
 				return Number.MAX_SAFE_INTEGER;
 			}
 
-			switch (request.user?.authenticatedWith) {
+			switch (request.session?.user.authenticatedWith) {
 				case "apiKey":
 					return 5000;
 
@@ -28,8 +28,8 @@ export const rateLimit = fastifyPlugin(async (app: App) => {
 		},
 		timeWindow: 1000 * 60, // 1 minute,
 		keyGenerator: (request) => {
-			if (request.user) {
-				return `user-${request.user.id}`;
+			if (request.session?.user) {
+				return `user-${request.session?.user.id}`;
 			}
 
 			return request.ip;

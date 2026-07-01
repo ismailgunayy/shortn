@@ -32,6 +32,15 @@ export interface ShortnCustomUrls {
   userId: number;
 }
 
+export interface ShortnSessions {
+  createdAt: Generated<Timestamp>;
+  expiresAt: Timestamp;
+  id: string;
+  refreshTokenHash: string;
+  updatedAt: Generated<Timestamp>;
+  userId: number;
+}
+
 export interface ShortnUrls {
   createdAt: Generated<Timestamp>;
   id: Generated<number>;
@@ -51,6 +60,7 @@ export interface ShortnUsers {
 export interface DB {
   "shortn.apiKeys": ShortnApiKeys;
   "shortn.customUrls": ShortnCustomUrls;
+  "shortn.sessions": ShortnSessions;
   "shortn.urls": ShortnUrls;
   "shortn.users": ShortnUsers;
 }

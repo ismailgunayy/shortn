@@ -29,6 +29,7 @@ await app.register(plugins.cors);
 await app.register(plugins.di);
 await app.register(plugins.docs);
 await app.register(plugins.router);
+await app.register(plugins.jobs);
 
 const start = async () => {
 	await app.listen({

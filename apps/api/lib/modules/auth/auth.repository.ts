@@ -1,5 +1,5 @@
-import { DB, ShortnApiKeys, ShortnUsers } from "~/types/db";
-import { Insertable, Kysely, Updateable } from "kysely";
+import { DB, ShortnSessions, ShortnUsers } from "~/types/db";
+import { Insertable, Kysely, SelectType, Updateable } from "kysely";
 
 export class AuthRepository {
 	constructor(private db: Kysely<DB>) {}
@@ -14,78 +14,42 @@ export class AuthRepository {
 			.executeTakeFirstOrThrow();
 	}
 
-	async updateUser(id: number, values: Updateable<ShortnUsers>) {
+	async updateUser(id: SelectType<ShortnUsers["id"]>, values: Updateable<ShortnUsers>) {
 		return await this.db.updateTable("shortn.users").set(values).where("id", "=", id).executeTakeFirstOrThrow();
 	}
 
-	async deleteUser(id: number) {
+	async deleteUser(id: SelectType<ShortnUsers["id"]>) {
 		return await this.db.deleteFrom("shortn.users").where("id", "=", id).execute();
 	}
 
-	async findUser(id: number) {
+	async findUser(id: SelectType<ShortnUsers["id"]>) {
 		return await this.db.selectFrom("shortn.users").selectAll().where("id", "=", id).executeTakeFirst();
 	}
 
-	async findUserByEmail(email: ShortnUsers["email"]) {
+	async findUserByEmail(email: SelectType<ShortnUsers["email"]>) {
 		return await this.db.selectFrom("shortn.users").selectAll().where("email", "=", email).executeTakeFirst();
 	}
 
-	// ------------------- API KEY ------------------- //
+	// ------------------- SESSION ------------------- //
 
-	async insertApiKey(values: Insertable<ShortnApiKeys>) {
-		return await this.db.insertInto("shortn.apiKeys").values(values).returningAll().executeTakeFirstOrThrow();
+	async insertSession(values: Insertable<ShortnSessions>) {
+		return await this.db.insertInto("shortn.sessions").values(values).executeTakeFirstOrThrow();
 	}
 
-	async updateApiKey(id: number, userId: number, values: Updateable<ShortnApiKeys>) {
+	async findSession(id: SelectType<ShortnSessions["id"]>) {
 		return await this.db
-			.updateTable("shortn.apiKeys")
-			.set(values)
-			.where("id", "=", id)
-			.where("userId", "=", userId)
-			.executeTakeFirstOrThrow();
-	}
-
-	async deleteApiKey(id: number, userId: number) {
-		return await this.db.deleteFrom("shortn.apiKeys").where("userId", "=", userId).where("id", "=", id).execute();
-	}
-
-	async findApiKey(id: number, userId: number) {
-		return await this.db
-			.selectFrom("shortn.apiKeys")
+			.selectFrom("shortn.sessions")
 			.selectAll()
-			.where("userId", "=", userId)
 			.where("id", "=", id)
+			.where("expiresAt", ">", new Date())
 			.executeTakeFirst();
 	}
 
-	async findApiKeyByHash(keyHash: ShortnApiKeys["keyHash"]) {
-		return await this.db.selectFrom("shortn.apiKeys").selectAll().where("keyHash", "=", keyHash).executeTakeFirst();
+	async updateSession(id: SelectType<ShortnSessions["id"]>, values: Updateable<ShortnSessions>) {
+		return await this.db.updateTable("shortn.sessions").set(values).where("id", "=", id).executeTakeFirstOrThrow();
 	}
 
-	async findApiKeyByName(userId: number, name: ShortnApiKeys["name"]) {
-		return await this.db
-			.selectFrom("shortn.apiKeys")
-			.selectAll()
-			.where("userId", "=", userId)
-			.where("name", "=", name)
-			.executeTakeFirst();
-	}
-
-	async findAllApiKeysByUserId(userId: number) {
-		return await this.db
-			.selectFrom("shortn.apiKeys")
-			.select(["id", "name", "lastFour", "createdAt", "lastUsedAt"])
-			.where("userId", "=", userId)
-			.execute();
-	}
-
-	async countApiKeysByUserId(userId: number) {
-		const result = await this.db
-			.selectFrom("shortn.apiKeys")
-			.select(this.db.fn.count<number>("id").as("count"))
-			.where("userId", "=", userId)
-			.executeTakeFirst();
-
-		return result ? result.count : 0;
+	async deleteSession(id: SelectType<ShortnSessions["id"]>) {
+		return await this.db.deleteFrom("shortn.sessions").where("id", "=", id).execute();
 	}
 }

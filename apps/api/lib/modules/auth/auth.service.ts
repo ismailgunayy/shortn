@@ -1,21 +1,30 @@
 import {
-	ApiKeyCreationLimitReached,
-	ApiKeyNameAlreadyInUse,
-	ApiKeyNotFound,
-	ApiKeyNotProvided,
-	InactiveApiKey,
-	InvalidApiKeyFormat,
+	AccessTokenNotFound,
+	ExpiredToken,
+	InvalidCookieSignature,
+	InvalidToken,
+	InvalidTokenType,
 	UserAlreadyExists,
 	UserNotFound,
 	WrongPassword
 } from "./auth.error";
+import { App, JWTPayload } from "~/types/fastify";
+import { compare, hash } from "bcrypt";
 
-import { ApiKeySchema } from "~/modules/auth/auth.schema";
-import { App } from "~/types/fastify";
 import { AuthRepository } from "~/modules/auth/auth.repository";
+import { FastifyRequest } from "fastify";
 import { ShortnUsers } from "~/types/db";
+import crypto from "crypto";
+import dayjs from "dayjs";
 
-const MAX_API_KEYS_PER_USER = 5;
+const SALT_ROUNDS = 12;
+
+export enum TokenType {
+	ACCESS = "shortn_access_token",
+	REFRESH = "shortn_refresh_token"
+}
+
+export type AuthMethod = "accessToken" | "apiKey";
 
 export class AuthService {
 	constructor(
@@ -38,7 +47,7 @@ export class AuthService {
 		const user = await this.authRepository.insertUser({
 			fullName,
 			email,
-			password: await this.app.helpers.auth.hashPassword(password)
+			password: await hash(password, SALT_ROUNDS)
 		});
 
 		return {
@@ -59,16 +68,47 @@ export class AuthService {
 			throw new UserNotFound();
 		}
 
-		const isPasswordMatched = await this.app.helpers.auth.verifyPassword(password, user.password);
+		const isPasswordMatched = await compare(password, user.password);
 		if (!isPasswordMatched) {
 			throw new WrongPassword();
 		}
 
+		const sessionId = crypto.randomUUID();
+
+		const accessToken = this.generateToken({
+			sessionId: sessionId,
+			userId: user.id,
+			tokenType: TokenType.ACCESS
+		});
+
+		const refreshToken = this.generateToken({
+			sessionId: sessionId,
+			userId: user.id,
+			tokenType: TokenType.REFRESH
+		});
+
+		const expiresAt = dayjs().add(this.app.config.AUTH.JWT.REFRESH_EXPIRES_IN_SECONDS, "second").toDate();
+
+		await this.authRepository.insertSession({
+			id: sessionId,
+			userId: user.id,
+			refreshTokenHash: crypto.createHash("sha256").update(refreshToken).digest("hex"),
+			expiresAt: expiresAt
+		});
+
 		return {
-			id: user.id,
-			fullName: user.fullName,
-			email: user.email
+			user: {
+				id: user.id,
+				fullName: user.fullName,
+				email: user.email
+			},
+			accessToken,
+			refreshToken
 		};
+	}
+
+	public async logout(sessionId: string) {
+		await this.authRepository.deleteSession(sessionId);
 	}
 
 	public async me(id: number) {
@@ -142,12 +182,12 @@ export class AuthService {
 			};
 		}
 
-		const isCurrentPasswordMatched = await this.app.helpers.auth.verifyPassword(currentPassword, user.password);
+		const isCurrentPasswordMatched = await compare(currentPassword, user.password);
 		if (!isCurrentPasswordMatched) {
 			throw new WrongPassword();
 		}
 
-		const hashedPassword = await this.app.helpers.auth.hashPassword(newPassword);
+		const hashedPassword = await hash(newPassword, SALT_ROUNDS);
 
 		await this.authRepository.updateUser(id, { password: hashedPassword });
 
@@ -173,100 +213,86 @@ export class AuthService {
 		await this.authRepository.deleteUser(id);
 	}
 
-	public async createApiKey(userId: number, name: string) {
-		const apiKeysCount = await this.authRepository.countApiKeysByUserId(userId);
+	private generateToken(payload: JWTPayload) {
+		const expiresIn =
+			payload.tokenType === TokenType.ACCESS
+				? this.app.config.AUTH.JWT.ACCESS_EXPIRES_IN_SECONDS
+				: this.app.config.AUTH.JWT.REFRESH_EXPIRES_IN_SECONDS;
 
-		if (apiKeysCount >= MAX_API_KEYS_PER_USER) {
-			throw new ApiKeyCreationLimitReached(MAX_API_KEYS_PER_USER);
+		return this.app.jwt.sign(payload, { expiresIn });
+	}
+
+	public authenticateAccessToken(request: FastifyRequest) {
+		let payload;
+
+		if (request.cookies[TokenType.ACCESS]) {
+			const { value: accessToken, valid } = request.unsignCookie(request.cookies[TokenType.ACCESS]);
+
+			if (!valid) {
+				throw new InvalidCookieSignature();
+			}
+
+			try {
+				payload = this.app.jwt.verify(accessToken);
+
+				if (payload.tokenType !== TokenType.ACCESS) {
+					throw new InvalidTokenType();
+				}
+			} catch (err) {
+				throw new InvalidToken(err);
+			}
+		} else {
+			throw new AccessTokenNotFound();
 		}
 
-		const existingApiKey = await this.authRepository.findApiKeyByName(userId, name);
-		if (existingApiKey) {
-			throw new ApiKeyNameAlreadyInUse();
+		return payload;
+	}
+
+	public async authenticateRefreshToken(token: string) {
+		let payload;
+
+		try {
+			payload = this.app.jwt.verify(token);
+
+			if (payload.tokenType !== TokenType.REFRESH) {
+				throw new InvalidTokenType("Expected refresh token");
+			}
+		} catch (err) {
+			throw new InvalidToken(err);
 		}
 
-		const key = this.app.helpers.auth.generateApiKey();
-		const lastFour = key.slice(-4);
-		const keyHash = this.app.helpers.auth.hashApiKey(key);
+		const session = await this.authRepository.findSession(payload.sessionId);
 
-		const apiKey = await this.authRepository.insertApiKey({
-			userId,
-			keyHash,
-			lastFour,
-			name,
-			lastUsedAt: new Date()
+		if (!session) {
+			throw new ExpiredToken();
+		}
+
+		const incomingHash = crypto.createHash("sha256").update(token).digest("hex");
+
+		if (incomingHash !== session.refreshTokenHash) {
+			await this.authRepository.deleteSession(session.id);
+			throw new InvalidToken();
+		}
+
+		const newAccessToken = this.generateToken({
+			sessionId: session.id,
+			userId: session.userId,
+			tokenType: TokenType.ACCESS
 		});
 
-		return {
-			id: apiKey.id,
-			key: key,
-			name: apiKey.name,
-			lastFour: apiKey.lastFour
-		};
-	}
+		const newRefreshToken = this.generateToken({
+			sessionId: session.id,
+			userId: session.userId,
+			tokenType: TokenType.REFRESH
+		});
 
-	public async getApiKeysOfUser(userId: number) {
-		const apiKeys = await this.authRepository.findAllApiKeysByUserId(userId);
-		return apiKeys;
-	}
+		const expiresAt = dayjs().add(this.app.config.AUTH.JWT.REFRESH_EXPIRES_IN_SECONDS, "second").toDate();
 
-	public async verifyApiKey(key?: string) {
-		if (!key) {
-			throw new ApiKeyNotProvided();
-		}
+		await this.authRepository.updateSession(session.id, {
+			expiresAt: expiresAt,
+			refreshTokenHash: crypto.createHash("sha256").update(newRefreshToken).digest("hex")
+		});
 
-		if (ApiKeySchema.safeParse(key).success === false) {
-			throw new InvalidApiKeyFormat();
-		}
-
-		const keyHash = this.app.helpers.auth.hashApiKey(key);
-		const apiKey = await this.authRepository.findApiKeyByHash(keyHash);
-
-		if (!apiKey) {
-			throw new ApiKeyNotFound();
-		}
-
-		if (!apiKey.isActive) {
-			throw new InactiveApiKey();
-		}
-
-		await this.authRepository.updateApiKey(apiKey.id, apiKey.userId, { lastUsedAt: new Date() });
-
-		return {
-			userId: apiKey.userId
-		};
-	}
-
-	public async updateApiKey(id: number, userId: number, name: string) {
-		const apiKey = await this.authRepository.findApiKey(id, userId);
-
-		if (!apiKey) {
-			throw new ApiKeyNotFound();
-		}
-
-		const existingApiKey = await this.authRepository.findApiKeyByName(userId, name);
-		if (existingApiKey && existingApiKey.id !== id) {
-			throw new ApiKeyNameAlreadyInUse();
-		}
-
-		if (apiKey.name !== name) {
-			await this.authRepository.updateApiKey(id, userId, { name });
-		}
-
-		return {
-			id: apiKey.id,
-			name: name,
-			lastFour: apiKey.lastFour
-		};
-	}
-
-	public async deleteApiKey(id: number, userId: number) {
-		const apiKey = await this.authRepository.findApiKey(id, userId);
-
-		if (!apiKey) {
-			throw new ApiKeyNotFound();
-		}
-
-		await this.authRepository.deleteApiKey(id, userId);
+		return { newAccessToken, newRefreshToken };
 	}
 }

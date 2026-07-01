@@ -3,7 +3,6 @@ import { SetOptions, createClient } from "redis";
 import { App } from "~/types/fastify";
 
 export enum CacheKind {
-	REFRESH = "refresh",
 	GENERATED_URL = "generated_url",
 	CUSTOM_URL = "custom_url"
 }
