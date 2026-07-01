@@ -5,6 +5,7 @@ export * from "./di.plugin";
 export * from "./docs.plugin";
 export * from "./error-handler.plugin";
 export * from "./helmet.plugin";
+export * from "./jobs.plugin";
 export * from "./log.plugin";
 export * from "./not-found-handler.plugin";
 export * from "./rate-limit.plugin";
