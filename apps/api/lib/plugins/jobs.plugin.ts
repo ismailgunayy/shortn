@@ -10,7 +10,20 @@ export const jobs = fastifyPlugin(async (app: App) => {
 	const task = new AsyncTask(
 		"Cleanup expired Sessions",
 		async () => {
-			await app.db.deleteFrom("shortn.sessions").where("expiresAt", "<", new Date()).limit(500).execute();
+			await app.db
+				.deleteFrom("shortn.sessions")
+				.where(
+					"id",
+					"in",
+					app.db
+						.selectFrom("shortn.sessions")
+						.select("id")
+						.where("expiresAt", "<", new Date())
+						.limit(1000)
+						.forUpdate()
+						.skipLocked()
+				)
+				.execute();
 		},
 		(err) => {
 			app.log.error(err);
