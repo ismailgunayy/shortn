@@ -1,5 +1,5 @@
 # Production Dockerfile for Client (SvelteKit)
-FROM node:24.16.0-alpine AS base
+FROM node:24.18.0-alpine AS base
 
 # Dependencies stage - install all dependencies for building
 FROM base AS deps
