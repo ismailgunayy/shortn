@@ -288,7 +288,7 @@ export const AuthController = (app: App) => {
 		}
 	);
 
-	app.get(
+	app.post(
 		"/auth/logout",
 		{
 			onRequest: [app.authenticateSession],

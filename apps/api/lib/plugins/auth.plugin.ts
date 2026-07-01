@@ -2,6 +2,7 @@ import { App } from "~/types/fastify";
 import { FastifyRequest } from "fastify";
 import { TokenType } from "~/modules/auth/auth.service";
 import { Unauthorized } from "~/modules/auth/auth.error";
+import crypto from "crypto";
 import fastifyCookie from "@fastify/cookie";
 import fastifyJwt from "@fastify/jwt";
 import fastifyPlugin from "fastify-plugin";
@@ -15,7 +16,7 @@ export const auth = fastifyPlugin(async (app: App) => {
 		secret: app.config.AUTH.JWT.SECRET
 	});
 
-	app.decorate("authenticate", async (request, _reply) => {
+	app.decorate("authenticate", async (request: FastifyRequest) => {
 		// Access Token
 		if (request.cookies[TokenType.ACCESS]) {
 			const payload = app.services.auth.authenticateAccessToken(request);
