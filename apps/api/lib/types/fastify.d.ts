@@ -42,7 +42,7 @@ declare module "@fastify/jwt" {
 declare module "fastify" {
 	interface FastifyRequest {
 		startTime?: number;
-		session?: Session;
+		session: Session;
 	}
 
 	interface FastifyInstance {
