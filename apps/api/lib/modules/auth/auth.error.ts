@@ -18,9 +18,15 @@ export class InvalidTokenType extends AuthError {
 	}
 }
 
-export class InvalidOrExpiredToken extends AuthError {
+export class InvalidToken extends AuthError {
 	constructor(cause?: unknown) {
-		super("Invalid or expired token", 401, cause);
+		super("Invalid token", 401, cause);
+	}
+}
+
+export class ExpiredToken extends AuthError {
+	constructor(cause?: unknown) {
+		super("Expired token", 401, cause);
 	}
 }
 

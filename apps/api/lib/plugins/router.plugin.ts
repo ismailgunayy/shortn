@@ -30,7 +30,11 @@ const restrictAuthEndpoints = (app: App) => {
 	app.addHook("onRequest", (request, reply, done) => {
 		const { origin } = request.headers;
 
-		if (request.user?.authenticatedWith === "apiKey" || !origin || !app.config.HTTP.CLIENT_URL.includes(origin)) {
+		if (
+			request.session?.user.authenticatedWith === "apiKey" ||
+			!origin ||
+			!app.config.HTTP.CLIENT_URL.includes(origin)
+		) {
 			return reply.status(403).send({
 				success: false,
 				error: {

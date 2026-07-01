@@ -38,18 +38,18 @@ const sanitizePayload = (payload: unknown): unknown => {
 };
 
 export const log = fastifyPlugin((app: App) => {
-	app.addHook("onRequest", (req, _reply, done) => {
-		req.startTime = Date.now();
+	app.addHook("onRequest", (request, _reply, done) => {
+		request.startTime = Date.now();
 		done();
 	});
 
-	app.addHook("preHandler", function (req, _reply, done) {
-		if (req.body && ["POST", "PUT", "PATCH"].includes(req.method)) {
+	app.addHook("preHandler", function (request, _reply, done) {
+		if (request.body && ["POST", "PUT", "PATCH"].includes(request.method)) {
 			app.log.info(
 				{
-					method: req.method,
-					url: req.url,
-					body: sanitizePayload(req.body)
+					method: request.method,
+					url: request.url,
+					body: sanitizePayload(request.body)
 				},
 				"Request"
 			);
@@ -57,8 +57,8 @@ export const log = fastifyPlugin((app: App) => {
 		done();
 	});
 
-	app.addHook("onResponse", (req, reply, done) => {
-		const duration = Date.now() - (req.startTime || Date.now());
+	app.addHook("onResponse", (request, reply, done) => {
+		const duration = Date.now() - (request.startTime || Date.now());
 		let logLevel: "error" | "warn" | "info";
 		switch (true) {
 			case reply.statusCode >= 500:
@@ -74,11 +74,12 @@ export const log = fastifyPlugin((app: App) => {
 
 		app.log[logLevel](
 			{
-				method: req.method,
-				url: req.url,
+				method: request.method,
+				url: request.url,
 				status: reply.statusCode,
 				duration: `${duration}ms`,
-				userId: req.user?.id
+				sessionId: request.session?.id,
+				userId: request.session?.user.id
 			},
 			"Response"
 		);

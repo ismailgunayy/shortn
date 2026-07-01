@@ -34,9 +34,9 @@ export const UrlController = (app: App) => {
 			const { url, customCode } = request.body;
 			const shortenedUrl = await app.services.url.shortenUrl(
 				url,
-				request.user.id,
+				request.session.user.id,
 				customCode,
-				request.user.isServiceAccount
+				request.session.user.isServiceAccount
 			);
 
 			return reply.code(200).send({
@@ -101,8 +101,8 @@ export const UrlController = (app: App) => {
 			}
 		},
 		async (request, reply) => {
-			const urls = await app.services.url.getGeneratedUrlsOfUser(request.query, request.user.id);
-			const totalUrls = await app.services.url.countGeneratedUrlsOfUser(request.query.search, request.user.id);
+			const urls = await app.services.url.getGeneratedUrlsOfUser(request.query, request.session.user.id);
+			const totalUrls = await app.services.url.countGeneratedUrlsOfUser(request.query.search, request.session.user.id);
 
 			const totalPages = Math.ceil(totalUrls / request.query.limit);
 
@@ -150,8 +150,8 @@ export const UrlController = (app: App) => {
 			}
 		},
 		async (request, reply) => {
-			const customUrls = await app.services.url.getCustomUrlsOfUser(request.query, request.user.id);
-			const totalUrls = await app.services.url.countCustomUrlsOfUser(request.query.search, request.user.id);
+			const customUrls = await app.services.url.getCustomUrlsOfUser(request.query, request.session.user.id);
+			const totalUrls = await app.services.url.countCustomUrlsOfUser(request.query.search, request.session.user.id);
 
 			const totalPages = Math.ceil(totalUrls / request.query.limit);
 
@@ -202,7 +202,7 @@ export const UrlController = (app: App) => {
 			const { id } = request.params;
 			const { originalUrl } = request.body;
 
-			const updatedUrl = await app.services.url.updateCustomUrl(id, request.user.id, originalUrl);
+			const updatedUrl = await app.services.url.updateCustomUrl(id, request.session.user.id, originalUrl);
 
 			return reply.code(200).send({
 				success: true,
@@ -233,7 +233,7 @@ export const UrlController = (app: App) => {
 			const { id } = request.params;
 			const { shortenedUrl } = request.body;
 
-			await app.services.url.deleteUrl(id, request.user.id, shortenedUrl);
+			await app.services.url.deleteUrl(id, request.session.user.id, shortenedUrl);
 
 			return reply.code(200).send({ success: true });
 		}

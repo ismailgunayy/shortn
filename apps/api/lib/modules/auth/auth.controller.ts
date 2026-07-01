@@ -1,14 +1,54 @@
-import { ApiKeyNameSchema, EmailSchema, FullNameSchema, PasswordSchema } from "~/modules/auth/auth.schema";
-import { IdSchema, createResponseSchema } from "~/common/schema";
+import { EmailSchema, FullNameSchema, PasswordSchema } from "~/modules/auth/auth.schema";
+import { InvalidCookieSignature, RefreshTokenNotFound } from "./auth.error";
 
 import { App } from "~/types/fastify";
-import { CacheKind } from "~/modules/cache/cache.service";
-import { TokenType } from "./auth.helper";
+import { CookieSerializeOptions } from "@fastify/cookie";
+import { FastifyReply } from "fastify";
+import { TokenType } from "./auth.service";
+import { createResponseSchema } from "~/common/schema";
 import z from "zod";
 
 export const AuthController = (app: App) => {
 	const accessTokenExpiresIn = app.config.AUTH.JWT.ACCESS_EXPIRES_IN_SECONDS;
 	const refreshTokenExpiresIn = app.config.AUTH.JWT.REFRESH_EXPIRES_IN_SECONDS;
+
+	const defaultCookieOptions: CookieSerializeOptions = {
+		secure: app.config.IS_PRODUCTION,
+		sameSite: "lax",
+		signed: true,
+		path: "/",
+		domain: new URL(app.config.HTTP.CLIENT_URL).hostname
+	};
+
+	const setTokenCookie = (name: TokenType, token: string, reply: FastifyReply) => {
+		let options = {};
+
+		if (name === TokenType.ACCESS) {
+			options = {
+				maxAge: accessTokenExpiresIn
+			};
+		} else if (name === TokenType.REFRESH) {
+			options = {
+				maxAge: refreshTokenExpiresIn
+			};
+		}
+
+		reply.setCookie(name, token, {
+			...defaultCookieOptions,
+			...options
+		});
+	};
+
+	const clearTokenCookies = (reply: FastifyReply) => {
+		reply.clearCookie(TokenType.ACCESS, {
+			...defaultCookieOptions,
+			maxAge: accessTokenExpiresIn
+		});
+		reply.clearCookie(TokenType.REFRESH, {
+			...defaultCookieOptions,
+			maxAge: refreshTokenExpiresIn
+		});
+	};
 
 	app.post(
 		"/auth/register",
@@ -76,30 +116,13 @@ export const AuthController = (app: App) => {
 		async (request, reply) => {
 			const { email, password } = request.body;
 
-			const user = await app.services.auth.login({
+			const { user, accessToken, refreshToken } = await app.services.auth.login({
 				email,
 				password
 			});
 
-			const accessToken = app.helpers.auth.generateToken({
-				id: user.id,
-				tokenType: TokenType.ACCESS
-			});
-
-			const refreshToken = app.helpers.auth.generateToken({
-				id: user.id,
-				tokenType: TokenType.REFRESH
-			});
-
-			await app.services.cache.set(CacheKind.REFRESH, user.id.toString(), refreshToken, {
-				expiration: {
-					type: "EX",
-					value: refreshTokenExpiresIn
-				}
-			});
-
-			app.helpers.auth.setTokenCookie(TokenType.ACCESS, accessToken, reply);
-			app.helpers.auth.setTokenCookie(TokenType.REFRESH, refreshToken, reply);
+			setTokenCookie(TokenType.ACCESS, accessToken, reply);
+			setTokenCookie(TokenType.REFRESH, refreshToken, reply);
 
 			return reply.code(200).send({
 				success: true,
@@ -131,7 +154,7 @@ export const AuthController = (app: App) => {
 			}
 		},
 		async (request, reply) => {
-			const user = await app.services.auth.me(request.user.id);
+			const user = await app.services.auth.me(request.session.user.id);
 
 			return reply.code(200).send({
 				success: true,
@@ -162,27 +185,22 @@ export const AuthController = (app: App) => {
 		},
 
 		async (request, reply) => {
-			const decoded = await app.helpers.auth.authenticateRefreshToken(request);
+			const signedRefreshTokenCookie = request.cookies[TokenType.REFRESH];
 
-			const newAccessToken = app.helpers.auth.generateToken({
-				id: decoded.id,
-				tokenType: TokenType.ACCESS
-			});
+			if (!signedRefreshTokenCookie) {
+				throw new RefreshTokenNotFound();
+			}
 
-			const newRefreshToken = app.helpers.auth.generateToken({
-				id: decoded.id,
-				tokenType: TokenType.REFRESH
-			});
+			const { value: refreshToken, valid } = request.unsignCookie(signedRefreshTokenCookie);
 
-			await app.services.cache.set(CacheKind.REFRESH, decoded.id.toString(), newRefreshToken, {
-				expiration: {
-					type: "EX",
-					value: refreshTokenExpiresIn
-				}
-			});
+			if (!valid) {
+				throw new InvalidCookieSignature();
+			}
 
-			app.helpers.auth.setTokenCookie(TokenType.ACCESS, newAccessToken, reply);
-			app.helpers.auth.setTokenCookie(TokenType.REFRESH, newRefreshToken, reply);
+			const { newAccessToken, newRefreshToken } = await app.services.auth.authenticateRefreshToken(refreshToken);
+
+			setTokenCookie(TokenType.ACCESS, newAccessToken, reply);
+			setTokenCookie(TokenType.REFRESH, newRefreshToken, reply);
 
 			return reply.code(200).send({
 				success: true,
@@ -216,7 +234,7 @@ export const AuthController = (app: App) => {
 		async (request, reply) => {
 			const { fullName } = request.body;
 
-			const user = await app.services.auth.updateUser(request.user.id, { fullName });
+			const user = await app.services.auth.updateUser(request.session.user.id, { fullName });
 
 			return reply.code(200).send({
 				success: true,
@@ -244,7 +262,7 @@ export const AuthController = (app: App) => {
 		async (request, reply) => {
 			const { currentPassword, newPassword } = request.body;
 
-			await app.services.auth.changePassword(request.user.id, currentPassword, newPassword);
+			await app.services.auth.changePassword(request.session.user.id, currentPassword, newPassword);
 
 			return reply.code(200).send({
 				success: true
@@ -263,9 +281,8 @@ export const AuthController = (app: App) => {
 			}
 		},
 		async (request, reply) => {
-			app.helpers.auth.clearTokenCookies(reply);
-			await app.services.auth.deleteUser(request.user.id);
-			await app.services.cache.del(CacheKind.REFRESH, request.user.id.toString());
+			clearTokenCookies(reply);
+			await app.services.auth.deleteUser(request.session.user.id);
 
 			return reply.code(200).send({ success: true });
 		}
@@ -282,139 +299,10 @@ export const AuthController = (app: App) => {
 			}
 		},
 		async (request, reply) => {
-			app.helpers.auth.clearTokenCookies(reply);
-			await app.services.cache.del(CacheKind.REFRESH, request.user.id.toString());
+			clearTokenCookies(reply);
+			await app.services.auth.logout(request.session.id);
 
 			return reply.code(200).send({ success: true });
-		}
-	);
-
-	app.get(
-		"/auth/api-keys",
-		{
-			onRequest: [app.authenticateSession],
-			schema: {
-				hide: true,
-				description: "Get all API keys of the current user",
-				response: createResponseSchema(
-					z.object({
-						apiKeys: z.array(
-							z.object({
-								id: z.number(),
-								name: z.string(),
-								lastFour: z.string(),
-								createdAt: z.date(),
-								lastUsedAt: z.date()
-							})
-						)
-					})
-				)
-			}
-		},
-		async (request, reply) => {
-			const apiKeys = await app.services.auth.getApiKeysOfUser(request.user.id);
-
-			return reply.code(200).send({
-				success: true,
-				data: {
-					apiKeys
-				}
-			});
-		}
-	);
-
-	app.post(
-		"/auth/api-keys",
-		{
-			onRequest: [app.authenticateSession],
-			schema: {
-				hide: true,
-				description: "Create a new API key for the current user",
-				body: z.object({
-					name: ApiKeyNameSchema
-				}),
-				response: createResponseSchema(
-					z.object({
-						id: z.number(),
-						key: z.string(),
-						name: z.string(),
-						lastFour: z.string()
-					})
-				)
-			}
-		},
-		async (request, reply) => {
-			const { name } = request.body;
-
-			const apiKey = await app.services.auth.createApiKey(request.user.id, name);
-
-			return reply.code(200).send({
-				success: true,
-				data: {
-					...apiKey
-				}
-			});
-		}
-	);
-
-	app.patch(
-		"/auth/api-keys/:id",
-		{
-			onRequest: [app.authenticateSession],
-			schema: {
-				hide: true,
-				description: "Update an existing API key of the current user",
-				params: z.object({
-					id: IdSchema
-				}),
-				body: z.object({
-					name: ApiKeyNameSchema
-				}),
-				response: createResponseSchema(
-					z.object({
-						id: z.number(),
-						name: z.string(),
-						lastFour: z.string()
-					})
-				)
-			}
-		},
-		async (request, reply) => {
-			const { id } = request.params;
-			const { name } = request.body;
-
-			const apiKey = await app.services.auth.updateApiKey(id, request.user.id, name);
-
-			return reply.code(200).send({
-				success: true,
-				data: {
-					...apiKey
-				}
-			});
-		}
-	);
-
-	app.delete(
-		"/auth/api-keys/:id",
-		{
-			onRequest: [app.authenticateSession],
-			schema: {
-				hide: true,
-				description: "Delete an existing API key of the current user",
-				params: z.object({
-					id: IdSchema
-				}),
-				response: createResponseSchema()
-			}
-		},
-		async (request, reply) => {
-			const { id } = request.params;
-
-			await app.services.auth.deleteApiKey(id, request.user.id);
-
-			return reply.code(200).send({
-				success: true
-			});
 		}
 	);
 };

@@ -1,6 +1,6 @@
 import { CustomUrlQuerySchema, UrlQuerySchema } from "~/modules/url/url.schema";
 import { DB, ShortnCustomUrls, ShortnUrls } from "~/types/db";
-import { Insertable, Kysely, Updateable } from "kysely";
+import { Insertable, Kysely, SelectType, Updateable } from "kysely";
 
 import z from "zod";
 
@@ -13,15 +13,15 @@ export class UrlRepository {
 		return await this.db.insertInto("shortn.urls").values(values).returning(["id"]).executeTakeFirstOrThrow();
 	}
 
-	async deleteGeneratedUrl(id: number, userId: number) {
+	async deleteGeneratedUrl(id: SelectType<ShortnUrls["id"]>, userId: SelectType<ShortnUrls["userId"]>) {
 		return await this.db.deleteFrom("shortn.urls").where("id", "=", id).where("userId", "=", userId).execute();
 	}
 
-	async findGeneratedUrlById(id: number) {
+	async findGeneratedUrl(id: SelectType<ShortnUrls["id"]>) {
 		return await this.db.selectFrom("shortn.urls").selectAll().where("id", "=", id).executeTakeFirst();
 	}
 
-	async findGeneratedUrlByUrl(url: ShortnUrls["url"], userId: number) {
+	async findGeneratedUrlByUrl(url: SelectType<ShortnUrls["url"]>, userId: SelectType<ShortnUrls["userId"]>) {
 		return await this.db
 			.selectFrom("shortn.urls")
 			.selectAll()
@@ -48,7 +48,7 @@ export class UrlRepository {
 		return await query.execute();
 	}
 
-	async countGeneratedUrlsByUserId(search: string | undefined, userId: number) {
+	async countGeneratedUrlsByUserId(userId: SelectType<ShortnUrls["userId"]>, search?: string) {
 		let query = this.db
 			.selectFrom("shortn.urls")
 			.select(this.db.fn.count("id").as("count"))
@@ -69,7 +69,11 @@ export class UrlRepository {
 		return await this.db.insertInto("shortn.customUrls").values(values).returning(["id"]).executeTakeFirstOrThrow();
 	}
 
-	async updateCustomUrl(id: number, userId: number, values: Updateable<ShortnCustomUrls>) {
+	async updateCustomUrl(
+		id: SelectType<ShortnCustomUrls["id"]>,
+		userId: SelectType<ShortnCustomUrls["userId"]>,
+		values: Updateable<ShortnCustomUrls>
+	) {
 		return await this.db
 			.updateTable("shortn.customUrls")
 			.set(values)
@@ -79,11 +83,11 @@ export class UrlRepository {
 			.executeTakeFirstOrThrow();
 	}
 
-	async deleteCustomUrl(id: number, userId: number) {
+	async deleteCustomUrl(id: SelectType<ShortnCustomUrls["id"]>, userId: SelectType<ShortnCustomUrls["userId"]>) {
 		return await this.db.deleteFrom("shortn.customUrls").where("id", "=", id).where("userId", "=", userId).execute();
 	}
 
-	async findCustomUrlById(id: number, userId: number) {
+	async findCustomUrl(id: SelectType<ShortnCustomUrls["id"]>, userId: SelectType<ShortnCustomUrls["userId"]>) {
 		return await this.db
 			.selectFrom("shortn.customUrls")
 			.selectAll()
@@ -92,7 +96,7 @@ export class UrlRepository {
 			.executeTakeFirst();
 	}
 
-	async findCustomUrlByCustomCode(customCode: ShortnCustomUrls["customCode"]) {
+	async findCustomUrlByCustomCode(customCode: SelectType<ShortnCustomUrls["customCode"]>) {
 		return await this.db
 			.selectFrom("shortn.customUrls")
 			.select("url")
@@ -100,7 +104,10 @@ export class UrlRepository {
 			.executeTakeFirst();
 	}
 
-	async findAllCustomUrlsByUserId(urlQuery: z.infer<typeof CustomUrlQuerySchema>, userId: number) {
+	async findAllCustomUrlsByUserId(
+		urlQuery: z.infer<typeof CustomUrlQuerySchema>,
+		userId: SelectType<ShortnCustomUrls["userId"]>
+	) {
 		const { page, limit, sortBy, sortOrder, search } = urlQuery;
 
 		let query = this.db
@@ -118,7 +125,7 @@ export class UrlRepository {
 		return await query.execute();
 	}
 
-	async countCustomUrlsByUserId(search: string | undefined, userId: number) {
+	async countCustomUrlsByUserId(userId: SelectType<ShortnCustomUrls["userId"]>, search: string | undefined) {
 		let query = this.db
 			.selectFrom("shortn.customUrls")
 			.select(this.db.fn.count("id").as("count"))
