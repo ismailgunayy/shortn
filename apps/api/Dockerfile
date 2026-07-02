@@ -70,7 +70,7 @@ USER apiuser
 
 # Add healthcheck
 HEALTHCHECK --interval=2s --timeout=3s --start-period=10s --retries=5 \
-	CMD wget --no-verbose --tries=1 --spider http://localhost:$PORT/api/health || exit 1
+	CMD wget --no-verbose --tries=1 --spider http://localhost:$PORT/health || exit 1
 
 # Create and use a simple startup script
 WORKDIR /app/apps/api

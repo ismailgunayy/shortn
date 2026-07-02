@@ -1,3 +1,4 @@
+import { ApiKeyController } from "~/modules/api-key/api-key.controller";
 import { App } from "~/types/fastify";
 import { AuthController } from "~/modules/auth/auth.controller";
 import { UrlController } from "~/modules/url/url.controller";
@@ -54,6 +55,7 @@ export const router = fastifyPlugin((app: App) => {
 		app.register((app: App) => {
 			restrictAuthEndpoints(app);
 			app.register(AuthController);
+			app.register(ApiKeyController);
 		});
 
 		app.register((app: App) => {
