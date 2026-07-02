@@ -106,12 +106,14 @@ export class UrlService {
 			userId
 		});
 
-		this.app.services.cache.set(CacheKind.CUSTOM_URL, customCode, originalUrl, {
-			expiration: {
-				type: "EX",
-				value: CUSTOM_URL_EXPIRY
-			}
-		});
+		this.app.services.cache
+			.set(CacheKind.CUSTOM_URL, customCode, originalUrl, {
+				expiration: {
+					type: "EX",
+					value: CUSTOM_URL_EXPIRY
+				}
+			})
+			.catch((err) => this.app.log.error(err, "Failed to cache custom URL"));
 
 		return this.buildUrl(customCode, URLSegment.CUSTOM);
 	}
@@ -127,12 +129,14 @@ export class UrlService {
 
 		const shortCode = this.encodeId(id);
 
-		this.app.services.cache.set(CacheKind.GENERATED_URL, shortCode, originalUrl, {
-			expiration: {
-				type: "EX",
-				value: GENERATED_URL_EXPIRY
-			}
-		});
+		this.app.services.cache
+			.set(CacheKind.GENERATED_URL, shortCode, originalUrl, {
+				expiration: {
+					type: "EX",
+					value: GENERATED_URL_EXPIRY
+				}
+			})
+			.catch((err) => this.app.log.error(err, "Failed to cache generated URL"));
 
 		return this.buildUrl(shortCode);
 	}
