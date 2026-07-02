@@ -17,6 +17,7 @@ const CUSTOM_URL_EXPIRY = 60 * 60 * 24 * 7; // 7 days
 
 const BASE = 62;
 const BASE62_ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+const MAX_URL_ID = 2147483647; // PostgreSQL int4 max
 enum URLSegment {
 	CUSTOM = "c"
 }
@@ -55,6 +56,10 @@ export class UrlService {
 			if (index === -1) return 0;
 
 			result += index * Math.pow(BASE, length - 1 - i);
+		}
+
+		if (result > MAX_URL_ID) {
+			throw new InvalidShortenedUrl();
 		}
 
 		return result;

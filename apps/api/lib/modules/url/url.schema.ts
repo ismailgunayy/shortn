@@ -1,51 +1,40 @@
 import {
 	InvalidCustomCodeFormat,
 	InvalidCustomCodeLength,
-	InvalidShortenedUrl,
 	InvalidShortenedUrlDomain,
 	InvalidUrl,
-	InvalidUrlProtocol,
-	UrlError
+	InvalidUrlProtocol
 } from "./url.error";
 import { ShortnCustomUrls, ShortnUrls } from "~/types/db";
 
 import { APP_CONFIG } from "~/common/config";
 import z from "zod";
 
-export const UrlSchema = z.url().refine((url) => {
+export const UrlSchema = z.url({ error: new InvalidUrl().message }).superRefine((url, ctx) => {
+	if (!APP_CONFIG.IS_PRODUCTION) return;
+
 	try {
-		const parsedUrl = new URL(url);
-
-		if (APP_CONFIG.IS_PRODUCTION && parsedUrl.protocol !== "https:") {
-			throw new InvalidUrlProtocol();
+		if (new URL(url).protocol !== "https:") {
+			ctx.addIssue({ code: "custom", message: new InvalidUrlProtocol().message });
 		}
-
-		return true;
-	} catch (err) {
-		if (err instanceof UrlError) {
-			throw err;
-		}
-
-		throw new InvalidUrl();
+	} catch {
+		// Invalid URL is already reported by z.url(), throwing here will result in duplicate errors
+		return;
 	}
 });
 
-export const ShortenedUrlSchema = UrlSchema.refine((url) => {
+export const ShortenedUrlSchema = UrlSchema.superRefine((url, ctx) => {
+	let parsedUrl: URL;
+
 	try {
-		const parsedUrl = new URL(url);
-		const clientUrl = new URL(APP_CONFIG.HTTP.CLIENT_URL);
+		parsedUrl = new URL(url);
+	} catch {
+		// Invalid URL is already reported by z.url(), throwing here will result in duplicate errors
+		return;
+	}
 
-		if (parsedUrl.hostname !== clientUrl.hostname) {
-			throw new InvalidShortenedUrlDomain();
-		}
-
-		return true;
-	} catch (err) {
-		if (err instanceof UrlError) {
-			throw err;
-		}
-
-		throw new InvalidShortenedUrl();
+	if (parsedUrl.hostname !== new URL(APP_CONFIG.HTTP.CLIENT_URL).hostname) {
+		ctx.addIssue({ code: "custom", message: new InvalidShortenedUrlDomain().message });
 	}
 });
 
