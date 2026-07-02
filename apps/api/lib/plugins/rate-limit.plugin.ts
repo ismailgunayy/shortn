@@ -1,6 +1,13 @@
 import { App } from "~/types/fastify";
+import { ShortnError } from "~/common/error";
 import fastifyPlugin from "fastify-plugin";
 import fastifyRateLimit from "@fastify/rate-limit";
+
+class RateLimitExceeded extends ShortnError {
+	constructor(cause?: unknown) {
+		super("Too many requests", 429, cause);
+	}
+}
 
 export const rateLimit = fastifyPlugin(async (app: App) => {
 	await app.register(fastifyRateLimit, {
@@ -17,13 +24,13 @@ export const rateLimit = fastifyPlugin(async (app: App) => {
 
 			switch (request.session?.user.authenticatedWith) {
 				case "apiKey":
-					return 5000;
-
-				case "accessToken":
 					return 2500;
 
-				default:
+				case "accessToken":
 					return 1000;
+
+				default:
+					return 15;
 			}
 		},
 		timeWindow: 1000 * 60, // 1 minute,
@@ -33,6 +40,9 @@ export const rateLimit = fastifyPlugin(async (app: App) => {
 			}
 
 			return request.ip;
+		},
+		errorResponseBuilder: () => {
+			return new RateLimitExceeded();
 		}
 	});
 });
