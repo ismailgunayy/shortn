@@ -160,13 +160,22 @@ export class UrlService {
 				return cachedUrl;
 			}
 
-			const existingCustom = await this.urlRepository.findCustomUrlByCustomCode(customCode);
+			const existingCustomUrl = await this.urlRepository.findCustomUrlByCustomCode(customCode);
 
-			if (!existingCustom) {
+			if (!existingCustomUrl) {
 				throw new InvalidShortenedUrl();
 			}
 
-			return existingCustom.url;
+			this.app.services.cache
+				.set(CacheKind.CUSTOM_URL, shortCode, existingCustomUrl.url, {
+					expiration: {
+						type: "EX",
+						value: CUSTOM_URL_EXPIRY
+					}
+				})
+				.catch((err) => this.app.log.error(err, "Failed to cache generated URL"));
+
+			return existingCustomUrl.url;
 		} else {
 			const cachedUrl = await this.app.services.cache.get(CacheKind.GENERATED_URL, shortCode);
 			if (cachedUrl) {
@@ -179,6 +188,15 @@ export class UrlService {
 			if (!existingUrl) {
 				throw new InvalidShortenedUrl();
 			}
+
+			this.app.services.cache
+				.set(CacheKind.GENERATED_URL, shortCode, existingUrl.url, {
+					expiration: {
+						type: "EX",
+						value: GENERATED_URL_EXPIRY
+					}
+				})
+				.catch((err) => this.app.log.error(err, "Failed to cache generated URL"));
 
 			return existingUrl.url;
 		}
