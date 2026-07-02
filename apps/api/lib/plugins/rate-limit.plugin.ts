@@ -36,7 +36,7 @@ export const rateLimit = fastifyPlugin(async (app: App) => {
 		timeWindow: 1000 * 60, // 1 minute,
 		keyGenerator: (request) => {
 			if (request.session?.user) {
-				return `session-${request.session?.id}`;
+				return `user-${request.session?.user.id}`;
 			}
 
 			return request.ip;
