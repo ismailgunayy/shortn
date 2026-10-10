@@ -387,12 +387,12 @@
     cookie "^2.0.0"
     fastify-plugin "^6.0.0"
 
-"@fastify/cors@^11.2.0":
-  version "11.2.0"
-  resolved "https://registry.yarnpkg.com/@fastify/cors/-/cors-11.2.0.tgz#82c47aff9bd7dfd40ac0a66fcd87a034113dcdd8"
-  integrity sha512-LbLHBuSAdGdSFZYTLVA3+Ch2t+sA6nq3Ejc6XLAKiQ6ViS2qFnvicpj0htsx03FyYeLs04HfRNBsz/a8SvbcUw==
+"@fastify/cors@^11.3.0":
+  version "11.3.1"
+  resolved "https://registry.yarnpkg.com/@fastify/cors/-/cors-11.3.1.tgz#4897642f6b1d343497209447ec84e97d5dfc7a05"
+  integrity sha512-gZXNzd6FLHzOIfvoK4+Az3Wko2V6Y0MIsLxpyo4AEYl7a9q1JBPwPaxLea4nkr++8FCiJiPpYYo6E02uZW0dqw==
   dependencies:
-    fastify-plugin "^5.0.0"
+    fastify-plugin "^6.0.0"
     toad-cache "^3.7.0"
 
 "@fastify/error@^4.0.0", "@fastify/error@^4.2.0":
@@ -412,23 +412,23 @@
   resolved "https://registry.yarnpkg.com/@fastify/forwarded/-/forwarded-3.0.0.tgz#0fc96cdbbb5a38ad453d2d5533a34f09b4949b37"
   integrity sha512-kJExsp4JCms7ipzg7SJ3y8DwmePaELHxKYtg+tZow+k0znUTf3cb+npgyqm8+ATZOdmfgfydIebPDWM172wfyA==
 
-"@fastify/helmet@^13.0.2":
-  version "13.0.2"
-  resolved "https://registry.yarnpkg.com/@fastify/helmet/-/helmet-13.0.2.tgz#c1b2e4dc28ddfb596121e311a0c9f318773b7f5b"
-  integrity sha512-tO1QMkOfNeCt9l4sG/FiWErH4QMm+RjHzbMTrgew1DYOQ2vb/6M1G2iNABBrD7Xq6dUk+HLzWW8u+rmmhQHifA==
+"@fastify/helmet@^13.1.1":
+  version "13.1.2"
+  resolved "https://registry.yarnpkg.com/@fastify/helmet/-/helmet-13.1.2.tgz#af148384f03c81fda4d7d32b937fb7684d84f67f"
+  integrity sha512-fXTultrEFW9bczr3jcffZD7NLlsTYa8eCCzVFsJvLIVO7SUiY/VWp18qCJbf2N9AXIEzIC11NYlNB3BlzBEZeg==
   dependencies:
-    fastify-plugin "^5.0.0"
+    fastify-plugin "^6.0.0"
     helmet "^8.0.0"
 
-"@fastify/jwt@^10.1.0":
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/@fastify/jwt/-/jwt-10.1.0.tgz#e9354bf3de42d98ffe7ed35d3826df127f1b3899"
-  integrity sha512-U1y8ZbxoH1Pjon3euzPJmbCkuYBM+hrQlFWLQWvKmJGCNT6mVsAolnVJdEWfXeQOKpgmuRVCIsPll5RLZxj10A==
+"@fastify/jwt@^10.2.3":
+  version "10.2.4"
+  resolved "https://registry.yarnpkg.com/@fastify/jwt/-/jwt-10.2.4.tgz#3d088aab620672d7c39f320001a3b61482e2af46"
+  integrity sha512-xaRULl7ZLLmmclAWc0gaNHCrK32A+uho8wMJkHfxQ+EXIXIBdCLnbe/89uTlNbQoR2w4i/p24DzOuldvM52ETA==
   dependencies:
     "@fastify/error" "^4.2.0"
     "@lukeed/ms" "^2.0.2"
-    fast-jwt "^6.2.0"
-    fastify-plugin "^5.0.1"
+    fast-jwt "^6.2.4"
+    fastify-plugin "^6.0.0"
     steed "^1.1.3"
 
 "@fastify/merge-json-schemas@^0.2.0":
@@ -446,10 +446,10 @@
     "@fastify/forwarded" "^3.0.0"
     ipaddr.js "^2.1.0"
 
-"@fastify/rate-limit@^11.1.0":
-  version "11.2.0"
-  resolved "https://registry.yarnpkg.com/@fastify/rate-limit/-/rate-limit-11.2.0.tgz#1eea79a5db89bd75bef3bb45eb805cf108f77860"
-  integrity sha512-X7osJd4XSvMoejYrnJkSZYYjY1eNYoBqhjlzf1RakC2204qExFqZFTKj5+T7VuzA/iUI9Z3UoSqQRkB2HpG0oQ==
+"@fastify/rate-limit@^11.2.0":
+  version "11.2.1"
+  resolved "https://registry.yarnpkg.com/@fastify/rate-limit/-/rate-limit-11.2.1.tgz#5fe437d2e71b27b459ca87c5372eb1e069030cf1"
+  integrity sha512-uTQjii3tJUnb6ZyEMcunuvKE3FDKNZEaPpxdyWADDgthHnUV1swdvwuiZfi3DDDgxm1iBrhOkQ/w0yDBQ8qJtA==
   dependencies:
     "@lukeed/ms" "^2.0.2"
     fastify-plugin "^6.0.0"
@@ -474,35 +474,36 @@
     http-errors "^2.0.0"
     mime "^3"
 
-"@fastify/static@^9.1.2":
-  version "9.1.3"
-  resolved "https://registry.yarnpkg.com/@fastify/static/-/static-9.1.3.tgz#d878694333b75c646d40670b7416044de09f09ad"
-  integrity sha512-aXrYtsiryLhRxRNaxNqsn7FUISeb7rB9q4eHUPIot5aeQBLNahnz1m6thzm7JWC1poSGXS9XrX8DvuMivp2hkQ==
+"@fastify/static@^10.1.0":
+  version "10.1.6"
+  resolved "https://registry.yarnpkg.com/@fastify/static/-/static-10.1.6.tgz#d20022be80230b2d581a10b3101d49b7c6728387"
+  integrity sha512-f3x9XisI+y6AIhIfA/+Q3SFsuXeqNNk5HQh5htgHsPxmMLb4pLFskV6eFaLSW3IbI4azrS5np+/tkzXNH99LyQ==
   dependencies:
     "@fastify/accept-negotiator" "^2.0.0"
+    "@fastify/error" "^4.0.0"
     "@fastify/send" "^4.0.0"
-    content-disposition "^1.0.1"
-    fastify-plugin "^5.0.0"
+    content-disposition "^3.0.0"
+    fastify-plugin "^6.0.0"
     fastq "^1.17.1"
     glob "^13.0.0"
 
-"@fastify/swagger-ui@^6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@fastify/swagger-ui/-/swagger-ui-6.0.0.tgz#f28af8458617fdbd95d3e992d15bb83e596323bc"
-  integrity sha512-L9c4CbXj3FnquqpCmn0IfbEeIqDUNi6QwXd23VhQj/bHEjNzDFIAy2W9I3prvSqM+mJWOElIa6uXROmcMDnfUA==
+"@fastify/swagger-ui@^6.1.1":
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/@fastify/swagger-ui/-/swagger-ui-6.1.2.tgz#43ac4545ba473ea02ecac8223a561af8cd4778fa"
+  integrity sha512-rG5EvbuzzH38XYULa9OVrSg3XngXlHmPFbuU4MKdrzx/lGHCvfPITIy7twnECBf7Ws4t2ZvwMa5UUe0T2+V49w==
   dependencies:
-    "@fastify/static" "^9.1.2"
-    fastify-plugin "^5.0.0"
+    "@fastify/static" "^10.1.0"
+    fastify-plugin "^6.0.0"
     openapi-types "^12.1.3"
     rfdc "^1.3.1"
     yaml "^2.4.1"
 
-"@fastify/swagger@^9.7.0":
-  version "9.7.0"
-  resolved "https://registry.yarnpkg.com/@fastify/swagger/-/swagger-9.7.0.tgz#6fb00aaa2acefbdf2fd6fc8c180d9908b018c806"
-  integrity sha512-Vp1SC1GC2Hrkd3faFILv86BzUNyFz5N4/xdExqtCgkGASOzn/x+eMe4qXIGq7cdT6wif/P/oa6r1Ruqx19paZA==
+"@fastify/swagger@^9.8.1":
+  version "9.9.2"
+  resolved "https://registry.yarnpkg.com/@fastify/swagger/-/swagger-9.9.2.tgz#ace5743a908844f3dcb18f62cc1bcc63b0328255"
+  integrity sha512-ayxItVgf/1axBvw33lqsA5ns02YMpT1r59G/HCJraRNWWBzvLgN+oiCBPhuzTiN67TvctlCYkG0+40WLKYuusQ==
   dependencies:
-    fastify-plugin "^5.0.0"
+    fastify-plugin "^6.0.0"
     json-schema-resolver "^3.0.0"
     openapi-types "^12.1.3"
     rfdc "^1.3.1"
@@ -1290,10 +1291,10 @@ consola@^3.2.3, consola@^3.4.0, consola@^3.4.2:
   resolved "https://registry.yarnpkg.com/consola/-/consola-3.4.2.tgz#5af110145397bb67afdab77013fdc34cae590ea7"
   integrity sha512-5IKcdX0nnYavi6G7TtOhwkYzyjfJlatbjMjuLSfE2kYT5pMDOilZ4OvMhi637CcDICTmz3wARPoyhqyX1Y+XvA==
 
-content-disposition@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/content-disposition/-/content-disposition-1.0.1.tgz#a8b7bbeb2904befdfb6787e5c0c086959f605f9b"
-  integrity sha512-oIXISMynqSqm241k6kcQ5UwttDILMK4BiurCfGEREw6+X9jkkpEe5T9FZaApyLGGOnFuyMWZpdolTXMtvEJ08Q==
+content-disposition@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/content-disposition/-/content-disposition-3.0.0.tgz#624fe1697b362049d4735368e3fe57138b2c528d"
+  integrity sha512-ZH/0Xs9rMIFWCOmGdmS9eHBTF62qqQYNz4nVjQhkdIO/a0fCP4UIM3mRz/wiqL0L14YgAz/1xio4OaSY4+ON/A==
 
 cookie@^0.6.0:
   version "0.6.0"
@@ -1741,10 +1742,10 @@ fast-json-stringify@^7.0.0:
     json-schema-ref-resolver "^3.0.0"
     rfdc "^1.2.0"
 
-fast-jwt@^6.2.0:
-  version "6.2.4"
-  resolved "https://registry.yarnpkg.com/fast-jwt/-/fast-jwt-6.2.4.tgz#cc2c1595a46aa04789f01aa6b7dd0ba47aa36ffa"
-  integrity sha512-IoQa53wI6TbARU2yelb0L44ggFQnP2qVcwswCSYHbCAWuwpr70icDb3QjG0v01I8Tt01rVGDkN/rRvpk0lKFTA==
+fast-jwt@^6.2.4:
+  version "6.3.4"
+  resolved "https://registry.yarnpkg.com/fast-jwt/-/fast-jwt-6.3.4.tgz#48311a7397e41ee318854d162697b857a360e3a2"
+  integrity sha512-wq1bK/Pi0OARHYrEkXyTH793Xbqx4dHxBVxYWWHymqFxSEmhllkDj5ZCvbYZcfwUQmitjnBKSgy7nv7Duxg2BQ==
   dependencies:
     "@lukeed/ms" "^2.0.2"
     asn1.js "^5.4.1"
@@ -1786,7 +1787,7 @@ fastfall@^1.5.0:
   dependencies:
     reusify "^1.0.0"
 
-fastify-plugin@^5.0.0, fastify-plugin@^5.0.1:
+fastify-plugin@^5.0.0:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/fastify-plugin/-/fastify-plugin-5.0.1.tgz#82d44e6fe34d1420bb5a4f7bee434d501e41939f"
   integrity sha512-HCxs+YnRaWzCl+cWRYFnHmeRFyR5GVnJTAaCJQiYzQSDwK9MgJdyAsuL3nh0EWRCYMgQ5MeziymvmAhUHYHDUQ==
@@ -2167,10 +2168,10 @@ kysely-ctl@^0.21.0:
     pkg-types "^2.3.1"
     std-env "^4.1.0"
 
-kysely@^0.29.5:
-  version "0.29.5"
-  resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.29.5.tgz#c07a51700a4b4db53c60bd373e6e098f919fccae"
-  integrity sha512-ooa+eSbBNPTo3MycPEuW5jdrxQdQwdtB3LC3h43FiXQbIry5tR0C5lDG7eealK0E4D7XjrnOP5DIUg/LyjRMYQ==
+kysely@^0.29.6:
+  version "0.29.6"
+  resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.29.6.tgz#f3af9a818a5a6def8e63fbc32ffb773346be911a"
+  integrity sha512-hHaB8C/rfzDDtr/t8YZwxAuPJTT0zHyaPoVzcXwDYhYNAgH/4sIfVhi/XLLIY+bL/FqaIJnjATDbi8ObSELmxg==
 
 levn@^0.4.1:
   version "0.4.1"
@@ -2769,10 +2770,10 @@ prettier-plugin-tailwindcss@^0.8.1:
   resolved "https://registry.yarnpkg.com/prettier-plugin-tailwindcss/-/prettier-plugin-tailwindcss-0.8.1.tgz#bb30f2794dbaa2ef0d36e39ebc258c8c03d8f0c3"
   integrity sha512-iaFMYqDsE4ffdDkn5qup0j5f2aCEBFZrdrZnvu9QKTlWx/iGPeQ4HHu7b7fCPMxeo9nwQBiOAh2nSypdFYWJkw==
 
-prettier@^3.9.6:
-  version "3.9.6"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.9.6.tgz#b3ea5146515d40fc53f18aa63f74dfab1e10dbf6"
-  integrity sha512-OpN0zzVdiaiAhxpuuj5efpIS4sY9j7bY6uR5mnj5yPzGkdkjNKSJeUThPb60Jw29QuAZgA4o+/iB49kFiaBX6g==
+prettier@^3.9.9:
+  version "3.9.10"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.9.10.tgz#ac378e432f1a7381518f2e080816bbaefa38d585"
+  integrity sha512-skGHTH1Yb9QvaTC4hWnRTzEYtCpApF0UMBPz+t/0ZPzP8ihefo/btKd+QA7pUE0fEwA1SbS/NmhyEcstdXOIdA==
 
 process-warning@^4.0.0:
   version "4.0.1"
