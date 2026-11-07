@@ -3140,19 +3140,6 @@ svelte-eslint-parser@^1.10.1:
     postcss-selector-parser "^7.0.0"
     semver "^7.7.2"
 
-svelte-eslint-parser@^1.8.1:
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/svelte-eslint-parser/-/svelte-eslint-parser-1.8.1.tgz#f72d286ffede52ad9932caa7d10df349ba933817"
-  integrity sha512-5zgKBqAf6V8Jyrmr1jViksyG4NKT8NheYwkdxRaMRDAqpGWi9wR8ktcGrAZbfMn/PHUp1BWzAp0cYQECkWuAMA==
-  dependencies:
-    eslint-scope "^8.2.0"
-    eslint-visitor-keys "^4.0.0"
-    espree "^10.0.0"
-    postcss "^8.4.49"
-    postcss-scss "^4.0.9"
-    postcss-selector-parser "^7.0.0"
-    semver "^7.7.2"
-
 svelte-french-toast@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/svelte-french-toast/-/svelte-french-toast-1.2.0.tgz#bfe3696ee1e3cbdee2a300e0153dede7d6d802eb"
