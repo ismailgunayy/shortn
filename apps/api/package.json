@@ -35,7 +35,7 @@
 		"pg": "^8.22.0",
 		"redis": "^6.1.0",
 		"toad-scheduler": "^4.0.1",
-		"zod": "^4.4.3"
+		"zod": "^4.6.7"
 	},
 	"devDependencies": {
 		"@repo/eslint-config": "0.0.1",
