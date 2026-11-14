@@ -41,7 +41,7 @@
 		"@repo/eslint-config": "0.0.1",
 		"@repo/typescript-config": "0.0.1",
 		"@types/bcrypt": "^6.0.0",
-		"@types/node": "^24.13.4",
+		"@types/node": "^26.6.6",
 		"@types/pg": "^8.20.0",
 		"esbuild": "^0.28.2",
 		"eslint": "^10.14.0",
